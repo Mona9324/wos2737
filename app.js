@@ -1,13 +1,12 @@
-let adminLogged=false
-
 let currentBuff="monday"
 let selectedSlot=null
 
 const ADMIN_PASSWORD="2737admin"
 
-const svsDate=new Date("2026-03-23T00:00:00Z")
-
+let adminAuthenticated=false
 let bookingOpen=false
+
+const svsDate=new Date("2026-03-23T00:00:00Z")
 
 const grid=document.getElementById("slots")
 
@@ -91,9 +90,10 @@ div.onclick=()=>openModal(id)
 }else{
 
 div.className="slot reserved"
+
 div.innerHTML="<b>"+time+"</b><br>"+slot.alliance+" - "+slot.player
 
-div.onclick=()=>cancelSlot(id,slot.password)
+div.title="Alliance: "+slot.alliance+"\nPlayer: "+slot.player
 
 }
 
@@ -122,7 +122,6 @@ document.getElementById("availableCount").innerText=total-reserved
 function openModal(id){
 
 selectedSlot=id
-
 document.getElementById("modal").style.display="flex"
 
 }
@@ -133,12 +132,24 @@ document.getElementById("modal").style.display="none"
 
 }
 
+function getMinDaysRequired(){
+
+let now=new Date()
+let diff=(svsDate-now)/(1000*60*60*24)
+
+if(diff<=1) return 0
+if(diff<=2) return 15
+if(diff<=3) return 30
+
+return 999
+
+}
+
 function confirmBooking(){
 
 let alliance=document.getElementById("alliance").value
 let player=document.getElementById("player").value
 let password=document.getElementById("password").value
-
 let days=parseInt(document.getElementById("daysSaved").value)
 
 let required=getMinDaysRequired()
@@ -150,6 +161,16 @@ alert("You need "+required+" days saved")
 return
 
 }
+
+let slotName=selectedSlot.split("_")[1]
+
+let text=
+slotName+" UTC\n"+
+alliance+" - "+player
+
+document.getElementById("copyText").innerText=text
+
+document.getElementById("copyBox").style.display="block"
 
 db.collection("slots").doc(selectedSlot).set({
 
@@ -163,39 +184,13 @@ closeModal()
 
 }
 
-function cancelSlot(id,password){
+function copyDiscord(){
 
-let pass=prompt("Enter password")
+let text=document.getElementById("copyText").innerText
 
-if(pass===ADMIN_PASSWORD){
+navigator.clipboard.writeText(text)
 
-db.collection("slots").doc(id).delete()
-return
-
-}
-
-if(pass!==password){
-
-alert("Wrong password")
-return
-
-}
-
-db.collection("slots").doc(id).delete()
-
-}
-
-function getMinDaysRequired(){
-
-let now=new Date()
-
-let diff=(svsDate-now)/(1000*60*60*24)
-
-if(diff<=1) return 0
-if(diff<=2) return 15
-if(diff<=3) return 30
-
-return 999
+alert("Copied for Discord")
 
 }
 
@@ -222,21 +217,18 @@ return
 
 }
 
-adminLogged=true
+adminAuthenticated=true
 
+document.getElementById("adminLogin").style.display="none"
 document.getElementById("adminControls").style.display="block"
-
-alert("Admin login successful")
 
 }
 
 function setBooking(state){
 
-if(!adminLogged){
-
+if(!adminAuthenticated){
 alert("Admin login required")
 return
-
 }
 
 db.collection("settings").doc("booking").set({
@@ -247,11 +239,9 @@ open:state
 
 function clearAll(){
 
-if(!adminLogged){
-
+if(!adminAuthenticated){
 alert("Admin login required")
 return
-
 }
 
 if(!confirm("Delete ALL bookings?")) return
@@ -265,51 +255,3 @@ doc.ref.delete()
 })
 
 }
-
-loadSlots()
-
-const canvas=document.getElementById("snow")
-const ctx=canvas.getContext("2d")
-
-canvas.width=window.innerWidth
-canvas.height=window.innerHeight
-
-let snow=[]
-
-for(let i=0;i<120;i++){
-
-snow.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-r:Math.random()*3,
-d:Math.random()*1
-})
-
-}
-
-function drawSnow(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height)
-
-ctx.fillStyle="rgba(200,220,255,0.8)"
-
-ctx.beginPath()
-
-snow.forEach(f=>{
-ctx.moveTo(f.x,f.y)
-ctx.arc(f.x,f.y,f.r,0,Math.PI*2)
-})
-
-ctx.fill()
-
-snow.forEach(f=>{
-f.y+=f.d
-if(f.y>canvas.height){
-f.y=0
-f.x=Math.random()*canvas.width
-}
-})
-
-}
-
-setInterval(drawSnow,33)
