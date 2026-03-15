@@ -1,13 +1,4 @@
-function switchBuff(buff){
-
-currentBuff=buff
-generateSlots()
-updateCounts()
-
-}
-
-
-let currentBuff="construction"
+let currentBuff="monday"
 let selectedSlot=null
 
 const ADMIN_PASSWORD="2737admin"
@@ -19,14 +10,11 @@ const svsDate=new Date("2026-03-23T00:00:00Z")
 function updateCountdown(){
 
 let now=new Date()
-
 let diff=svsDate-now
 
 if(diff<0){
-
 document.getElementById("countdown").innerHTML="SVS Started!"
 return
-
 }
 
 let d=Math.floor(diff/(1000*60*60*24))
@@ -40,6 +28,14 @@ document.getElementById("countdown").innerHTML=
 
 setInterval(updateCountdown,60000)
 updateCountdown()
+
+function switchBuff(buff){
+
+currentBuff=buff
+generateSlots()
+updateCounts()
+
+}
 
 function generateSlots(){
 
@@ -71,7 +67,6 @@ let data=doc.data()
 if(!data){
 
 div.className="slot available"
-
 div.innerHTML="<b>"+time+" UTC</b><br>"+local+" Local<br>Available"
 
 div.onclick=()=>openModal(id)
@@ -79,7 +74,6 @@ div.onclick=()=>openModal(id)
 }else{
 
 div.className="slot reserved"
-
 div.innerHTML="<b>"+time+" UTC</b><br>"+local+" Local<br>"+data.alliance+" - "+data.player
 
 div.onclick=()=>cancelSlot(id,data.password)
@@ -143,7 +137,6 @@ db.collection("slots").doc(id).delete()
 
 }
 
-
 function updateCounts(){
 
 db.collection("slots").onSnapshot(snapshot=>{
@@ -168,9 +161,7 @@ document.getElementById("availableCount").innerText=available
 
 }
 
-
 generateSlots()
-updateStats()
 updateCounts()
 
 const canvas=document.getElementById("snow")
@@ -194,7 +185,6 @@ d:Math.random()*1
 
 }
 
-
 function drawSnow(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height)
@@ -208,7 +198,6 @@ for(let i=0;i<snowflakes.length;i++){
 let f=snowflakes[i]
 
 ctx.moveTo(f.x,f.y)
-
 ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true)
 
 }
