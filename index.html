@@ -26,10 +26,19 @@
 
 <div class="tabs">
 
-<button onclick="switchBuff('construction')">Construction</button> <button onclick="switchBuff('research')">Research</button> <button onclick="switchBuff('training')">Training</button>
+<button onclick="switchBuff('Monday (construction)')">Construction</button> <button onclick="switchBuff('Tuesday (research)')">Research</button> <button onclick="switchBuff('Thursday (training)')">Training</button>
+  
+</div>
+
+<div class="slotStats">
+
+<span class="availableDot"></span> <span id="availableCount">0</span>
+
+<span class="reservedDot"></span> <span id="reservedCount">0</span>
 
 </div>
 
+  
 <div id="slots" class="grid"></div>
 
 <h2>Alliance Usage</h2>
@@ -66,11 +75,3 @@
 
 </body>
 </html>
-
-<div class="slotStats">
-
-<span class="availableDot"></span> <span id="availableCount">0</span>
-
-<span class="reservedDot"></span> <span id="reservedCount">0</span>
-
-</div>
