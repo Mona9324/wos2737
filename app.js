@@ -141,7 +141,7 @@ if(diff<=1) return 0
 if(diff<=2) return 15
 if(diff<=3) return 30
 
-return 999
+return 30
 
 }
 
