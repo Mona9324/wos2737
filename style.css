@@ -27,27 +27,6 @@ font-weight:bold;
 cursor:pointer;
 }
 
-.slotStats{
-margin:10px;
-}
-
-.availableDot{
-width:10px;
-height:10px;
-background:#9bd39b;
-display:inline-block;
-border-radius:50%;
-}
-
-.reservedDot{
-width:10px;
-height:10px;
-background:#d88989;
-display:inline-block;
-border-radius:50%;
-margin-left:10px;
-}
-
 .grid{
 display:grid;
 grid-template-columns:repeat(4,1fr);
@@ -117,6 +96,28 @@ color:white;
 cursor:pointer;
 }
 
+.copyBox{
+
+display:none;
+
+position:fixed;
+
+bottom:80px;
+
+left:50%;
+
+transform:translateX(-50%);
+
+background:white;
+
+padding:15px;
+
+border-radius:10px;
+
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+
+}
+
 .adminFloating{
 
 position:fixed;
@@ -153,24 +154,6 @@ border-radius:14px;
 
 box-shadow:0 0 20px rgba(0,0,0,0.25);
 
-z-index:50;
-
-}
-
-.adminPanel button{
-
-display:block;
-margin:10px auto;
-padding:10px;
-
-border:none;
-border-radius:8px;
-
-background:#6fa8ff;
-color:white;
-
-cursor:pointer;
-
 }
 
 #adminControls{
@@ -184,11 +167,4 @@ left:0;
 width:100%;
 height:100%;
 pointer-events:none;
-z-index:0;
-}
-
-@media(max-width:600px){
-.grid{
-grid-template-columns:1fr 1fr;
-}
 }
