@@ -1,3 +1,6 @@
+const ADMIN_PASSWORD="2737admin"
+
+
 const allianceColors={}
 
 const colorList=[
@@ -15,9 +18,11 @@ if(!allianceColors[tag]){
 
 let color=getAllianceColor(data.alliance)
 
-div.innerHTML=`<b>${time} UTC</b>
-<br>${local} Local
-<br><span style="color:${color}">[${data.alliance}]</span> ${data.player}`
+div.innerHTML=
+"<b>"+time+" UTC</b><br>"+
+local+" Local<br>"+
+"<span style='color:"+color+"'>["+data.alliance+"]</span> "+
+data.player
 
 }
 
@@ -145,7 +150,14 @@ closeModal()
 
 function cancelSlot(id,password){
 
-let pass=prompt("Cancel password")
+let pass=prompt("Enter password")
+
+if(pass===ADMIN_PASSWORD){
+
+db.collection("slots").doc(id).delete()
+return
+
+}
 
 if(pass!==password){
 
@@ -186,7 +198,7 @@ function drawSnow(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height)
 
-ctx.fillStyle="white"
+ctx.fillStyle="rgba(180,200,255,0.8)"
 ctx.beginPath()
 
 for(let i=0;i<snowflakes.length;i++){
