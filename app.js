@@ -2,21 +2,14 @@ let currentBuff="monday"
 let selectedSlot=null
 
 const ADMIN_PASSWORD="2737admin"
-
 const svsDate=new Date("2026-03-23T00:00:00Z")
 
 let bookingLocked=true
 
 const grid=document.getElementById("slots")
 
-db.collection("settings").doc("booking").onSnapshot(doc=>{
-if(doc.exists){
-bookingLocked=doc.data().locked
-generateSlots()
-}
-})
-
 function updateCountdown(){
+
 let now=new Date()
 let diff=svsDate-now
 
@@ -26,18 +19,34 @@ let m=Math.floor((diff/(1000*60))%60)
 
 document.getElementById("countdown").innerHTML=
 "SVS begins in "+d+"d "+h+"h "+m+"m"
+
 }
 
 setInterval(updateCountdown,60000)
 updateCountdown()
 
-function switchBuff(buff){
-currentBuff=buff
-generateSlots()
-updateCounts()
+function loadSlots(){
+
+db.collection("slots").onSnapshot(snapshot=>{
+
+let data={}
+snapshot.forEach(doc=>{
+data[doc.id]=doc.data()
+})
+
+generateSlots(data)
+updateCounts(data)
+
+})
+
 }
 
-function generateSlots(){
+function switchBuff(buff){
+currentBuff=buff
+loadSlots()
+}
+
+function generateSlots(data){
 
 grid.innerHTML=""
 
@@ -49,37 +58,48 @@ let id=currentBuff+"_"+time
 
 let div=document.createElement("div")
 
-db.collection("slots").doc(id).onSnapshot(doc=>{
-
-let data=doc.data()
+let slot=data[id]
 
 if(bookingLocked){
 
 div.className="slot locked"
-div.innerHTML="<b>"+time+" UTC</b><br>🔒 Locked"
+div.innerHTML="<b>"+time+"</b><br>🔒 Locked"
 
-}else if(!data){
+}else if(!slot){
 
 div.className="slot available"
-div.innerHTML="<b>"+time+" UTC</b><br>Available"
+div.innerHTML="<b>"+time+"</b><br>Available"
 
 div.onclick=()=>openModal(id)
 
 }else{
 
 div.className="slot reserved"
-div.innerHTML="<b>"+time+" UTC</b><br>"+data.alliance+" - "+data.player
+div.innerHTML="<b>"+time+"</b><br>"+slot.alliance+" - "+slot.player
 
-div.onclick=()=>cancelSlot(id,data.password)
+div.onclick=()=>cancelSlot(id,slot.password)
 
 }
-
-})
 
 grid.appendChild(div)
 
 }
 }
+
+}
+
+function updateCounts(data){
+
+let reserved=0
+
+for(let key in data){
+if(key.startsWith(currentBuff)) reserved++
+}
+
+let total=48
+
+document.getElementById("reservedCount").innerText=reserved
+document.getElementById("availableCount").innerText=total-reserved
 
 }
 
@@ -105,6 +125,7 @@ password
 })
 
 closeModal()
+
 }
 
 function cancelSlot(id,password){
@@ -125,31 +146,22 @@ db.collection("slots").doc(id).delete()
 
 }
 
-function openAdmin(){
+function adminUnlock(){
 
-let pass=prompt("Admin Password")
+let pass=document.getElementById("adminPass").value
 
 if(pass!==ADMIN_PASSWORD){
 alert("Wrong password")
 return
 }
 
-document.getElementById("adminPanel").style.display="block"
+document.getElementById("adminControls").style.display="block"
 
-}
-
-function closeAdmin(){
-document.getElementById("adminPanel").style.display="none"
 }
 
 function toggleBooking(){
-
 bookingLocked=!bookingLocked
-
-db.collection("settings").doc("booking").set({
-locked:bookingLocked
-})
-
+alert("Booking lock toggled")
 }
 
 function clearAll(){
@@ -164,27 +176,7 @@ doc.ref.delete()
 
 }
 
-function updateCounts(){
-
-db.collection("slots").onSnapshot(snapshot=>{
-
-let reserved=0
-
-snapshot.forEach(doc=>{
-if(doc.id.startsWith(currentBuff)) reserved++
-})
-
-let total=48
-
-document.getElementById("reservedCount").innerText=reserved
-document.getElementById("availableCount").innerText=total-reserved
-
-})
-
-}
-
-generateSlots()
-updateCounts()
+loadSlots()
 
 const canvas=document.getElementById("snow")
 const ctx=canvas.getContext("2d")
