@@ -1,3 +1,16 @@
+let bookingLocked=true
+db.collection("settings").doc("booking").onSnapshot(doc=>{
+
+if(doc.exists){
+
+bookingLocked=doc.data().locked
+
+generateSlots()
+
+}
+
+})
+
 let currentBuff="monday"
 let selectedSlot=null
 
