@@ -20,9 +20,17 @@ color:#555;
 
 }
 
+.timeBox{
+
+font-size:14px;
+color:#666;
+margin-top:6px;
+
+}
+
 .tabs{
 
-margin:18px;
+margin:20px;
 display:flex;
 justify-content:center;
 flex-wrap:wrap;
