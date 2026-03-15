@@ -29,6 +29,25 @@ document.getElementById("countdown").innerHTML=
 setInterval(updateCountdown,60000)
 updateCountdown()
 
+function updateClocks(){
+
+let now=new Date()
+
+let utc=now.toUTCString().slice(17,22)
+
+let local=now.toLocaleTimeString([],{
+hour:'2-digit',
+minute:'2-digit'
+})
+
+document.getElementById("utcClock").innerHTML="UTC Time: "+utc
+document.getElementById("localClock").innerHTML="Local Time: "+local
+
+}
+
+setInterval(updateClocks,1000)
+updateClocks()
+
 function switchBuff(buff){
 
 currentBuff=buff
@@ -189,7 +208,7 @@ function drawSnow(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height)
 
-ctx.fillStyle="rgba(200,220,255,0.8)"
+ctx.fillStyle="rgba(200,220,255,0.9)"
 
 ctx.beginPath()
 
