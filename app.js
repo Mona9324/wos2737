@@ -183,3 +183,23 @@ document.getElementById("countdown").innerHTML=
 setInterval(updateCountdown,60000)
 
 updateCountdown()
+
+
+function updateCounts(){
+
+db.collection("slots").onSnapshot(snapshot=>{
+
+let reserved=snapshot.size
+
+let total=48
+
+let available=total-reserved
+
+document.getElementById("reservedCount").innerText=reserved
+document.getElementById("availableCount").innerText=available
+
+})
+
+}
+
+updateCounts()
