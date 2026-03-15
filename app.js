@@ -1,3 +1,5 @@
+const BOOKING_OPEN = new Date("2026-03-20T12:00:00Z")
+
 let currentBuff="monday"
 let selectedSlot=null
 
