@@ -13,11 +13,13 @@
 </head>
 
 <body>
+
 <canvas id="snow"></canvas>
 
 <header>
 
 <h1>❄ 2737 SVS Booking</h1>
+
 <div id="countdown"></div>
 
 </header>
@@ -30,19 +32,25 @@
 
 <div id="slots" class="grid"></div>
 
+<h2>Alliance Usage</h2>
+
+<div id="stats"></div>
+
 <div id="modal" class="modal">
 
 <div class="modalBox">
 
 <h3>Reserve Slot</h3>
 
-<input id="alliance" placeholder="Alliance tag">
+<input id="alliance" placeholder="Alliance">
 
-<input id="player" placeholder="Player name">
+<input id="player" placeholder="Player">
 
 <input id="password" type="password" placeholder="Cancel password">
 
-<button onclick="confirmBooking()">Confirm</button> <button onclick="closeModal()">Cancel</button>
+<button onclick="confirmBooking()">Confirm</button>
+
+<button onclick="closeModal()">Cancel</button>
 
 </div>
 
@@ -58,6 +66,3 @@
 
 </body>
 </html>
-
-<h2>Alliance Usage</h2>
-<div id="stats"></div>
