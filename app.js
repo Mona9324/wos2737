@@ -41,6 +41,41 @@ updateCounts(data)
 
 }
 
+function openAdmin(){
+
+let pass=prompt("Admin Password")
+
+if(pass!==ADMIN_PASSWORD){
+
+alert("Wrong password")
+return
+
+}
+
+document.getElementById("adminPanel").style.display="block"
+
+}
+
+function closeAdmin(){
+
+document.getElementById("adminPanel").style.display="none"
+
+}
+
+function openBooking(){
+
+bookingLocked=false
+alert("Booking OPENED")
+
+}
+
+function lockBooking(){
+
+bookingLocked=true
+alert("Booking LOCKED")
+
+}
+
 function switchBuff(buff){
 currentBuff=buff
 loadSlots()
