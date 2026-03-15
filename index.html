@@ -24,12 +24,6 @@
 
 </header>
 
-<div class="adminButton">
-
-<button onclick="openAdmin()">⚙ Admin</button>
-
-</div>
-
 <div class="tabs">
 
 <button onclick="switchBuff('monday')">Monday (Construction)</button> <button onclick="switchBuff('tuesday')">Tuesday (Research)</button> <button onclick="switchBuff('thursday')">Thursday (Training)</button>
@@ -64,11 +58,17 @@
 
 </div>
 
-<div id="adminPanel" class="adminPanel">
+<div id="adminPanel">
 
-<h3>Admin Dashboard</h3>
+<input id="adminPass" placeholder="Admin Password" type="password">
 
-<button onclick="toggleBooking()">Toggle Booking</button> <button onclick="clearAll()">Clear All Slots</button> <button onclick="closeAdmin()">Close</button>
+<button onclick="adminUnlock()">Admin Login</button>
+
+<div id="adminControls">
+
+<button onclick="toggleBooking()">Toggle Booking Lock</button> <button onclick="clearAll()">Clear All Slots</button>
+
+</div>
 
 </div>
 
