@@ -155,3 +155,31 @@ document.getElementById("stats").innerHTML=html
 
 generateSlots()
 updateStats()
+
+const svsDate=new Date("2026-03-23T00:00:00Z")
+
+function updateCountdown(){
+
+let now=new Date()
+
+let diff=svsDate-now
+
+if(diff<0){
+
+document.getElementById("countdown").innerHTML="SVS Started!"
+return
+
+}
+
+let d=Math.floor(diff/(1000*60*60*24))
+let h=Math.floor((diff/(1000*60*60))%24)
+let m=Math.floor((diff/(1000*60))%60)
+
+document.getElementById("countdown").innerHTML=
+"SVS begins in "+d+"d "+h+"h "+m+"m"
+
+}
+
+setInterval(updateCountdown,60000)
+
+updateCountdown()
