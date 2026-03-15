@@ -2,8 +2,10 @@ function switchBuff(buff){
 
 currentBuff=buff
 generateSlots()
+updateCounts()
 
 }
+
 
 let currentBuff="construction"
 let selectedSlot=null
