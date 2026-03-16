@@ -1,6 +1,7 @@
 let currentBuff="monday";
 let selectedSlot=null;
 let cancelSlot=null;
+
 const ADMIN_PASSWORD="2737admin";
 const grid=document.getElementById("slots");
 const svsDate=new Date("2026-03-23T00:00:00Z");
@@ -11,7 +12,10 @@ let bookingOpen=false;
 function updateCountdown(){
     let now=new Date();
     let diff=svsDate-now;
-    if(diff<0){document.getElementById("countdown").innerText="SVS has started!"; return;}
+    if(diff<0){
+        document.getElementById("countdown").innerText="SVS has started!";
+        return;
+    }
     let d=Math.floor(diff/(1000*60*60*24));
     let h=Math.floor((diff/(1000*60*60))%24);
     let m=Math.floor((diff/(1000*60))%60);
@@ -28,9 +32,6 @@ function updateOpenTimer(){
         db.collection("settings").doc("booking").set({open:true});
         return;
     }
-    let diff=bookingOpenTime-now;
-    let h=Math.floor(diff/1000/60/60);
-    let m=Math.floor(diff/1000/60)%60;
 }
 setInterval(updateOpenTimer,60000);
 updateOpenTimer();
@@ -46,6 +47,7 @@ function loadSlots(){
     });
 }
 loadSlots();
+
 function switchBuff(buff){
     currentBuff=buff;
     document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
@@ -69,17 +71,27 @@ function generateSlots(data){
             let div=document.createElement("div");
             let slot=data[id];
             div.classList.remove("selected");
-            if(!bookingOpen){div.className="slot locked";div.innerHTML="<div class='timeRow'><div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div><div class='statusReserved'>Locked</div></div><div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>";}
-            else if(!slot){
+
+            if(!bookingOpen){
+                div.className="slot locked";
+                div.innerHTML=
+                "<div class='timeRow'><div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div><div class='statusReserved'>Locked</div></div>"+
+                "<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>";
+            } else if(!slot){
                 div.className="slot available";
-                div.innerHTML="<div class='timeRow'><div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div><div class='statusAvailable'>Available</div></div><div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>";
+                div.innerHTML=
+                "<div class='timeRow'><div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div><div class='statusAvailable'>Available</div></div>"+
+                "<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>";
                 div.onclick=()=>{openModal(id); highlightSlot(div);}
-            }
-            else{
+            } else {
                 div.className="slot reserved";
-                div.innerHTML="<div class='timeRow'><div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div><div class='statusReserved'>Reserved</div></div><div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div><div class='bookingInfo'>["+slot.alliance+"] "+slot.player+" ("+slot.days+")</div>";
+                div.innerHTML=
+                "<div class='timeRow'><div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div><div class='statusReserved'>Reserved</div></div>"+
+                "<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>"+
+                "<div class='bookingInfo'>["+slot.alliance+"] "+slot.player+" ("+slot.days+")</div>";
                 div.onclick=()=>{openCancelModal(id); highlightSlot(div);}
             }
+
             grid.appendChild(div);
         }
     }
@@ -95,7 +107,8 @@ function updateCounts(data){
     let reserved=0;
     for(let key in data){ if(key.startsWith(currentBuff)) reserved++; }
     let total=48;
-    let r=document.getElementById("reservedCount"); let a=document.getElementById("availableCount");
+    let r=document.getElementById("reservedCount");
+    let a=document.getElementById("availableCount");
     if(r) r.innerText="Reserved "+reserved;
     if(a) a.innerText="Available "+(total-reserved);
 }
@@ -113,9 +126,9 @@ function updateRanking(data){
     let html="";
     for(let i=0;i<list.length&&i<5;i++){
         let p=list[i];
-        if(i==0) html+="<span style='font-size:20px'>🥇</span> ["+p.alliance+"] "+p.player+" — "+p.days+"<br>";
-        else if(i==1) html+="<span style='font-size:18px'>🥈</span> ["+p.alliance+"] "+p.player+" — "+p.days+"<br>";
-        else if(i==2) html+="<span style='font-size:16px'>🥉</span> ["+p.alliance+"] "+p.player+" — "+p.days+"<br>";
+        if(i==0) html+="<span style='font-size:22px'>🥇</span> ["+p.alliance+"] "+p.player+" — "+p.days+"<br>";
+        else if(i==1) html+="<span style='font-size:20px'>🥈</span> ["+p.alliance+"] "+p.player+" — "+p.days+"<br>";
+        else if(i==2) html+="<span style='font-size:18px'>🥉</span> ["+p.alliance+"] "+p.player+" — "+p.days+"<br>";
         else html+="<span style='display:inline-block;width:20px;height:20px;border-radius:50%;background:#a0e7ff;color:white;text-align:center;font-size:12px;margin-right:4px;'>"+(i+1)+"</span> ["+p.alliance+"] "+p.player+" — "+p.days+"<br>";
     }
     let el=document.getElementById("ranking"); if(el) el.innerHTML=html;
