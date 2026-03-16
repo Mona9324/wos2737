@@ -13,17 +13,17 @@
 <header>
   <h1>❄ 2737 SVS Booking</h1>
   <div id="countdown"></div>
-  <div class="slotStats">
-    <span class="availableDot"></span> <span id="availableCount">Available 0</span>
-    <span class="reservedDot"></span> <span id="reservedCount">Reserved 0</span>
-  </div>
-  <div id="rankingBox"></div>
 </header>
 
 <div class="tabs">
   <button onclick="switchBuff('monday')">Monday (Construction)</button>
   <button onclick="switchBuff('tuesday')">Tuesday (Research)</button>
   <button onclick="switchBuff('thursday')">Thursday (Troop Training)</button>
+</div>
+
+<div class="slotStats">
+  <span class="availableDot"></span> <span id="availableCount">Available 0</span>
+  <span class="reservedDot"></span> <span id="reservedCount">Reserved 0</span>
 </div>
 
 <div id="slots" class="grid"></div>
@@ -66,6 +66,8 @@
   </div>
   <button onclick="closeAdmin()">닫기</button>
 </div>
+
+<div id="rankingBox"></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
