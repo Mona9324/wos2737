@@ -8,6 +8,9 @@ let bookingOpen=false
 
 const svsDate=new Date("2026-03-23T00:00:00Z")
 
+// 예약 자동 오픈
+const bookingStart=new Date("2026-03-20T00:00:00Z")
+
 const grid=document.getElementById("slots")
 
 function updateCountdown(){
@@ -27,21 +30,12 @@ document.getElementById("countdown").innerHTML=
 setInterval(updateCountdown,60000)
 updateCountdown()
 
-db.collection("settings").doc("booking").onSnapshot(doc=>{
-
-if(doc.exists){
-bookingOpen=doc.data().open
-}
-
-loadSlots()
-
-})
-
 function loadSlots(){
 
 db.collection("slots").onSnapshot(snapshot=>{
 
 let data={}
+
 snapshot.forEach(doc=>{
 data[doc.id]=doc.data()
 })
@@ -52,6 +46,8 @@ updateCounts(data)
 })
 
 }
+
+loadSlots()
 
 function switchBuff(buff){
 
@@ -69,9 +65,7 @@ for(let m=0;m<60;m+=30){
 
 let utcTime=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")
 
-let localDate=new Date()
-localDate.setUTCHours(h,m)
-
+let localDate=new Date(Date.UTC(2024,0,1,h,m))
 let localTime=localDate.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
 
 let id=currentBuff+"_"+utcTime
@@ -80,7 +74,10 @@ let div=document.createElement("div")
 
 let slot=data[id]
 
-if(!bookingOpen){
+let now=new Date()
+let autoOpen = now > bookingStart
+
+if(!bookingOpen && !autoOpen){
 
 div.className="slot locked"
 div.innerHTML="<b>"+utcTime+" UTC</b><br>"+localTime+"<br>🔒"
@@ -88,6 +85,9 @@ div.innerHTML="<b>"+utcTime+" UTC</b><br>"+localTime+"<br>🔒"
 }else if(!slot){
 
 div.className="slot available"
+
+if(h<6) div.classList.add("timeNight")
+if(h>=6 && h<18) div.classList.add("timeDay")
 
 div.innerHTML=
 "<b>"+utcTime+" UTC</b><br>"+
@@ -99,11 +99,32 @@ div.onclick=()=>openModal(id)
 
 div.className="slot reserved"
 
+let priority=""
+
+if(slot.days>=10){
+priority="⭐"
+div.classList.add("priorityHigh")
+}
+
 div.innerHTML=
 "<b>"+utcTime+" UTC</b><br>"+
 localTime+"<br><br>"+
 slot.alliance+" - "+slot.player+
-"<br>"+slot.days+" days"
+"<br>"+slot.days+" days "+priority
+
+if(adminAuthenticated){
+
+div.onclick=()=>{
+if(confirm("관리자가 이 예약을 삭제할까요?")){
+db.collection("slots").doc(id).delete()
+}
+}
+
+}else{
+
+div.onclick=()=>cancelBooking(id,slot.password)
+
+}
 
 }
 
@@ -144,21 +165,49 @@ document.getElementById("modal").style.display="none"
 
 function confirmBooking(){
 
-let alliance=document.getElementById("alliance").value
+let alliance=document.getElementById("alliance").value.toUpperCase()
 let player=document.getElementById("player").value
 let password=document.getElementById("password").value
-let days=document.getElementById("daysSaved").value
+let days=parseInt(document.getElementById("daysSaved").value)
 
-db.collection("slots").doc(selectedSlot).set({
+if(!alliance || !player || !password){
+
+alert("모든 정보를 입력하세요")
+return
+
+}
+
+db.collection("slots").doc(selectedSlot).create({
 
 alliance,
 player,
 password,
 days
 
+}).catch(()=>{
+
+alert("이미 예약된 슬롯입니다")
+
 })
 
 closeModal()
+
+}
+
+function cancelBooking(id,correctPassword){
+
+let input=prompt("취소 비밀번호 입력")
+
+if(input!==correctPassword){
+
+alert("비밀번호 틀림")
+return
+
+}
+
+if(!confirm("예약을 취소할까요?")) return
+
+db.collection("slots").doc(id).delete()
 
 }
 
@@ -223,74 +272,3 @@ doc.ref.delete()
 })
 
 }
-
-const canvas=document.getElementById("snow")
-const ctx=canvas.getContext("2d")
-
-canvas.width=window.innerWidth
-canvas.height=window.innerHeight
-
-let snowflakes=[]
-
-for(let i=0;i<80;i++){
-
-snowflakes.push({
-
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-r:Math.random()*3+1,
-d:Math.random()+1
-
-})
-
-}
-
-function drawSnow(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height)
-
-ctx.fillStyle="white"
-
-ctx.beginPath()
-
-for(let i=0;i<snowflakes.length;i++){
-
-let f=snowflakes[i]
-
-ctx.moveTo(f.x,f.y)
-ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true)
-
-}
-
-ctx.fill()
-
-moveSnow()
-
-}
-
-function moveSnow(){
-
-for(let i=0;i<snowflakes.length;i++){
-
-let f=snowflakes[i]
-
-f.y+=Math.pow(f.d,2)+1
-
-if(f.y>canvas.height){
-
-snowflakes[i]={
-
-x:Math.random()*canvas.width,
-y:0,
-r:f.r,
-d:f.d
-
-}
-
-}
-
-}
-
-}
-
-setInterval(drawSnow,33)
