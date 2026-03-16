@@ -12,12 +12,6 @@ let bookingUnsubscribe = null;
 let slotsUnsubscribe = null;
 let allSlotsData = {};
 
-const buffLabels = {
-  monday: "Monday",
-  tuesday: "Tuesday",
-  thursday: "Thursday"
-};
-
 const medalMap = ["🥇", "🥈", "🥉"];
 
 function updateCountdown() {
@@ -154,9 +148,9 @@ function clearAll() {
     });
 }
 
-function getBuffTop3(data, buff) {
+function getCurrentBuffTop3(data) {
   return Object.entries(data)
-    .filter(([key, value]) => key.startsWith(`${buff}_`) && value)
+    .filter(([key, value]) => key.startsWith(`${currentBuff}_`) && value)
     .map(([, value]) => value)
     .filter((slot) => slot.daysSaved !== undefined && slot.daysSaved !== null && slot.daysSaved !== "")
     .sort((a, b) => Number(b.daysSaved) - Number(a.daysSaved))
@@ -181,36 +175,25 @@ function updateCounts(data) {
 
 function updateTopSpeedups(data) {
   const rankingBox = document.getElementById("rankingBox");
-  const buffs = ["monday", "tuesday", "thursday"];
+  const top3 = getCurrentBuffTop3(data);
 
   let html = '<div class="rankingTitle">Top Speed-ups</div>';
-  html += '<div class="rankingGrid">';
+  html += '<div class="rankingList">';
 
-  buffs.forEach((buff) => {
-    const top3 = getBuffTop3(data, buff);
+  if (top3.length === 0) {
+    html += '<div class="rankingItem empty">No data yet</div>';
+  } else {
+    top3.forEach((slot, idx) => {
+      html += `
+        <div class="rankingItem">
+          <span class="medal">${medalMap[idx]}</span>
+          <span class="rankingText">[${escapeHtml(slot.alliance || "-")}] ${escapeHtml(slot.player || "-")} (${Number(slot.daysSaved)})</span>
+        </div>
+      `;
+    });
+  }
 
-    html += `
-      <div class="rankingDayCard">
-        <div class="rankingDayTitle">${buffLabels[buff]}</div>
-    `;
-
-    if (top3.length === 0) {
-      html += `<div class="rankingItem empty">No data yet</div>`;
-    } else {
-      top3.forEach((slot, idx) => {
-        html += `
-          <div class="rankingItem">
-            <span class="medal">${medalMap[idx]}</span>
-            <span class="rankingText">[${escapeHtml(slot.alliance || "-")}] ${escapeHtml(slot.player || "-")} (${Number(slot.daysSaved)})</span>
-          </div>
-        `;
-      });
-    }
-
-    html += `</div>`;
-  });
-
-  html += `</div>`;
+  html += '</div>';
   rankingBox.innerHTML = html;
 }
 
@@ -267,7 +250,7 @@ function generateSlots(data) {
             <span class="statusAvailable">Available</span>
           </div>
           <div class="timeLocal">${localStart} - ${localEnd}</div>
-          <div class="bookingInfo">&nbsp;</div>
+          <div class="bookingInfo">Click to book this slot</div>
         `;
         div.onclick = () => {
           highlightSlot(div, true);
