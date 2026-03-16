@@ -2,12 +2,11 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>2737 SVS Booking</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <canvas id="snow"></canvas>
 
   <header>
@@ -16,7 +15,7 @@
     <div id="rankingBox"></div>
   </header>
 
-  <div class="tabsWrap">
+  <section class="tabsWrap">
     <div class="tabs">
       <button type="button" id="tab-monday" onclick="switchBuff('monday')">Monday (Construction)</button>
       <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">Tuesday (Research)</button>
@@ -24,13 +23,18 @@
     </div>
 
     <div class="slotStats">
-      <span class="availableDot"></span><span id="availableCount">Available 0</span>
-      <span class="reservedDot"></span><span id="reservedCount">Reserved 0</span>
+      <span class="availableDot"></span>
+      <span id="availableCount">Available 0</span>
+      <span class="reservedDot"></span>
+      <span id="reservedCount">Reserved 0</span>
     </div>
-  </div>
+  </section>
 
-  <div id="slots" class="grid"></div>
+  <main>
+    <div id="slots" class="grid"></div>
+  </main>
 
+  <!-- Reserve Modal -->
   <div id="modal" class="modal">
     <div class="modalBox">
       <h3>Reserve Slot</h3>
@@ -43,6 +47,7 @@
     </div>
   </div>
 
+  <!-- Cancel Modal -->
   <div id="cancelModal" class="modal">
     <div class="modalBox">
       <h3>Cancel Reservation</h3>
@@ -52,8 +57,10 @@
     </div>
   </div>
 
+  <!-- Admin Button -->
   <button type="button" class="adminFloating" onclick="openAdmin()">⚙ Admin</button>
 
+  <!-- Admin Popup -->
   <div id="adminPanel" class="adminOverlay">
     <div class="adminPanelBox">
       <h3>관리자 패널</h3>
@@ -77,6 +84,5 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
   <script src="firebase.js"></script>
   <script src="app.js"></script>
-
 </body>
 </html>
