@@ -616,11 +616,6 @@ h1 {
   }
 }
 
-.creatorImageWrap {
-  position: relative;
-  display: inline-block;
-}
-
 /* 눈송이 아이콘 */
 #snowSecret {
   cursor: pointer;
