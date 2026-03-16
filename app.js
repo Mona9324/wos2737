@@ -1,14 +1,11 @@
 let currentBuff = "monday";
 let selectedSlot = null;
-const ADMIN_PASSWORD = "2737admin";
-let adminAuthenticated = false;
 let bookingOpen = false;
 const svsDate = new Date("2026-03-23T00:00:00Z");
 
 const grid = document.getElementById("slots");
 const modal = document.getElementById("modal");
 const cancelModal = document.getElementById("cancelModal");
-const adminPanel = document.getElementById("adminPanel");
 const rankingBox = document.getElementById("rankingBox");
 
 const dbRef = window.db || firebase.firestore();
@@ -65,11 +62,22 @@ function clearSelection() {
 function highlightSlot(div, isAvailable) {
   clearSelection();
   div.classList.add("selected");
+
   if (isAvailable) {
     div.classList.add("highlightAvailable");
   } else {
     div.classList.add("highlightReserved");
   }
+}
+
+function getBuffBaseDate(buff) {
+  const base = new Date(Date.UTC(2026, 2, 23, 0, 0, 0)); // 2026-03-23 UTC (Monday)
+
+  if (buff === "monday") return new Date(base);
+  if (buff === "tuesday") return new Date(Date.UTC(2026, 2, 24, 0, 0, 0));
+  if (buff === "thursday") return new Date(Date.UTC(2026, 2, 26, 0, 0, 0));
+
+  return new Date(base);
 }
 
 /* ---------- tab change ---------- */
@@ -91,6 +99,7 @@ function closeModal() {
   document.getElementById("player").value = "";
   document.getElementById("daysSaved").value = "";
   document.getElementById("password").value = "";
+  selectedSlot = null;
   clearSelection();
 }
 
@@ -102,62 +111,8 @@ function openCancelModal(id) {
 function closeCancelModal() {
   cancelModal.classList.remove("show");
   document.getElementById("cancelPassword").value = "";
+  selectedSlot = null;
   clearSelection();
-}
-
-/* ---------- admin ---------- */
-function openAdmin() {
-  adminPanel.classList.add("show");
-}
-
-function closeAdmin() {
-  adminPanel.classList.remove("show");
-}
-
-function adminLogin() {
-  const pw = document.getElementById("adminPass").value;
-  if (pw === ADMIN_PASSWORD) {
-    adminAuthenticated = true;
-    document.getElementById("adminLogin").style.display = "none";
-    document.getElementById("adminControls").style.display = "flex";
-  } else {
-    alert("관리자 비밀번호가 틀렸습니다.");
-  }
-}
-
-function setBooking(isOpen) {
-  if (!adminAuthenticated) return;
-
-  dbRef.collection("settings").doc("booking").set(
-    { open: isOpen },
-    { merge: true }
-  )
-  .then(() => {
-    alert(isOpen ? "예약이 열렸습니다." : "예약이 잠겼습니다.");
-  })
-  .catch((error) => {
-    console.error(error);
-    alert("설정 변경 중 오류가 발생했습니다.");
-  });
-}
-
-function clearAll() {
-  if (!adminAuthenticated) return;
-  if (!confirm("전체 예약을 삭제할까요?")) return;
-
-  dbRef.collection("slots").get()
-    .then((snapshot) => {
-      const batch = dbRef.batch();
-      snapshot.forEach((doc) => batch.delete(doc.ref));
-      return batch.commit();
-    })
-    .then(() => {
-      alert("전체 예약이 삭제되었습니다.");
-    })
-    .catch((error) => {
-      console.error(error);
-      alert("전체 삭제 중 오류가 발생했습니다.");
-    });
 }
 
 /* ---------- counts / ranking ---------- */
@@ -181,10 +136,17 @@ function updateCounts(data) {
 }
 
 function updateTopSpeedups(data) {
-  const allSlots = Object.values(data)
-    .filter((slot) => {
-      return slot && slot.daysSaved !== undefined && slot.daysSaved !== null && slot.daysSaved !== "";
+  const allSlots = Object.entries(data)
+    .filter(([id, slot]) => {
+      return (
+        id.startsWith(currentBuff + "_") &&
+        slot &&
+        slot.daysSaved !== undefined &&
+        slot.daysSaved !== null &&
+        slot.daysSaved !== ""
+      );
     })
+    .map(([, slot]) => slot)
     .sort((a, b) => Number(b.daysSaved) - Number(a.daysSaved))
     .slice(0, 6);
 
@@ -205,15 +167,20 @@ function updateTopSpeedups(data) {
 function generateSlots(data) {
   grid.innerHTML = "";
 
+  const baseDate = getBuffBaseDate(currentBuff);
+
   for (let h = 0; h < 24; h++) {
     for (let m = 0; m < 60; m += 30) {
       const utcTime = padTime(h, m);
       const id = `${currentBuff}_${utcTime}`;
       const slot = data[id];
 
-      const localDate = new Date();
+      const localDate = new Date(baseDate);
       localDate.setUTCHours(h, m, 0, 0);
-      const localTime = localDate.toLocaleTimeString([], {
+
+      const localTime = localDate.toLocaleString([], {
+        month: "short",
+        day: "numeric",
         hour: "2-digit",
         minute: "2-digit"
       });
@@ -283,6 +250,7 @@ function attachRealtimeListeners() {
 
       if (slotsUnsubscribe) {
         slotsUnsubscribe();
+        slotsUnsubscribe = null;
       }
 
       slotsUnsubscribe = dbRef.collection("slots").onSnapshot(
@@ -317,26 +285,64 @@ function confirmBooking() {
 
   const alliance = document.getElementById("alliance").value.trim();
   const player = document.getElementById("player").value.trim();
-  const daysSaved = document.getElementById("daysSaved").value.trim();
+  const daysSavedRaw = document.getElementById("daysSaved").value.trim();
   const password = document.getElementById("password").value;
+  const daysSaved = Number(daysSavedRaw);
 
-  if (!alliance || !player || !daysSaved || !password) {
-    alert("모든 항목을 입력해주세요.");
+  if (!alliance || !player || !daysSavedRaw || !password) {
+    alert("Please fill in all fields.");
     return;
   }
 
-  dbRef.collection("slots").doc(selectedSlot).set({
-    alliance: alliance,
-    player: player,
-    daysSaved: Number(daysSaved),
-    password: password
+  if (!Number.isFinite(daysSaved) || daysSaved < 0) {
+    alert("Days Saved must be a number 0 or greater.");
+    return;
+  }
+
+  if (!bookingOpen) {
+    alert("Booking is currently closed.");
+    closeModal();
+    return;
+  }
+
+  const slotRef = dbRef.collection("slots").doc(selectedSlot);
+  const bookingRef = dbRef.collection("settings").doc("booking");
+
+  dbRef.runTransaction(async (transaction) => {
+    const bookingDoc = await transaction.get(bookingRef);
+    const slotDoc = await transaction.get(slotRef);
+
+    const isOpen = bookingDoc.exists ? Boolean(bookingDoc.data().open) : false;
+
+    if (!isOpen) {
+      throw new Error("BOOKING_CLOSED");
+    }
+
+    if (slotDoc.exists) {
+      throw new Error("ALREADY_RESERVED");
+    }
+
+    transaction.set(slotRef, {
+      alliance,
+      player,
+      daysSaved,
+      password,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
   })
   .then(() => {
     closeModal();
   })
   .catch((error) => {
     console.error(error);
-    alert("예약 중 오류가 발생했습니다.");
+
+    if (error.message === "BOOKING_CLOSED") {
+      alert("Booking is currently closed.");
+    } else if (error.message === "ALREADY_RESERVED") {
+      alert("This slot is already reserved. Please refresh and try another slot.");
+    } else {
+      alert("An error occurred while reserving.");
+    }
   });
 }
 
@@ -344,28 +350,40 @@ function confirmCancel() {
   if (!selectedSlot) return;
 
   const cancelPassword = document.getElementById("cancelPassword").value;
+  if (!cancelPassword) {
+    alert("Please enter the password.");
+    return;
+  }
 
-  dbRef.collection("slots").doc(selectedSlot).get()
-    .then((doc) => {
-      if (!doc.exists) {
-        alert("예약 정보를 찾을 수 없습니다.");
-        return;
-      }
+  const slotRef = dbRef.collection("slots").doc(selectedSlot);
 
-      if (doc.data().password !== cancelPassword) {
-        alert("Password incorrect");
-        return;
-      }
+  dbRef.runTransaction(async (transaction) => {
+    const doc = await transaction.get(slotRef);
 
-      return dbRef.collection("slots").doc(selectedSlot).delete()
-        .then(() => {
-          closeCancelModal();
-        });
-    })
-    .catch((error) => {
-      console.error(error);
-      alert("취소 중 오류가 발생했습니다.");
-    });
+    if (!doc.exists) {
+      throw new Error("NOT_FOUND");
+    }
+
+    if (doc.data().password !== cancelPassword) {
+      throw new Error("WRONG_PASSWORD");
+    }
+
+    transaction.delete(slotRef);
+  })
+  .then(() => {
+    closeCancelModal();
+  })
+  .catch((error) => {
+    console.error(error);
+
+    if (error.message === "NOT_FOUND") {
+      alert("Reservation not found.");
+    } else if (error.message === "WRONG_PASSWORD") {
+      alert("Password incorrect.");
+    } else {
+      alert("An error occurred while canceling.");
+    }
+  });
 }
 
 /* ---------- blue snow ---------- */
