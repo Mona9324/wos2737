@@ -48,9 +48,7 @@ function showToast(message, type) {
   setTimeout(function () {
     toast.classList.add("hide");
     setTimeout(function () {
-      if (toast.parentNode) {
-        toast.parentNode.removeChild(toast);
-      }
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
     }, 250);
   }, 2200);
 }
@@ -196,7 +194,9 @@ function closeAdmin() {
 }
 
 function adminLogin() {
-  var pw = document.getElementById("adminPass").value;
+  var passEl = document.getElementById("adminPass");
+  var pw = passEl ? passEl.value : "";
+
   if (pw === ADMIN_PASSWORD) {
     adminAuthenticated = true;
     document.getElementById("adminLogin").style.display = "none";
@@ -278,7 +278,6 @@ function updateCounts() {
 
 function updateTopSpeedups() {
   var top3 = getCurrentBuffTop3();
-
   var html = '<div class="rankingTitle">Top Speed-ups</div>';
   html += '<div class="rankingList">';
 
@@ -563,8 +562,8 @@ function downloadCSV(filename, rows) {
   var link = document.createElement("a");
   var url = URL.createObjectURL(blob);
 
-  link.setAttribute("href", url);
-  link.setAttribute("download", filename);
+  link.href = url;
+  link.download = filename;
   link.style.display = "none";
   document.body.appendChild(link);
   link.click();
