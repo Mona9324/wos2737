@@ -184,8 +184,9 @@ function updateTopSpeedups(data) {
     html += '<div class="rankingItem empty">No data yet</div>';
   } else {
     top3.forEach((slot, idx) => {
+      const firstClass = idx === 0 ? " firstPlace" : "";
       html += `
-        <div class="rankingItem">
+        <div class="rankingItem${firstClass}">
           <span class="medal">${medalMap[idx]}</span>
           <span class="rankingText">[${escapeHtml(slot.alliance || "-")}] ${escapeHtml(slot.player || "-")} (${Number(slot.daysSaved)})</span>
         </div>
@@ -193,13 +194,12 @@ function updateTopSpeedups(data) {
     });
   }
 
-  html += '</div>';
+  html += "</div>";
   rankingBox.innerHTML = html;
 
-/* 랭킹 업데이트 강조 효과 */
-rankingBox.classList.remove("rankingUpdate");
-void rankingBox.offsetWidth;
-rankingBox.classList.add("rankingUpdate");
+  rankingBox.classList.remove("rankingUpdate");
+  void rankingBox.offsetWidth;
+  rankingBox.classList.add("rankingUpdate");
 }
 
 function escapeHtml(value) {
