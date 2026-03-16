@@ -1,84 +1,85 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2737 SVS Booking</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2737 SVS Booking</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <canvas id="snow"></canvas>
 
-<canvas id="snow"></canvas>
+  <header>
+    <h1>❄ 2737 SVS Booking</h1>
+    <div id="countdown"></div>
+    <div id="rankingBox"></div>
+  </header>
 
-<header>
-  <h1>❄ 2737 SVS Booking</h1>
-  <div id="countdown"></div>
-</header>
+  <div class="tabsWrap">
+    <div class="tabs">
+      <button id="tab-monday" class="active" type="button">Monday (Construction)</button>
+      <button id="tab-tuesday" type="button">Tuesday (Research)</button>
+      <button id="tab-thursday" type="button">Thursday (Troop Training)</button>
+    </div>
 
-<div class="tabs">
-  <button id="tab-monday">Monday (Construction)</button>
-  <button id="tab-tuesday">Tuesday (Research)</button>
-  <button id="tab-thursday">Thursday (Troop Training)</button>
-</div>
-
-<div class="slotStats">
-  <span class="availableDot"></span> <span id="availableCount">Available 0</span>
-  <span class="reservedDot"></span> <span id="reservedCount">Reserved 0</span>
-</div>
-
-<div id="slots" class="grid"></div>
-
-<!-- 예약 모달 -->
-<div id="modal" class="modal">
-  <div class="modalBox">
-    <h3>Reserve Slot</h3>
-    <input id="alliance" placeholder="Alliance">
-    <input id="player" placeholder="Player">
-    <input id="daysSaved" type="number" placeholder="Speed-up Days">
-    <input id="password" type="password" placeholder="Cancel Password">
-    <button id="reserveBtn">Reserve</button>
-    <button onclick="closeModal()">Cancel</button>
+    <div class="slotStats">
+      <span class="availableDot"></span><span id="availableCount">Available 0</span>
+      <span class="reservedDot"></span><span id="reservedCount">Reserved 0</span>
+    </div>
   </div>
-</div>
 
-<!-- 예약 취소 모달 -->
-<div id="cancelModal" class="modal">
-  <div class="modalBox">
-    <h3>Cancel Reservation</h3>
-    <input id="cancelPassword" type="password" placeholder="Password">
-    <button id="cancelBtn">Cancel Reservation</button>
-    <button onclick="closeCancelModal()">Close</button>
+  <div id="slots" class="grid"></div>
+
+  <!-- 예약 모달 -->
+  <div id="modal" class="modal">
+    <div class="modalBox">
+      <h3>Reserve Slot</h3>
+      <input id="alliance" type="text" placeholder="Alliance">
+      <input id="player" type="text" placeholder="Player">
+      <input id="daysSaved" type="number" placeholder="Speed-up Days">
+      <input id="password" type="password" placeholder="Cancel Password">
+      <div class="modalButtons">
+        <button id="reserveBtn" type="button">Reserve</button>
+        <button id="closeReserveBtn" type="button">Cancel</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Admin -->
-<button class="adminFloating" onclick="openAdmin()">⚙ Admin</button>
-<div id="adminPanel" class="adminPanel">
-  <h3>관리자 패널</h3>
-  <div id="adminLogin">
-    <input id="adminPass" type="password" placeholder="관리자 비밀번호">
-    <button onclick="adminLogin()">로그인</button>
+  <!-- 예약 취소 모달 -->
+  <div id="cancelModal" class="modal">
+    <div class="modalBox">
+      <h3>Cancel Reservation</h3>
+      <input id="cancelPassword" type="password" placeholder="Password">
+      <div class="modalButtons">
+        <button id="cancelBtn" type="button">Cancel Reservation</button>
+        <button id="closeCancelBtn" type="button">Close</button>
+      </div>
+    </div>
   </div>
-  <div id="adminControls">
-    <button onclick="setBooking(true)">예약 열기</button>
-    <button onclick="setBooking(false)">예약 잠금</button>
-    <button onclick="clearAll()">전체 예약 삭제</button>
+
+  <!-- Admin -->
+  <button id="adminOpenBtn" class="adminFloating" type="button">⚙ Admin</button>
+
+  <div id="adminPanel" class="adminPanel">
+    <h3>관리자 패널</h3>
+
+    <div id="adminLogin">
+      <input id="adminPass" type="password" placeholder="관리자 비밀번호">
+      <button id="adminLoginBtn" type="button">로그인</button>
+    </div>
+
+    <div id="adminControls">
+      <button id="openBookingBtn" type="button">예약 열기</button>
+      <button id="closeBookingBtn" type="button">예약 잠금</button>
+      <button id="clearAllBtn" type="button">전체 예약 삭제</button>
+    </div>
+
+    <button id="adminCloseBtn" type="button">닫기</button>
   </div>
-  <button onclick="closeAdmin()">닫기</button>
-</div>
 
-<div id="rankingBox"></div>
-
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-<script src="firebase.js"></script>
-<script src="app.js"></script>
-
-<script>
-document.getElementById("tab-monday").addEventListener("click", function(){ switchBuff("monday"); });
-document.getElementById("tab-tuesday").addEventListener("click", function(){ switchBuff("tuesday"); });
-document.getElementById("tab-thursday").addEventListener("click", function(){ switchBuff("thursday"); });
-</script>
-
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
