@@ -438,3 +438,37 @@ h1 {
     font-size: 0.95rem;
   }
 }
+
+/* ===== ranking animation ===== */
+
+.rankingItem {
+  animation: rankFade 0.45s ease;
+}
+
+@keyframes rankFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 랭킹 갱신 강조 */
+.rankingUpdate {
+  animation: rankingPulse 0.8s ease;
+}
+
+@keyframes rankingPulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
