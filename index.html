@@ -24,14 +24,13 @@
     </div>
 
     <div class="slotStats">
-      <span class="availableDot"></span> <span id="availableCount">Available 0</span>
-      <span class="reservedDot"></span> <span id="reservedCount">Reserved 0</span>
+      <span class="availableDot"></span><span id="availableCount">Available 0</span>
+      <span class="reservedDot"></span><span id="reservedCount">Reserved 0</span>
     </div>
   </div>
 
   <div id="slots" class="grid"></div>
 
-  <!-- 예약 모달 -->
   <div id="modal" class="modal">
     <div class="modalBox">
       <h3>Reserve Slot</h3>
@@ -44,7 +43,6 @@
     </div>
   </div>
 
-  <!-- 예약 취소 모달 -->
   <div id="cancelModal" class="modal">
     <div class="modalBox">
       <h3>Cancel Reservation</h3>
@@ -54,21 +52,23 @@
     </div>
   </div>
 
-  <!-- Admin -->
   <button type="button" class="adminFloating" onclick="openAdmin()">⚙ Admin</button>
 
   <div id="adminPanel" class="adminOverlay">
-    <div class="adminPanel">
+    <div class="adminPanelBox">
       <h3>관리자 패널</h3>
+
       <div id="adminLogin">
         <input id="adminPass" type="password" placeholder="관리자 비밀번호" autocomplete="current-password">
         <button type="button" onclick="adminLogin()">로그인</button>
       </div>
+
       <div id="adminControls" style="display:none;">
         <button type="button" onclick="setBooking(true)">예약 열기</button>
         <button type="button" onclick="setBooking(false)">예약 잠금</button>
         <button type="button" onclick="clearAll()">전체 예약 삭제</button>
       </div>
+
       <button type="button" onclick="closeAdmin()">닫기</button>
     </div>
   </div>
