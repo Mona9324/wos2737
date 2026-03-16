@@ -1,60 +1,131 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>2737 SVS Booking</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2737 SVS Booking</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 
-  <canvas id="snow"></canvas>
+<canvas id="snow"></canvas>
 
-  <header>
-    <h1>❄ 2737 SVS Booking</h1>
-    <div id="countdown"></div>
-    <div class="slotStats">
-      <span class="availableDot"></span> <span id="availableCount">Available 0</span>
-      <span class="reservedDot"></span> <span id="reservedCount">Reserved 0</span>
-    </div>
-    <div id="rankingBox"></div>
-  </header>
+<header>
 
-  <div class="tabs">
-    <button type="button" onclick="switchBuff('monday')">Monday (Construction)</button>
-    <button type="button" onclick="switchBuff('tuesday')">Tuesday (Research)</button>
-    <button type="button" onclick="switchBuff('thursday')">Thursday (Troop Training)</button>
-  </div>
+<h1>❄ 2737 SVS Booking</h1>
 
-  <div id="slots" class="grid"></div>
+<div id="countdown"></div>
 
-  <!-- Reserve Modal -->
-  <div id="modal" class="modal">
-    <div class="modalBox">
-      <h3>Reserve Slot</h3>
-      <input id="alliance" type="text" placeholder="Alliance" autocomplete="off">
-      <input id="player" type="text" placeholder="Player" autocomplete="off">
-      <input id="daysSaved" type="number" placeholder="Days Saved" min="0">
-      <input id="password" type="password" placeholder="Cancel Password" autocomplete="new-password">
-      <button type="button" onclick="confirmBooking()">Reserve</button>
-      <button type="button" onclick="closeModal()">Cancel</button>
-    </div>
-  </div>
+</header>
 
-  <!-- Cancel Modal -->
-  <div id="cancelModal" class="modal">
-    <div class="modalBox">
-      <h3>Cancel Reservation</h3>
-      <input id="cancelPassword" type="password" placeholder="Password" autocomplete="current-password">
-      <button type="button" onclick="confirmCancel()">Cancel Reservation</button>
-      <button type="button" onclick="closeCancelModal()">Close</button>
-    </div>
-  </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-  <script src="firebase.js"></script>
-  <script src="app.js"></script>
+<div class="tabs">
+
+<button onclick="switchBuff('monday')">Monday (Construction)</button>
+
+<button onclick="switchBuff('tuesday')">Tuesday (Research)</button>
+
+<button onclick="switchBuff('thursday')">Thursday (Troop Training)</button>
+
+</div>
+
+
+<div class="slotStats">
+
+<span class="availableDot"></span> <span id="availableCount">Available 0</span>
+
+<span class="reservedDot"></span> <span id="reservedCount">Reserved 0</span>
+
+</div>
+
+
+<div id="rankingBox"></div>
+
+
+<div id="slots" class="grid"></div>
+
+
+<!-- Reserve modal -->
+
+<div id="modal" class="modal">
+
+<div class="modalBox">
+
+<h3>Reserve Slot</h3>
+
+<input id="alliance" type="text" placeholder="Alliance">
+
+<input id="player" type="text" placeholder="Player">
+
+<input id="daysSaved" type="number" placeholder="Use Speed-up">
+
+<input id="password" type="password" placeholder="Cancel Password">
+
+<button onclick="confirmBooking()">Reserve</button>
+
+<button onclick="closeModal()">Cancel</button>
+
+</div>
+
+</div>
+
+
+<!-- Cancel modal -->
+
+<div id="cancelModal" class="modal">
+
+<div class="modalBox">
+
+<h3>Cancel Reservation</h3>
+
+<input id="cancelPassword" type="password" placeholder="Password">
+
+<button onclick="confirmCancel()">Cancel Reservation</button>
+
+<button onclick="closeCancelModal()">Close</button>
+
+</div>
+
+</div>
+
+
+<!-- Admin -->
+
+<button class="adminFloating" onclick="openAdmin()">⚙ Admin</button>
+
+
+<div id="adminPanel" class="adminPanel">
+
+<h3>Admin Panel</h3>
+
+<input id="adminPass" type="password" placeholder="Admin Password">
+
+<button onclick="adminLogin()">Login</button>
+
+<div id="adminControls">
+
+<button onclick="setBooking(true)">Open Booking</button>
+
+<button onclick="setBooking(false)">Close Booking</button>
+
+<button onclick="clearAll()">Clear All</button>
+
+</div>
+
+<button onclick="closeAdmin()">Close</button>
+
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+<script src="firebase.js"></script>
+
+<script src="app.js"></script>
 
 </body>
 </html>
