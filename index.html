@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,9 +16,9 @@
 </header>
 
 <div class="tabs">
-  <button onclick="switchBuff('monday')">Monday (Construction)</button>
-  <button onclick="switchBuff('tuesday')">Tuesday (Research)</button>
-  <button onclick="switchBuff('thursday')">Thursday (Troop Training)</button>
+  <button id="tab-monday">Monday (Construction)</button>
+  <button id="tab-tuesday">Tuesday (Research)</button>
+  <button id="tab-thursday">Thursday (Troop Training)</button>
 </div>
 
 <div class="slotStats">
@@ -36,7 +36,7 @@
     <input id="player" placeholder="Player">
     <input id="daysSaved" type="number" placeholder="Speed-up Days">
     <input id="password" type="password" placeholder="Cancel Password">
-    <button onclick="confirmBooking()">Reserve</button>
+    <button id="reserveBtn">Reserve</button>
     <button onclick="closeModal()">Cancel</button>
   </div>
 </div>
@@ -46,7 +46,7 @@
   <div class="modalBox">
     <h3>Cancel Reservation</h3>
     <input id="cancelPassword" type="password" placeholder="Password">
-    <button onclick="confirmCancel()">Cancel Reservation</button>
+    <button id="cancelBtn">Cancel Reservation</button>
     <button onclick="closeCancelModal()">Close</button>
   </div>
 </div>
@@ -73,6 +73,13 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 <script src="firebase.js"></script>
 <script src="app.js"></script>
+
+<script>
+// 탭 클릭 이벤트
+document.getElementById("tab-monday").addEventListener("click", () => switchBuff("monday"));
+document.getElementById("tab-tuesday").addEventListener("click", () => switchBuff("tuesday"));
+document.getElementById("tab-thursday").addEventListener("click", () => switchBuff("thursday"));
+</script>
 
 </body>
 </html>
