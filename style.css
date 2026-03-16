@@ -109,7 +109,7 @@ header{
 
 /* 클릭 강조 색상 연하게 */
 .slot.available.selected {background-color: #c8e6c9; border-color:#66cc66;}
-.slot.reserved.selected {background-color: #f8d7da; border-color:#e06666;}
+.slot.reserved.selected {background-color: #e8a0a0; border-color:#e06666;}
 
 .timeRow{
     display:flex;
