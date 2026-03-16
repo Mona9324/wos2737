@@ -563,3 +563,52 @@ h1 {
   color: #7a6a52;
   text-align: center;
 }
+
+/* ===== admin panel centered ===== */
+.adminPanel {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: calc(100% - 32px);
+  max-width: 340px;
+  padding: 22px;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.22);
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+}
+
+.adminPanel.show {
+  display: block;
+}
+
+/* ===== first place sparkle ===== */
+.rankingItem.firstPlace {
+  color: #b8860b;
+  font-weight: 700;
+  animation: firstPlaceGlow 1.8s ease-in-out infinite;
+}
+
+.rankingItem.firstPlace .medal {
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.55));
+}
+
+@keyframes firstPlaceGlow {
+  0% {
+    text-shadow: 0 0 0 rgba(255, 215, 0, 0);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow:
+      0 0 6px rgba(255, 215, 0, 0.45),
+      0 0 12px rgba(255, 215, 0, 0.22);
+    transform: scale(1.02);
+  }
+  100% {
+    text-shadow: 0 0 0 rgba(255, 215, 0, 0);
+    transform: scale(1);
+  }
+}
