@@ -195,6 +195,11 @@ function updateTopSpeedups(data) {
 
   html += '</div>';
   rankingBox.innerHTML = html;
+
+/* 랭킹 업데이트 강조 효과 */
+rankingBox.classList.remove("rankingUpdate");
+void rankingBox.offsetWidth;
+rankingBox.classList.add("rankingUpdate");
 }
 
 function escapeHtml(value) {
