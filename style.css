@@ -1,14 +1,26 @@
+*{
+box-sizing:border-box;
+}
+
 body{
 margin:0;
-font-family:Arial;
+font-family:Arial, Helvetica, sans-serif;
 background:#0a1324;
 color:white;
 }
+
+/* HEADER */
 
 header{
 text-align:center;
 padding:20px;
 }
+
+h1{
+margin-bottom:10px;
+}
+
+/* TABS */
 
 .tabs{
 text-align:center;
@@ -23,12 +35,20 @@ background:#1f3b73;
 color:white;
 cursor:pointer;
 border-radius:6px;
+font-size:14px;
 }
+
+.tabs button:hover{
+background:#315bb5;
+}
+
+/* STATS */
 
 .slotStats{
 text-align:center;
-margin-bottom:10px;
+margin-bottom:15px;
 font-weight:bold;
+font-size:15px;
 }
 
 .availableDot{
@@ -50,20 +70,29 @@ margin-left:15px;
 margin-right:4px;
 }
 
+/* GRID */
+
 .grid{
 max-width:1400px;
 margin:auto;
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
 gap:12px;
 padding:20px;
 }
+
+/* SLOT */
 
 .slot{
 background:#13213f;
 padding:15px;
 border-radius:10px;
 cursor:pointer;
+transition:0.2s;
+}
+
+.slot:hover{
+transform:scale(1.02);
 }
 
 .slot.available{
@@ -77,7 +106,10 @@ border:2px solid #ff5b5b;
 .slot.locked{
 opacity:0.5;
 cursor:not-allowed;
+border:2px solid #888;
 }
+
+/* SLOT TEXT */
 
 .timeRow{
 font-weight:bold;
@@ -93,6 +125,8 @@ opacity:0.7;
 margin-top:5px;
 font-size:14px;
 }
+
+/* MODAL */
 
 .modal{
 position:fixed;
@@ -118,7 +152,28 @@ border-radius:10px;
 display:flex;
 flex-direction:column;
 gap:10px;
+min-width:250px;
 }
+
+.modalBox input{
+padding:8px;
+font-size:14px;
+}
+
+.modalBox button{
+padding:10px;
+border:none;
+background:#1f3b73;
+color:white;
+cursor:pointer;
+border-radius:6px;
+}
+
+.modalBox button:hover{
+background:#315bb5;
+}
+
+/* ADMIN BUTTON */
 
 .adminFloating{
 position:fixed;
@@ -130,7 +185,10 @@ border:none;
 padding:12px 16px;
 border-radius:8px;
 cursor:pointer;
+font-size:14px;
 }
+
+/* ADMIN PANEL */
 
 .adminPanel{
 position:fixed;
@@ -144,8 +202,22 @@ border-radius:10px;
 display:none;
 flex-direction:column;
 gap:10px;
+z-index:10;
+min-width:250px;
 }
 
 .adminPanel.show{
 display:flex;
+}
+
+/* RANKING */
+
+#rankingBox{
+text-align:center;
+margin-bottom:10px;
+}
+
+.rankingItem{
+font-size:14px;
+margin:3px;
 }
