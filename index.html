@@ -13,17 +13,20 @@
   <header>
     <h1>❄ 2737 SVS Booking</h1>
     <div id="countdown"></div>
+    <div id="rankingBox"></div>
+  </header>
+
+  <div class="tabsWrap">
+    <div class="tabs">
+      <button type="button" id="tab-monday" onclick="switchBuff('monday')">Monday (Construction)</button>
+      <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">Tuesday (Research)</button>
+      <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">Thursday (Troop Training)</button>
+    </div>
+
     <div class="slotStats">
       <span class="availableDot"></span> <span id="availableCount">Available 0</span>
       <span class="reservedDot"></span> <span id="reservedCount">Reserved 0</span>
     </div>
-    <div id="rankingBox"></div>
-  </header>
-
-  <div class="tabs">
-    <button type="button" id="tab-monday" onclick="switchBuff('monday')">Monday (Construction)</button>
-    <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">Tuesday (Research)</button>
-    <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">Thursday (Troop Training)</button>
   </div>
 
   <div id="slots" class="grid"></div>
@@ -34,7 +37,7 @@
       <h3>Reserve Slot</h3>
       <input id="alliance" type="text" placeholder="Alliance" autocomplete="off">
       <input id="player" type="text" placeholder="Player" autocomplete="off">
-      <input id="daysSaved" type="number" placeholder="Days Saved" min="0">
+      <input id="daysSaved" type="number" placeholder="Use Speed-up" min="0">
       <input id="password" type="password" placeholder="Cancel Password" autocomplete="new-password">
       <button type="button" onclick="confirmBooking()">Reserve</button>
       <button type="button" onclick="closeModal()">Cancel</button>
@@ -54,18 +57,20 @@
   <!-- Admin -->
   <button type="button" class="adminFloating" onclick="openAdmin()">⚙ Admin</button>
 
-  <div id="adminPanel" class="adminPanel">
-    <h3>관리자 패널</h3>
-    <div id="adminLogin">
-      <input id="adminPass" type="password" placeholder="관리자 비밀번호" autocomplete="current-password">
-      <button type="button" onclick="adminLogin()">로그인</button>
+  <div id="adminPanel" class="adminOverlay">
+    <div class="adminPanel">
+      <h3>관리자 패널</h3>
+      <div id="adminLogin">
+        <input id="adminPass" type="password" placeholder="관리자 비밀번호" autocomplete="current-password">
+        <button type="button" onclick="adminLogin()">로그인</button>
+      </div>
+      <div id="adminControls" style="display:none;">
+        <button type="button" onclick="setBooking(true)">예약 열기</button>
+        <button type="button" onclick="setBooking(false)">예약 잠금</button>
+        <button type="button" onclick="clearAll()">전체 예약 삭제</button>
+      </div>
+      <button type="button" onclick="closeAdmin()">닫기</button>
     </div>
-    <div id="adminControls" style="display:none;">
-      <button type="button" onclick="setBooking(true)">예약 열기</button>
-      <button type="button" onclick="setBooking(false)">예약 잠금</button>
-      <button type="button" onclick="clearAll()">전체 예약 삭제</button>
-    </div>
-    <button type="button" onclick="closeAdmin()">닫기</button>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
