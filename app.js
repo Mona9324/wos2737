@@ -920,24 +920,24 @@ function loadSlots() {
 ========================= */
 function validateBookingInput(alliance, player, daysSavedRaw, password) {
   if (!alliance || !player || daysSavedRaw === "" || !password) {
-    return "Please fill in all fields.";
+    return "Please fill in all fields (모든 칸을 입력해주세요)";
   }
 
   if (alliance.length < 2 || alliance.length > 20) {
-    return "Alliance must be 2-20 characters.";
+    return "Alliance must be 2-20 characters (연맹명 2글자 이상)";
   }
 
   if (player.length < 2 || player.length > 20) {
-    return "Player must be 2-20 characters.";
+    return "Player must be 2-20 characters (닉네임 2글자 이상)";
   }
 
   if (password.length < 4 || password.length > 30) {
-    return "Password must be 4-30 characters.";
+    return "Password must be 4-30 characters (비밀번호 4자리 이상)";
   }
 
   var daysSaved = Number(daysSavedRaw);
   if (isNaN(daysSaved) || daysSaved < 0 || daysSaved > 9999) {
-    return "Enter a valid speed-up value.";
+    return "Enter a valid speed-up value (사용할 가속을 올바르게 입력해주세요)";
   }
 
   return "";
