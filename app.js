@@ -215,21 +215,7 @@ function updateCountdown() {
 
   var countdown = document.getElementById("countdown");
   if (countdown) {
-    countdown.innerText =
-      "Next SVS begins in " + d + "d " + h + "h " + m + "m";
-  }
-}
-
-  var cycleInfo = document.getElementById("svsCycleInfo");
-  if (cycleInfo) {
-    var utcText =
-      svsDate.getUTCFullYear() + "." +
-      String(svsDate.getUTCMonth() + 1).padStart(2, "0") + "." +
-      String(svsDate.getUTCDate()).padStart(2, "0") + " " +
-      String(svsDate.getUTCHours()).padStart(2, "0") + ":" +
-      String(svsDate.getUTCMinutes()).padStart(2, "0") + " UTC";
-
-    cycleInfo.textContent = "Next SVS: " + utcText;
+    countdown.innerText = "Next SVS begins in " + d + "d " + h + "h " + m + "m";
   }
 }
 
@@ -562,7 +548,6 @@ function setManualBooking(buff, isOpen) {
 
       tabs[buff].manualOpen = isOpen;
 
-      // 🔥 핵심: 수동 오픈 시 openAt 초기화
       if (isOpen) {
         tabs[buff].openAt = "";
       }
@@ -573,6 +558,10 @@ function setManualBooking(buff, isOpen) {
       });
     })
     .then(function () {
+      if (!bookingSettings.tabs[buff]) {
+        bookingSettings.tabs[buff] = { manualOpen: true, openAt: "", closeAt: "" };
+      }
+
       bookingSettings.tabs[buff].manualOpen = isOpen;
 
       if (isOpen) {
@@ -594,10 +583,11 @@ function setManualBooking(buff, isOpen) {
       );
     })
     .catch(function (error) {
-      console.error(error);
+      console.error("setManualBooking error:", error);
       showToast("예약 설정 변경 중 오류가 발생했습니다.", "error");
     });
 }
+
 function populateScheduleInputs() {
   var setting = getTabSetting(currentBuff);
   var openEl = document.getElementById("scheduleOpenAt");
@@ -633,7 +623,6 @@ function saveTabSchedule() {
       }, { merge: true });
     })
     .then(function () {
-      if (!bookingSettings.tabs) bookingSettings.tabs = {};
       if (!bookingSettings.tabs[currentBuff]) {
         bookingSettings.tabs[currentBuff] = { manualOpen: true, openAt: "", closeAt: "" };
       }
@@ -642,6 +631,7 @@ function saveTabSchedule() {
       bookingSettings.tabs[currentBuff].closeAt = closeAt;
 
       renderAll();
+      refreshTimeTexts();
 
       return logAction("save_schedule", {
         buff: currentBuff,
