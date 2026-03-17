@@ -1,10 +1,10 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyA90OVkTb5svXjHrF37wI_0dUWv-4Pr7Xc",
-  authDomain: "svs-booking-4a785.firebaseapp.com",
-  projectId: "svs-booking-4a785",
-  storageBucket: "svs-booking-4a785.firebasestorage.app",
-  messagingSenderId: "815196694859",
-  appId: "1:815196694859:web:eb39b55526841c248860ce"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 try {
@@ -13,6 +13,9 @@ try {
   }
 
   window.db = firebase.firestore();
+  window.auth = firebase.auth();
+  window.googleProvider = new firebase.auth.GoogleAuthProvider();
+
   console.log("Firebase initialized");
 } catch (error) {
   console.error("Firebase initialization failed:", error);
