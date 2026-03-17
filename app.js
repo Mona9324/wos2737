@@ -86,6 +86,10 @@ function showToast(message, type) {
   }, 2200);
 }
 
+function biToast(en, ko, type) {
+  showToast(en + "\n" + ko, type);
+}
+
 /* =========================
    local storage helpers
 ========================= */
@@ -344,7 +348,7 @@ function formatSlotInfo(slotId) {
 
 function openReserveModal(id) {
   if (!isBuffBookingOpen(currentBuff)) {
-    showToast("Booking is closed for this tab.", "error");
+    biToast("Booking is closed for this tab.", "현재 탭 예약이 닫혀 있습니다.", "error");
     return;
   }
 
@@ -920,28 +924,29 @@ function loadSlots() {
 ========================= */
 function validateBookingInput(alliance, player, daysSavedRaw, password) {
   if (!alliance || !player || daysSavedRaw === "" || !password) {
-    return "Please fill in all fields (모든 칸을 입력해주세요)";
+    return "Please fill in all fields.\n모든 칸을 입력해주세요.";
   }
 
   if (alliance.length < 2 || alliance.length > 20) {
-    return "Alliance must be 2-20 characters (연맹명 2글자 이상)";
+    return "Alliance must be 2-20 characters.\n연맹명은 2~20자로 입력해주세요.";
   }
 
   if (player.length < 2 || player.length > 20) {
-    return "Player must be 2-20 characters (닉네임 2글자 이상)";
+    return "Player must be 2-20 characters.\n닉네임은 2~20자로 입력해주세요.";
   }
 
   if (password.length < 4 || password.length > 30) {
-    return "Password must be 4-30 characters (비밀번호 4자리 이상)";
+    return "Password must be 4-30 characters.\n비밀번호는 4~30자로 입력해주세요.";
   }
 
   var daysSaved = Number(daysSavedRaw);
   if (isNaN(daysSaved) || daysSaved < 0 || daysSaved > 9999) {
-    return "Enter a valid speed-up value (사용할 가속을 올바르게 입력해주세요)";
+    return "Enter a valid speed-up value.\n사용할 가속 값을 올바르게 입력해주세요.";
   }
 
   return "";
 }
+
 function confirmBooking() {
   var allianceEl = document.getElementById("alliance");
   var playerEl = document.getElementById("player");
@@ -949,17 +954,17 @@ function confirmBooking() {
   var passwordEl = document.getElementById("password");
 
   if (!allianceEl || !playerEl || !daysSavedEl || !passwordEl) {
-    showToast("Booking form not found (예약 입력창을 찾을 수 없습니다)", "error");
+    biToast("Booking form not found.", "예약 입력창을 찾을 수 없습니다.", "error");
     return;
   }
 
   if (!selectedSlot) {
-    showToast("Please select a slot first (예약 슬롯을 먼저 선택해주세요)", "error");
+    biToast("Please select a slot first.", "예약 슬롯을 먼저 선택해주세요.", "error");
     return;
   }
 
   if (!isBuffBookingOpen(currentBuff)) {
-    showToast("Booking is closed for this tab (현재 탭 예약이 닫혀 있습니다)", "error");
+    biToast("Booking is closed for this tab.", "현재 탭 예약이 닫혀 있습니다.", "error");
     return;
   }
 
@@ -1034,24 +1039,24 @@ function confirmBooking() {
       }, 1800);
 
       closeModal();
-      showToast("Booked successfully (예약이 완료되었습니다)", "success");
+      biToast("Booked successfully.", "예약이 완료되었습니다.", "success");
     })
     .catch(function (error) {
       console.error("confirmBooking error:", error);
 
       if (error.message === "ALREADY_RESERVED") {
-        showToast("This slot is already reserved (이미 예약된 슬롯입니다)", "error");
+        biToast("This slot is already reserved.", "이미 예약된 슬롯입니다.", "error");
       } else if (error.message === "PLAYER_ALREADY_BOOKED") {
-        showToast("This player already has a booking in this buff (같은 장관은 1개만 예약 가능합니다)", "error");
+        biToast("This player already has a booking in this buff.", "같은 장수는 같은 buff에 1개만 예약 가능합니다.", "error");
       } else {
-        showToast("Something went wrong while booking (예약 중 오류가 발생했습니다)", "error");
+        biToast("Something went wrong while booking.", "예약 중 오류가 발생했습니다.", "error");
       }
     });
 }
 
 function confirmUpdateBooking() {
   if (!selectedSlot) {
-    showToast("Please select a slot first (수정할 슬롯을 먼저 선택해주세요)", "error");
+    biToast("Please select a slot first.", "수정할 슬롯을 먼저 선택해주세요.", "error");
     return;
   }
 
@@ -1060,13 +1065,13 @@ function confirmUpdateBooking() {
   var password = ((document.getElementById("editPassword") || {}).value || "");
 
   if (!alliance || !daysSavedRaw || !password) {
-    showToast("Enter alliance, speed-up, and password.(Alliance, Use Speed-up, Password를 입력해주세요.)", "error");
+    biToast("Enter alliance, speed-up, and password.", "Alliance, Use Speed-up, Password를 입력해주세요.", "error");
     return;
   }
 
   var daysSaved = Number(daysSavedRaw);
   if (isNaN(daysSaved) || daysSaved < 0 || daysSaved > 9999) {
-    showToast("Enter a valid speed-up value (사용할 가속을 올바르게 입력해주세요)", "error");
+    biToast("Enter a valid speed-up value.", "사용할 가속 값을 올바르게 입력해주세요.", "error");
     return;
   }
 
@@ -1111,23 +1116,23 @@ function confirmUpdateBooking() {
     })
     .then(function () {
       closeReservedModal();
-      showToast("Booking canceled (예약이 취소되었습니다)", "success");
+      biToast("Booking updated.", "예약이 수정되었습니다.", "success");
     })
     .catch(function (error) {
       console.error("confirmUpdateBooking error:", error);
       if (error.message === "NOT_FOUND") {
-        showToast("Booking not found (예약 정보를 찾을 수 없습니다)", "error");
+        biToast("Booking not found.", "예약 정보를 찾을 수 없습니다.", "error");
       } else if (error.message === "WRONG_PASSWORD") {
-        showToast("Wrong password (비밀번호가 올바르지 않습니다)", "error");
+        biToast("Wrong password.", "비밀번호가 올바르지 않습니다.", "error");
       } else {
-        showToast("Something went wrong while canceling (수정 중 오류가 발생했습니다)", "error");
+        biToast("Something went wrong while updating.", "수정 중 오류가 발생했습니다.", "error");
       }
     });
 }
 
 function confirmCancel() {
   if (!selectedSlot) {
-    showToast("Please select a slot first (취소할 슬롯을 먼저 선택해주세요)", "error");
+    biToast("Please select a slot first.", "취소할 슬롯을 먼저 선택해주세요.", "error");
     return;
   }
 
@@ -1165,16 +1170,16 @@ function confirmCancel() {
     })
     .then(function () {
       closeReservedModal();
-      showToast("Booking canceled (예약이 취소되었습니다)", "success");
+      biToast("Booking canceled.", "예약이 취소되었습니다.", "success");
     })
     .catch(function (error) {
       console.error("confirmCancel error:", error);
       if (error.message === "NOT_FOUND") {
-        showToast("Booking not found (예약 정보를 찾을 수 없습니다)", "error");
+        biToast("Booking not found.", "예약 정보를 찾을 수 없습니다.", "error");
       } else if (error.message === "WRONG_PASSWORD") {
-        showToast("Wrong password (비밀번호가 올바르지 않습니다)", "error");
+        biToast("Wrong password.", "비밀번호가 올바르지 않습니다.", "error");
       } else {
-        showToast("omething went wrong while updating (취소 중 오류가 발생했습니다)", "error");
+        biToast("Something went wrong while canceling.", "취소 중 오류가 발생했습니다.", "error");
       }
     });
 }
