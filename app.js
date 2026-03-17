@@ -217,6 +217,7 @@ function updateCountdown() {
   if (countdown) {
     countdown.innerText = "Next SVS begins in " + d + "d " + h + "h " + m + "m";
   }
+}
 
   var cycleInfo = document.getElementById("svsCycleInfo");
   if (cycleInfo) {
@@ -277,9 +278,9 @@ function updateBookingGuide() {
   var guide = document.getElementById("bookingGuide");
   if (!guide) return;
 
-  guide.textContent =
-    "Day 1 (Thu): 30d+ speed-up / Day 2 (Fri): 15d+ speed-up / Day 3+: Free booking"
-    guide.textContent =
+  guide.innerHTML =
+    "Day 1 (Thu): 30d+ speed-up / Day 2 (Fri): 15d+ speed-up / Day 3+: Free booking" +
+    "<br>" +
     "1일차: 가속 30일 이상 / 2일차: 가속 15일 이상 / 3일차부터 자유 예약";
 }
 
