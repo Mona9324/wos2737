@@ -811,25 +811,25 @@ function confirmBooking() {
 
   var daysSaved = Number(daysSavedRaw);
   var playerNorm = normalizeText(player);
-  var docRef = db.collection("slots").doc(selectedSlot);
 
-  var duplicateQuery = db.collection("slots")
-    .where("buff", "==", currentBuff)
-    .where("playerNormalized", "==", playerNorm)
-    .limit(1);
+  var slotRef = db.collection("slots").doc(selectedSlot);
+
+  // 같은 buff + 같은 player 1개 제한용 잠금 문서
+  var playerLockId = currentBuff + "__" + playerNorm;
+  var playerLockRef = db.collection("playerBookings").doc(playerLockId);
 
   db.runTransaction(function (transaction) {
-    return transaction.get(docRef).then(function (slotDoc) {
+    return transaction.get(slotRef).then(function (slotDoc) {
       if (slotDoc.exists) {
         throw new Error("ALREADY_RESERVED");
       }
 
-      return transaction.get(duplicateQuery).then(function (dupSnapshot) {
-        if (!dupSnapshot.empty) {
+      return transaction.get(playerLockRef).then(function (lockDoc) {
+        if (lockDoc.exists) {
           throw new Error("PLAYER_ALREADY_BOOKED");
         }
 
-        transaction.set(docRef, {
+        transaction.set(slotRef, {
           alliance: alliance,
           player: player,
           playerNormalized: playerNorm,
@@ -841,6 +841,14 @@ function confirmBooking() {
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           adminNote: "",
           status: "reserved"
+        });
+
+        transaction.set(playerLockRef, {
+          slotId: selectedSlot,
+          buff: currentBuff,
+          player: player,
+          playerNormalized: playerNorm,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       });
     });
@@ -962,11 +970,11 @@ function confirmCancel() {
   }
 
   var password = ((document.getElementById("editPassword") || {}).value || "");
-  var docRef = db.collection("slots").doc(selectedSlot);
+  var slotRef = db.collection("slots").doc(selectedSlot);
   var deletedData = null;
 
   db.runTransaction(function (transaction) {
-    return transaction.get(docRef).then(function (doc) {
+    return transaction.get(slotRef).then(function (doc) {
       if (!doc.exists) {
         throw new Error("NOT_FOUND");
       }
@@ -978,7 +986,11 @@ function confirmCancel() {
         throw new Error("WRONG_PASSWORD");
       }
 
-      transaction.delete(docRef);
+      var playerLockId = data.buff + "__" + normalizeText(data.player);
+      var playerLockRef = db.collection("playerBookings").doc(playerLockId);
+
+      transaction.delete(slotRef);
+      transaction.delete(playerLockRef);
     });
   })
     .then(function () {
@@ -1116,11 +1128,20 @@ function backupAndClearCurrentBuff() {
   db.collection("slots").get()
     .then(function (snapshot) {
       var batch = db.batch();
+
       snapshot.forEach(function (doc) {
+        var data = doc.data();
         if (doc.id.indexOf(currentBuff + "_") === 0) {
           batch.delete(doc.ref);
+
+          if (data && data.player) {
+            var playerLockId = data.buff + "__" + normalizeText(data.player);
+            var playerLockRef = db.collection("playerBookings").doc(playerLockId);
+            batch.delete(playerLockRef);
+          }
         }
       });
+
       return batch.commit();
     })
     .then(function () {
@@ -1147,9 +1168,18 @@ function backupAndClearAll() {
   db.collection("slots").get()
     .then(function (snapshot) {
       var batch = db.batch();
+
       snapshot.forEach(function (doc) {
+        var data = doc.data();
         batch.delete(doc.ref);
+
+        if (data && data.player) {
+          var playerLockId = data.buff + "__" + normalizeText(data.player);
+          var playerLockRef = db.collection("playerBookings").doc(playerLockId);
+          batch.delete(playerLockRef);
+        }
       });
+
       return batch.commit();
     })
     .then(function () {
@@ -1163,7 +1193,6 @@ function backupAndClearAll() {
       showToast("전체 삭제 중 오류가 발생했습니다.", "error");
     });
 }
-
 function renderLogs(snapshot) {
   var box = document.getElementById("logsBox");
   if (!box) return;
