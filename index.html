@@ -92,8 +92,9 @@
     </div>
   </div>
 
-  <div id="adminPanel" class="adminPanel">
-    <h3>관리자 패널</h3>
+<div id="adminPanel" class="adminPanel">
+  <button type="button" class="adminCloseBtn" onclick="closeAdmin()" aria-label="관리자 패널 닫기">×</button>
+  <h3>관리자 패널</h3>
 
     <div id="adminLogin">
       <div id="adminUserInfo" class="adminUserInfo">관리자 로그인이 필요합니다.</div>
@@ -150,12 +151,14 @@
         <button type="button" onclick="saveAdminNote()">선택 슬롯 메모 저장</button>
       </div>
 
-      <div class="adminSection">
-        <h4>관리자 로그</h4>
-        <button type="button" onclick="loadLogs()">로그 새로고침</button>
-        <div id="logsBox" class="logsBox"></div>
-      </div>
-    </div>
+<div class="adminSection">
+  <h4>관리자 로그</h4>
+  <div class="buttonRow">
+    <button type="button" onclick="loadLogs()">로그 새로고침</button>
+    <button type="button" onclick="downloadLogsCSV()">로그 다운로드</button>
+  </div>
+  <div id="logsBox" class="logsBox"></div>
+</div>
 
     <button type="button" onclick="closeAdmin()">닫기</button>
   </div>
