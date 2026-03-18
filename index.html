@@ -9,33 +9,31 @@
 <body>
   <canvas id="snow"></canvas>
 
-<header>
-  <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
+  <header>
+    <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
 
-  <!-- Next SVS 카운트 -->
-  <div id="countdown"></div>
+    <div id="countdown"></div>
 
-  <div class="creatorBadge">
-    <img src="creator-dino.png" alt="Creator artwork" class="creatorAvatar">
-    <div class="creatorCredit">Mona</div>
-  </div>
-  
-  <!-- 작은 설명줄 -->
-<div id="bookingGuide" class="bookingGuideGrid">
-  <div id="bookingCloseText" class="bookingCloseText"></div>
-</div>
+    <div class="creatorBadge">
+      <img src="creator-dino.png" alt="Creator artwork" class="creatorAvatar">
+      <div class="creatorCredit">Mona</div>
+    </div>
 
-  <div class="headerToolbar">
-    <input id="searchInput" type="text" placeholder="Search alliance / player">
-    <select id="filterStatus" onchange="renderAll()">
-      <option value="all">All</option>
-      <option value="available">Available only</option>
-      <option value="reserved">Reserved only</option>
-      <option value="mine">My reservation only</option>
-    </select>
-    <button type="button" onclick="clearSearch()">Clear</button>
-  </div>
-</header>
+    <div class="headerToolbar">
+      <input id="searchInput" type="text" placeholder="Search alliance / player">
+      <select id="filterStatus" onchange="renderAll()">
+        <option value="all">All</option>
+        <option value="available">Available only</option>
+        <option value="reserved">Reserved only</option>
+        <option value="mine">My reservation only</option>
+      </select>
+      <button type="button" onclick="clearSearch()">Clear</button>
+    </div>
+
+    <div id="bookingGuide" class="bookingGuideGrid">
+      <div id="bookingCloseText" class="bookingCloseText"></div>
+    </div>
+  </header>
 
   <section class="tabsWrap">
     <div class="tabs">
@@ -91,9 +89,9 @@
     </div>
   </div>
 
-<div id="adminPanel" class="adminPanel">
-  <button type="button" class="adminCloseBtn" onclick="closeAdmin()" aria-label="관리자 패널 닫기">×</button>
-  <h3>관리자 패널</h3>
+  <div id="adminPanel" class="adminPanel">
+    <button type="button" class="adminCloseBtn" onclick="closeAdmin()" aria-label="관리자 패널 닫기">×</button>
+    <h3>관리자 패널</h3>
 
     <div id="adminLogin">
       <div id="adminUserInfo" class="adminUserInfo">관리자 로그인이 필요합니다.</div>
@@ -150,16 +148,15 @@
         <button type="button" onclick="saveAdminNote()">선택 슬롯 메모 저장</button>
       </div>
 
-<div class="adminSection">
-  <h4>관리자 로그</h4>
-  <div class="buttonRow">
-    <button type="button" onclick="loadLogs()">로그 새로고침</button>
-    <button type="button" onclick="downloadLogsCSV()">로그 다운로드</button>
-  </div>
-  <div id="logsBox" class="logsBox"></div>
-</div>
-
-    <button type="button" onclick="closeAdmin()">닫기</button>
+      <div class="adminSection">
+        <h4>관리자 로그</h4>
+        <div class="buttonRow">
+          <button type="button" onclick="loadLogs()">로그 새로고침</button>
+          <button type="button" onclick="downloadLogsCSV()">로그 다운로드</button>
+        </div>
+        <div id="logsBox" class="logsBox"></div>
+      </div>
+    </div>
   </div>
 
   <div id="toastContainer" class="toastContainer"></div>
