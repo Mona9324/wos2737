@@ -50,7 +50,7 @@
                 <input id="alliance" type="text" placeholder="연맹명 / Alliance (e.g. ZTP)" list="allianceSuggestions">
                 <datalist id="allianceSuggestions"></datalist>
                 <input id="player" type="text" placeholder="닉네임 / Nickname">
-                <input id="playerId" type="text" placeholder="ID (숫자 9개) / Player ID (9 Number)" maxlength="9">
+                <input id="playerId" type="text" placeholder="ID (숫자 9개) / Player ID (9 digits)" maxlength="9">
                 <input id="daysSaved" type="number" placeholder="사용 가속(일) / Speed-up Days">
                 <input id="password" type="password" placeholder="비밀번호(취소용) / Password">
             </div>
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <!-- 현황 모달 -->
+    <!-- 상세 현황 모달 -->
     <div id="reservedModal" class="modal">
         <div class="modalBox">
             <h3>예약 현황 / Booking Status</h3>
@@ -87,14 +87,14 @@
         <div class="adminBody">
             <div class="adminSection">
                 <h4>개별 예약 관리 / Select Slot to Manage</h4>
-                <div id="adminSelectedSlotLabel" class="selectedSlotInfo" style="margin-bottom:10px;">슬롯을 선택하세요 / Select a slot</div>
+                <div id="adminSelectedSlotLabel" class="selectedSlotInfo" style="margin-bottom:10px;">슬롯을 먼저 선택하세요</div>
                 <div id="adminAttendeeList" class="attendeeListDetail"></div>
             </div>
             <div class="adminSection">
                 <h4>데이터 관리 / Data Management</h4>
                 <div class="adminButtonGroup">
                     <button onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출 (Excel)</button>
-                    <button onclick="backupAndClearAll()" class="adminBtn clear">전체 데이터 초기화 (Reset All)</button>
+                    <button onclick="backupAndClearAll()" class="adminBtn clear">데이터 전체 초기화 (Reset)</button>
                 </div>
             </div>
             <div class="adminSection">
