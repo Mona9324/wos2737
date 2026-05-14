@@ -19,7 +19,7 @@ function simpleHash(v) {
 function formatLocalTime(date) { return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
 
 // Identity
-function saveMyBookingInfo(a, p) { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p })); }
+function saveMyBookingInfo(a, p, id) { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p, playerId: id })); }
 function getMyBookingInfo() { try { return JSON.parse(localStorage.getItem(MY_BOOKING_KEY)); } catch(e) { return null; } }
 function isMyReservation(person) {
     var mine = getMyBookingInfo();
@@ -88,14 +88,19 @@ function renderAll() {
 function updateTabs() { document.querySelectorAll(".tabs button").forEach(btn => btn.classList.toggle("active", btn.id === "tab-" + currentBuff)); }
 function switchBuff(b) { currentBuff = b; renderAll(); }
 
-// Modals
+// 모달 전환 로직 수정 (현황 창 닫고 바로 예약 창 열기)
 function openReserveModal(id) {
+    closeReservedModal(); // 현황 창 닫기
     selectedSlot = id;
     var info = id.split("_");
     document.getElementById("selectedSlotInfo").innerHTML = `<b>${info[0].toUpperCase()} / ${info[1]} UTC</b><br>예약 신청 / New Booking`;
     document.getElementById("modal").classList.add("show");
     var mine = getMyBookingInfo();
-    if(mine) { document.getElementById("alliance").value = mine.alliance; document.getElementById("player").value = mine.player; }
+    if(mine) { 
+        document.getElementById("alliance").value = mine.alliance || ""; 
+        document.getElementById("player").value = mine.player || ""; 
+        document.getElementById("playerId").value = mine.playerId || ""; 
+    }
 }
 function closeModal() { document.getElementById("modal").classList.remove("show"); }
 
@@ -118,16 +123,18 @@ function openReservedModal(id) {
 }
 function closeReservedModal() { document.getElementById("reservedModal").classList.remove("show"); }
 
-// Booking Actions
+// Booking Actions (ID 포함)
 function confirmBooking() {
     var a = document.getElementById("alliance").value.trim();
     var p = document.getElementById("player").value.trim();
+    var idNum = document.getElementById("playerId").value.trim();
     var d = document.getElementById("daysSaved").value;
     var pass = document.getElementById("password").value;
 
+    if(!/^\d{9}$/.test(idNum)) { alert("ID는 숫자 9자리를 입력해주세요.\nPlayer ID must be 9 digits."); return; }
     if(!a || !p || !pass) { alert("모든 칸을 입력하세요 / Fill all fields."); return; }
 
-    var newEntry = { alliance: a, player: p, playerNormalized: normalizeText(p), daysSaved: d, passwordHash: simpleHash(pass), createdAt: Date.now() };
+    var newEntry = { alliance: a, player: p, playerId: idNum, playerNormalized: normalizeText(p), daysSaved: d, passwordHash: simpleHash(pass), createdAt: Date.now() };
     var ref = db.collection("slots").doc(selectedSlot);
 
     db.runTransaction(t => {
@@ -137,14 +144,16 @@ function confirmBooking() {
             if(attendees.some(ex => ex.playerNormalized === newEntry.playerNormalized)) throw "이미 예약됨 / Already booked.";
             t.set(ref, { attendees: [...attendees, newEntry], updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, {merge: true});
         });
-    }).then(() => { saveMyBookingInfo(a, p); closeModal(); closeReservedModal(); alert("성공 / Success!"); }).catch(e => alert(e));
+    }).then(() => { 
+        saveMyBookingInfo(a, p, idNum); closeModal(); closeReservedModal(); 
+        alert("예약 성공 / Success!"); 
+    }).catch(e => alert(e));
 }
 
 function confirmCancel() {
     var pass = document.getElementById("editPassword").value;
     var mine = getMyBookingInfo();
     if(!mine || !pass) { alert("비밀번호 필요 / Need Password."); return; }
-
     var ref = db.collection("slots").doc(selectedSlot);
     var hash = simpleHash(pass);
 
@@ -179,7 +188,7 @@ function exportAllCSV() {
         var slot = allSlotsData[id];
         if (slot.attendees) {
             slot.attendees.forEach((a, idx) => {
-                rows.push({ Buff: id.split("_")[0], Time: id.split("_")[1], Order: idx + 1, Alliance: a.alliance, Player: a.player, Days: a.daysSaved });
+                rows.push({ Buff: id.split("_")[0], Time: id.split("_")[1], ID: a.playerId, Player: a.player, Days: a.daysSaved });
             });
         }
     });
