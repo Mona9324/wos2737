@@ -5,7 +5,22 @@ header { padding: 20px; position: relative; z-index: 1; }
 .countdown { font-size: 15px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
 
 /* 아바타 */
-.creatorAvatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #d6b347; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+/* 공룡 프로필 크기 확대 버전 */
+.creatorAvatar { 
+    width: 160px;          /* 120px에서 160px로 확대 */
+    height: 160px;         /* 120px에서 160px로 확대 */
+    border-radius: 50%; 
+    border: 5px solid #d6b347; /* 테두리도 조금 더 두껍게 */
+    cursor: pointer; 
+    transition: 0.3s; 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* 그림자도 좀 더 깊게 */
+    object-fit: cover;     /* 이미지가 찌그러지지 않게 방지 */
+}
+
+/* 마우스 올렸을 때 효과 (선택 사항: 살짝 더 커짐) */
+.creatorAvatar:hover {
+    transform: scale(1.05);
+}
 .creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
 /* 검색바 레이아웃 */
