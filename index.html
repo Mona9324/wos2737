@@ -27,14 +27,16 @@
 
     <section class="tabsWrap">
         <div class="tabs">
-            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설/영웅버프) / Mon</button>
-            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (기술연구버프) / Tue</button>
-            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (용병훈련버프) / Thu</button>
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설버프) / Monday (Construction buff)</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구버프) / Tuesday (Research Buff)</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (병사훈련버프) / Thursday (Troop Training Buff)</button>
         </div>
         <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
     </section>
 
-    <main><div id="slots" class="grid"></div></main>
+    <main>
+        <div id="slots" class="grid"></div>
+    </main>
 
     <!-- 예약 신청 모달 -->
     <div id="modal" class="modal">
@@ -72,10 +74,12 @@
         </div>
     </div>
 
-    <!-- 상세 서버 관리자 시스템 -->
+    <!-- 서버 관리자 시스템 -->
     <div id="adminPanel" class="adminPanel">
         <button type="button" class="adminCloseBtn" onclick="closeAdmin()">×</button>
-        <div class="adminHeader"><h3>서버 관리자 시스템 / Admin System</h3></div>
+        <div class="adminHeader">
+            <h3>서버 관리자 시스템 / Admin System</h3>
+        </div>
         <div class="adminBody">
             <div class="adminSection">
                 <h4>SvS 기준일 설정 / SvS Base Date</h4>
@@ -87,9 +91,9 @@
             <div class="adminSection">
                 <h4>요일별 예약 제어 / Toggle Tabs</h4>
                 <div class="adminButtonGroup" style="flex-wrap: wrap;">
-                    <button onclick="toggleTabStatus('monday')" class="adminBtn open">월요일 On/Off</button>
-                    <button onclick="toggleTabStatus('tuesday')" class="adminBtn open">화요일 On/Off</button>
-                    <button onclick="toggleTabStatus('thursday')" class="adminBtn open">목요일 On/Off</button>
+                    <button onclick="toggleTabStatus('monday')" class="adminBtn open">Monday On/Off</button>
+                    <button onclick="toggleTabStatus('tuesday')" class="adminBtn open">Tuesday On/Off</button>
+                    <button onclick="toggleTabStatus('thursday')" class="adminBtn open">Thursday On/Off</button>
                     <button onclick="toggleAllTabs(true)" class="adminBtn open" style="background:#2d5468">전체 오픈</button>
                     <button onclick="toggleAllTabs(false)" class="adminBtn lock">전체 잠금</button>
                 </div>
@@ -97,8 +101,8 @@
             <div class="adminSection">
                 <h4>데이터 관리 / Data</h4>
                 <div class="adminButtonGroup">
-                    <button id="exportBtn" onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출</button>
-                    <button onclick="backupAndClearAll()" class="adminBtn clear">전체 초기화</button>
+                    <button onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출/Excel</button>
+                    <button onclick="backupAndClearAll()" class="adminBtn clear">전체 초기화 / All Cancle</button>
                 </div>
             </div>
             <div class="adminSection">
@@ -109,10 +113,9 @@
     </div>
 
     <div id="toastContainer" class="toastContainer"></div>
-    
-    <!-- 엑셀 라이브러리 (cdnjs 사용) -->
+
+    <!-- 스크립트 라이브러리 로드 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- 파이어베이스 -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
