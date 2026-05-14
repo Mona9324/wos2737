@@ -18,20 +18,17 @@ function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0
 
 // 초기화 시작
 function init() {
-    // 설정값 감시
     db.collection("settings").doc("booking").onSnapshot(doc => { 
         if(doc.exists) bookingSettings = doc.data(); 
         updateStatusMessage(); 
         updateAdminUI(); 
         renderAll();
     });
-    // 슬롯 데이터 감시
     db.collection("slots").onSnapshot(snap => {
         allSlotsData = {}; 
         snap.forEach(doc => { allSlotsData[doc.id] = doc.data(); });
         renderAll();
     });
-    // 카운트다운 시작
     updateCountdown();
     setInterval(updateCountdown, 1000);
 }
@@ -46,7 +43,7 @@ function addLog(msg) {
     box.prepend(log);
 }
 
-// 탭 활성화 색상 업데이트
+// 탭 활성화 색상 업데이트 (진한 파스텔 하늘색)
 function updateTabsUI() {
     document.querySelectorAll(".tabs button").forEach(btn => {
         btn.classList.toggle("active", btn.id === "tab-" + currentBuff);
@@ -106,7 +103,7 @@ function renderAll() {
     }
 }
 
-// 예약 확정
+// 예약 확정 (정보 저장 로직: 연맹, 닉네임, 비밀번호 기억)
 function confirmBooking() {
     var a = document.getElementById("alliance").value, 
         p = document.getElementById("player").value, 
@@ -121,10 +118,15 @@ function confirmBooking() {
     
     db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true})
     .then(() => { 
-        localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p })); 
+        // 닉네임, 연맹과 함께 비밀번호(cancelKey)도 저장하여 연속 예약 편의성 제공
+        localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ 
+            alliance: a, 
+            player: p,
+            cancelKey: pass 
+        })); 
+        
         closeModal(); 
         addLog(`New Booking: ${p} (${selectedSlot})`); 
-        document.getElementById("cancelKey").value = ""; 
         alert("예약 성공! / Success!"); 
     });
 }
@@ -151,7 +153,7 @@ function confirmCancel() {
     });
 }
 
-// 엑셀 추출 (영문 헤더)
+// 엑셀 추출 (영문 헤더 고정)
 function exportAllCSV() {
     try {
         const wb = XLSX.utils.book_new();
@@ -160,7 +162,14 @@ function exportAllCSV() {
             const rows = [];
             Object.keys(allSlotsData).filter(k => k.startsWith(day)).sort().forEach(id => {
                 allSlotsData[id].attendees.forEach(a => {
-                    rows.push({ "Day": day.toUpperCase(), "Time(UTC)": id.split('_')[1], "Alliance": a.alliance, "Nickname": a.player, "ID": a.playerId, "Speed-up Days": a.daysSaved });
+                    rows.push({ 
+                        "Day": day.toUpperCase(), 
+                        "Time(UTC)": id.split('_')[1], 
+                        "Alliance": a.alliance, 
+                        "Nickname": a.player, 
+                        "ID": a.playerId, 
+                        "Speed-up Days": a.daysSaved 
+                    });
                 });
             });
             if (rows.length > 0) { XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day); hasData = true; }
@@ -171,14 +180,14 @@ function exportAllCSV() {
     } catch (e) { alert("추출 실패 / Export failed."); }
 }
 
-// 관리자 기능들
+// 관리자 기능
 function handleAdminAccess() { sc++; if(sc>=3) { sc=0; var p=prompt("Password:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); updateAdminUI(); addLog("Admin Login Success"); } } }
 function saveAdminBaseDate() { var val = document.getElementById("adminBaseDate").value; if(!val) return; db.collection("settings").doc("booking").update({baseDate: val}).then(()=>{ addLog("Date Updated"); alert("저장됨 / Saved"); }); }
 function toggleTabStatus(day) { var current = bookingSettings.tabs[day].isOpen; bookingSettings.tabs[day].isOpen = !current; db.collection("settings").doc("booking").update(bookingSettings).then(() => { addLog(`${day} Status: ${!current ? 'Open' : 'Closed'}`); }); }
 function toggleAllTabs(status) { Object.keys(bookingSettings.tabs).forEach(k => bookingSettings.tabs[k].isOpen = status); db.collection("settings").doc("booking").update(bookingSettings).then(() => { addLog(`All: ${status ? 'Open' : 'Closed'}`); }); }
 function backupAndClearAll() { if(!confirm("모든 데이터를 삭제할까요? / Confirm Clear all data?")) return; db.collection("slots").get().then(snap => { var batch = db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit().then(() => { addLog("Cleared"); alert("삭제 완료 / Done"); }); }); }
 
-// UI 업데이트 유틸리티
+// UI 보조 함수
 function updateAdminUI() { ['monday', 'tuesday', 'thursday'].forEach(day => { const btn = document.getElementById(`btn-admin-${day}`); if (btn) btn.className = bookingSettings.tabs[day].isOpen ? "admin-btn-on" : "admin-btn-off"; }); }
 function updateStatusMessage() { var el = document.getElementById("bookingStatusMsg"); if(el) el.innerText = (bookingSettings.tabs && bookingSettings.tabs[currentBuff] && bookingSettings.tabs[currentBuff].isOpen) ? "✅ 모든 슬롯 예약 가능 / Booking is Open" : "🔒 예약 잠금 상태 / Booking is Locked"; }
 function updateCountdown() { var diff = new Date(bookingSettings.baseDate) - new Date(); while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000; var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000); if(document.getElementById("countdown")) document.getElementById("countdown").innerText = `Next SVS in ${d}d ${h}h ${m}m ${s}s`; }
@@ -188,13 +197,14 @@ function closeModal() { document.getElementById("modal").classList.remove("show"
 function closeReservedModal() { document.getElementById("reservedModal").classList.remove("show"); }
 function closeAdmin() { document.getElementById("adminPanel").classList.remove("show"); }
 
-// 모달 제어
+// 모달 열기 (기존 정보 및 비밀번호 자동 채우기 로직)
 function openReserveModal() { 
     var m = localStorage.getItem(MY_BOOKING_KEY); 
     if(m) { 
         var mine = JSON.parse(m); 
         document.getElementById("alliance").value = mine.alliance || ""; 
         document.getElementById("player").value = mine.player || ""; 
+        document.getElementById("cancelKey").value = mine.cancelKey || ""; // 비밀번호 자동 완성
     } 
     document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; 
     document.getElementById("modal").classList.add("show"); 
