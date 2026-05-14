@@ -4,7 +4,7 @@ var allSlotsData = {};
 var db = window.db;
 var MY_BOOKING_KEY = "svs_my_booking_info";
 
-// 관리자 설정 (기본 SvS 시작: 5월 23일 21:00, 모든 요일 오픈 상태)
+// 관리자 설정 (기본 SvS 시작: 5월 23일 21:00)
 var bookingSettings = { 
     baseDate: "2026-05-23T21:00:00", 
     tabs: { 
@@ -117,14 +117,17 @@ function renderAll() {
 function updateTabs() { document.querySelectorAll(".tabs button").forEach(btn => btn.classList.toggle("active", btn.id === "tab-" + currentBuff)); }
 function switchBuff(b) { currentBuff = b; updateStatusMessage(); renderAll(); }
 
-// 모달
 function openReserveModal(id) {
     closeReservedModal();
     selectedSlot = id;
     document.getElementById("selectedSlotInfo").innerHTML = `<b>${id.replace('_',' ').toUpperCase()} UTC</b><br>예약 신청 / New Booking`;
     document.getElementById("modal").classList.add("show");
     var mine = getMyBookingInfo();
-    if(mine) { document.getElementById("alliance").value = mine.alliance || ""; document.getElementById("player").value = mine.player || ""; document.getElementById("playerId").value = mine.playerId || ""; }
+    if(mine) { 
+        document.getElementById("alliance").value = mine.alliance || ""; 
+        document.getElementById("player").value = mine.player || ""; 
+        document.getElementById("playerId").value = mine.playerId || ""; 
+    }
 }
 function closeModal() { document.getElementById("modal").classList.remove("show"); }
 function openReservedModal(id) {
@@ -141,7 +144,6 @@ function openReservedModal(id) {
 }
 function closeReservedModal() { document.getElementById("reservedModal").classList.remove("show"); }
 
-// 동작
 function confirmBooking() {
     var a = document.getElementById("alliance").value.trim(), p = document.getElementById("player").value.trim(), idNum = document.getElementById("playerId").value.trim(), d = document.getElementById("daysSaved").value, pass = document.getElementById("password").value;
     if(!/^\d{9}$/.test(idNum)) return alert("ID 숫자 9자리를 입력하세요.");
@@ -170,7 +172,40 @@ function confirmCancel() {
     }).then(() => { closeReservedModal(); alert("취소됨"); }).catch(e => alert(e));
 }
 
-// 관리자 기능
+// 엑셀 추출 함수 (안정화 버전)
+function exportAllCSV() {
+    try {
+        if (typeof XLSX === "undefined") {
+            alert("엑셀 라이브러리 로딩 중입니다. 잠시 후 다시 시도해주세요.");
+            return;
+        }
+        var rows = [];
+        Object.keys(allSlotsData).sort().forEach(id => {
+            var slot = allSlotsData[id];
+            if (slot && slot.attendees && slot.attendees.length > 0) {
+                slot.attendees.forEach((a, idx) => {
+                    rows.push({
+                        "요일(Buff)": id.split('_')[0],
+                        "시간(UTC)": id.split('_')[1],
+                        "연맹(Alliance)": a.alliance,
+                        "닉네임(Player)": a.player,
+                        "ID": a.playerId,
+                        "가속(Days)": a.daysSaved
+                    });
+                });
+            }
+        });
+        if (rows.length === 0) return alert("데이터가 없습니다.");
+        var ws = XLSX.utils.json_to_sheet(rows);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "SVS_Booking");
+        XLSX.writeFile(wb, "SVS_Booking_" + new Date().toISOString().slice(0,10) + ".xlsx");
+    } catch (e) {
+        alert("엑셀 추출 오류: " + e.message);
+    }
+}
+
+// 관리자 보안
 var adminAuthenticated = false;
 var sc = 0;
 document.querySelector(".creatorAvatar").onclick = function() {
@@ -191,6 +226,7 @@ document.querySelector(".creatorAvatar").onclick = function() {
         }
     }
 };
+
 function closeAdmin() { document.getElementById("adminPanel").classList.remove("show"); }
 function saveAdminBaseDate() {
     bookingSettings.baseDate = document.getElementById("adminBaseDate").value;
@@ -205,13 +241,6 @@ function toggleAllTabs(status) {
     db.collection("settings").doc("booking").set(bookingSettings).then(() => alert(`전체 상태 변경 완료!`));
 }
 function loadLogs() { document.getElementById("logsBox").innerHTML = "[" + new Date().toLocaleString() + "] Admin session started."; }
-function exportAllCSV() {
-    var rows = [];
-    Object.keys(allSlotsData).forEach(id => {
-        allSlotsData[id].attendees?.forEach(a => rows.push({ Day: id.split('_')[0], Time: id.split('_')[1], ID: a.playerId, Player: a.player, Days: a.daysSaved }));
-    });
-    XLSX.writeFile(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.json_to_sheet(rows), "SVS"), "SVS_Booking.xlsx");
-}
 function backupAndClearAll() { if (confirm("데이터를 모두 지울까요?")) db.collection("slots").get().then(snap => { var b = db.batch(); snap.forEach(d => b.delete(d.ref)); return b.commit(); }).then(() => alert("초기화됨")); }
 function clearSearch() { document.getElementById("searchInput").value = ""; renderAll(); }
 document.getElementById("searchInput").oninput = renderAll;
