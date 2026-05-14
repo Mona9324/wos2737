@@ -42,10 +42,10 @@ header { padding: 20px; position: relative; z-index: 1; }
 
 /* 로컬 시간 강조 (요청 사항 반영) */
 .localTime { 
-    font-size: 12px !important; 
+    font-size: 14px !important; 
     font-weight: 700 !important; 
     color: #4a5568 !important; 
-    margin-bottom: 10px; 
+    margin-bottom: 12px; 
 }
 
 .miniItem { display: flex; justify-content: space-between; padding: 4px 0; }
