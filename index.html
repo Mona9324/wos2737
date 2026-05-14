@@ -10,9 +10,7 @@
     <canvas id="snow"></canvas>
     <header>
         <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
-        <!-- SVS 카운트다운 복구 -->
         <div id="countdown" class="countdown"></div>
-        
         <div class="creatorBadge">
             <img src="creator-dino.png" alt="Creator" class="creatorAvatar">
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
@@ -29,17 +27,14 @@
 
     <section class="tabsWrap">
         <div class="tabs">
-            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설/영웅버프) / Mon (Build)</button>
-            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (기술연구버프) / Tue (Research)</button>
-            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (용병훈련버프) / Thu (Train)</button>
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설/영웅버프) / Mon</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (기술연구버프) / Tue</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (용병훈련버프) / Thu</button>
         </div>
-        <!-- 예약 오픈 상태 메시지 -->
         <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
     </section>
 
-    <main>
-        <div id="slots" class="grid"></div>
-    </main>
+    <main><div id="slots" class="grid"></div></main>
 
     <!-- 예약 신청 모달 -->
     <div id="modal" class="modal">
@@ -47,10 +42,9 @@
             <h3>새 예약 추가 / New Booking</h3>
             <div id="selectedSlotInfo" class="selectedSlotInfo"></div>
             <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="연맹명 / Alliance (e.g. ZTP)" list="allianceSuggestions">
-                <datalist id="allianceSuggestions"></datalist>
+                <input id="alliance" type="text" placeholder="연맹명 / Alliance (e.g. ZTP)">
                 <input id="player" type="text" placeholder="닉네임 / Nickname">
-                <input id="playerId" type="text" placeholder="ID (숫자 9개) / Player ID (9 digits)" maxlength="9">
+                <input id="playerId" type="text" placeholder="ID (숫자 9개) / Player ID" maxlength="9">
                 <input id="daysSaved" type="number" placeholder="사용 가속(일) / Speed-up Days">
                 <input id="password" type="password" placeholder="비밀번호(취소용) / Password">
             </div>
@@ -78,39 +72,43 @@
         </div>
     </div>
 
-    <!-- 서버 관리자 시스템 -->
+    <!-- 상세 서버 관리자 시스템 -->
     <div id="adminPanel" class="adminPanel">
         <button type="button" class="adminCloseBtn" onclick="closeAdmin()">×</button>
-        <div class="adminHeader">
-            <h3>서버 관리자 시스템 / Admin System</h3>
-        </div>
+        <div class="adminHeader"><h3>서버 관리자 시스템 / Admin System</h3></div>
         <div class="adminBody">
             <div class="adminSection">
-                <h4>예약 오픈 시간 설정 / Auto Schedule</h4>
+                <h4>SvS 기준일 설정 / SvS Base Date</h4>
                 <div class="adminInputRow">
-                    <label>Open At:</label> <input id="scheduleOpenAt" type="datetime-local">
+                    <input id="adminBaseDate" type="datetime-local">
+                    <button onclick="saveAdminBaseDate()" class="adminBtn excel" style="width:30%;">저장</button>
                 </div>
-                <div class="adminInputRow">
-                    <label>Close At:</label> <input id="scheduleCloseAt" type="datetime-local">
-                </div>
-                <button onclick="saveAdminSchedule()" class="adminBtn excel" style="width:100%; margin-top:10px;">스케줄 저장 (Save Schedule)</button>
             </div>
             <div class="adminSection">
-                <h4>데이터 관리 / Data Management</h4>
+                <h4>요일별 예약 제어 / Toggle Tabs</h4>
+                <div class="adminButtonGroup" style="flex-wrap: wrap;">
+                    <button onclick="toggleTabStatus('monday')" class="adminBtn open">월요일 On/Off</button>
+                    <button onclick="toggleTabStatus('tuesday')" class="adminBtn open">화요일 On/Off</button>
+                    <button onclick="toggleTabStatus('thursday')" class="adminBtn open">목요일 On/Off</button>
+                    <button onclick="toggleAllTabs(true)" class="adminBtn open" style="background:#2d5468">전체 오픈</button>
+                    <button onclick="toggleAllTabs(false)" class="adminBtn lock">전체 잠금</button>
+                </div>
+            </div>
+            <div class="adminSection">
+                <h4>데이터 관리 / Data</h4>
                 <div class="adminButtonGroup">
-                    <button onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출 (Excel)</button>
-                    <button onclick="backupAndClearAll()" class="adminBtn clear">전체 데이터 초기화 (Reset)</button>
+                    <button onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출</button>
+                    <button onclick="backupAndClearAll()" class="adminBtn clear">전체 초기화</button>
                 </div>
             </div>
             <div class="adminSection">
                 <h4>시스템 로그 / Logs</h4>
-                <div id="logsBox" class="logsBox">로그 대기 중...</div>
+                <div id="logsBox" class="logsBox"></div>
             </div>
         </div>
     </div>
 
     <div id="toastContainer" class="toastContainer"></div>
-
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
