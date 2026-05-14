@@ -16,23 +16,21 @@
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
         </div>
         <div class="headerToolbar">
-            <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search Alliance or Nickname" oninput="renderAll()">
+            <input id="searchInput" type="text" placeholder="검색 / Search" oninput="renderAll()">
             <select id="filterStatus" onchange="renderAll()">
                 <option value="all">전체 보기 / View All</option>
-                <option value="mine">내 예약 확인 / My Booking</option>
+                <option value="mine">내 예약 / My Booking</option>
             </select>
-            <button type="button" onclick="clearSearch()">초기화 / Reset</button>
+            <button type="button" onclick="clearSearch()" style="padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer;">초기화</button>
         </div>
     </header>
 
-    <section class="tabsWrap">
-        <div class="tabs">
-            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설) / Monday (Construction Buff)</button>
-            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tuesday (Research Buff)</button>
-            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thursday (Troops Training Buff)</button>
-        </div>
-        <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
-    </section>
+    <div class="tabs">
+        <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설) / Mon (Build)</button>
+        <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tue (Research)</button>
+        <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thu (Train)</button>
+    </div>
+    <div id="bookingStatusMsg" style="font-weight: bold; margin-bottom: 20px;"></div>
 
     <main><div id="slots" class="grid"></div></main>
 
@@ -40,16 +38,16 @@
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3>새 예약 추가 / New Booking</h3>
-            <div id="selectedSlotInfo" style="margin-bottom:15px; font-weight:800;"></div>
+            <div id="selectedSlotInfo" style="font-weight: bold; color: #1e88e5;"></div>
             <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="연맹명 / Alliance">
+                <input id="alliance" type="text" placeholder="연맹 / Alliance">
                 <input id="player" type="text" placeholder="닉네임 / Nickname">
                 <input id="playerId" type="text" placeholder="ID (9자리)" maxlength="9">
-                <input id="daysSaved" type="number" placeholder="사용 가속(일)">
-                <input id="password" type="password" placeholder="비밀번호(취소용)">
+                <input id="daysSaved" type="number" placeholder="가속(일) / Days">
+                <input id="password" type="password" placeholder="비밀번호 / Password">
             </div>
             <div class="buttonRow">
-                <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정 / Confirm</button>
+                <button type="button" onclick="confirmBooking()" class="btn-primary">확정 / Confirm</button>
             </div>
             <button type="button" onclick="closeModal()" class="btn-close-full">닫기 / Close</button>
         </div>
@@ -58,12 +56,12 @@
     <!-- 예약 현황 모달 -->
     <div id="reservedModal" class="modal">
         <div class="modalBox">
-            <h3>예약 현황 / Booking Status</h3>
-            <div id="reservedSlotInfo" style="margin-bottom:15px; font-weight:800;"></div>
-            <div id="attendeeListDetail" class="attendeeListDetail"></div>
-            <hr>
-            <div class="cancelArea" style="margin-top:20px;">
-                <p style="font-size:13px; font-weight:700; margin-bottom:8px;">취소 비밀번호 입력 / Password to Cancel</p>
+            <h3>예약 현황 / Status</h3>
+            <div id="reservedSlotInfo" style="font-weight: bold; margin-bottom: 10px;"></div>
+            <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
+            <hr style="border: 0.5px solid #edf2f7;">
+            <div class="cancelArea" style="margin-top: 15px;">
+                <p style="font-size: 13px; font-weight: bold; margin-bottom: 8px;">비밀번호 입력 / Password</p>
                 <input id="editPassword" type="password" placeholder="Password">
                 <div class="buttonRow">
                     <button type="button" onclick="confirmCancel()" class="btn-danger">취소하기 / Cancel</button>
@@ -74,23 +72,35 @@
         </div>
     </div>
 
-    <!-- 관리자 패널 -->
+    <!-- 관리자 패널 (복구 완료) -->
     <div id="adminPanel" class="modal">
-        <div class="modalBox">
-            <h3>관리자 시스템 / Admin System</h3>
+        <div class="modalBox" style="max-width: 550px;">
+            <h3>관리자 시스템 / Admin</h3>
             <div class="adminSection">
-                <p>기준 시간 설정 / Base Date</p>
-                <input id="adminBaseDate" type="datetime-local" style="width:100%; padding:10px; margin:10px 0;">
-                <button onclick="saveAdminBaseDate()" class="btn-primary" style="width:100%;">저장 / Save</button>
+                <p style="font-size: 13px; font-weight: bold;">기준일 설정 / Base Date</p>
+                <input id="adminBaseDate" type="datetime-local" style="width: 100%; padding: 10px; margin: 10px 0;">
+                <button onclick="saveAdminBaseDate()" class="btn-primary" style="width: 100%;">기준일 저장</button>
             </div>
-            <div class="adminSection" style="margin-top:20px;">
-                <p>요일 제어 / Day Control</p>
+            <div class="adminSection">
+                <p style="font-size: 13px; font-weight: bold;">요일 제어 / Day Control</p>
                 <div class="buttonRow">
                     <button onclick="toggleTabStatus('monday')" id="btn-admin-monday" class="btn-primary">Mon</button>
                     <button onclick="toggleTabStatus('tuesday')" id="btn-admin-tuesday" class="btn-primary">Tue</button>
                     <button onclick="toggleTabStatus('thursday')" id="btn-admin-thursday" class="btn-primary">Thu</button>
                 </div>
+                <div class="buttonRow">
+                    <button onclick="toggleAllTabs(true)" class="btn-primary" style="background: #e3f2fd;">전체 열기</button>
+                    <button onclick="toggleAllTabs(false)" class="btn-danger" style="background: #ffebee;">전체 닫기</button>
+                </div>
             </div>
+            <div class="adminSection">
+                <p style="font-size: 13px; font-weight: bold;">데이터 관리 / Data</p>
+                <div class="buttonRow">
+                    <button onclick="exportAllCSV()" class="btn-primary" style="background: #e8f5e9; color: #2e7d32;">엑셀 추출</button>
+                    <button onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button>
+                </div>
+            </div>
+            <div id="logsBox" class="logsBox"></div>
             <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button>
         </div>
     </div>
