@@ -31,9 +31,9 @@ header { padding: 20px; position: relative; z-index: 1; }
 .buttonRow { display: flex; gap: 12px; margin-top: 15px; width: 100%; }
 .btn-primary { flex: 1; background: #bbdefb; color: #1976d2; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 .btn-danger { flex: 1; background: #ffcdd2; color: #e53935; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
-.btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 20px; }
+.btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 20px; display: block; }
 
-/* 관리자 버튼 상태 색상 */
+/* 관리자 버튼 상태 색상 (OFF 시 연한 파스텔 회색) */
 .admin-btn-on { background-color: #bbdefb !important; color: #1976d2 !important; }
 .admin-btn-off { background-color: #e2e8f0 !important; color: #94a3b8 !important; }
 
