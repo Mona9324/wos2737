@@ -1,148 +1,78 @@
-/* 기본 배경 및 폰트 설정 */
-body { 
-    font-family: 'Segoe UI', Roboto, Arial, sans-serif; 
-    background: #eef5fb; 
-    margin: 0; 
-    text-align: center; 
-    color: #1f2937; 
-}
-
+/* ===== 기본 설정 및 레이아웃 ===== */
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-
-/* 헤더 영역 */
 header { padding: 20px; position: relative; z-index: 1; }
-h1 { margin: 0; font-size: 26px; }
-#countdown { font-size: 14px; font-weight: 700; margin: 10px 0; color: #374151; }
 
-.creatorBadge { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; }
-.creatorAvatar { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #d6b347; }
-.creatorCredit { font-size: 11px; font-weight: bold; color: #7a6a52; margin-top: 5px; cursor: pointer; }
-
-/* 툴바 (검색 및 필터) */
-.headerToolbar { 
-    display: flex; 
-    justify-content: center; 
-    gap: 10px; 
-    margin-bottom: 20px; 
-    flex-wrap: wrap; 
-    padding: 0 10px;
+/* ===== 프로필 이미지 확대 및 텍스트 수정 ===== */
+.creatorBadge { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+.creatorAvatar { 
+    width: 120px; /* 크기 확대 */
+    height: 120px; 
+    border-radius: 50%; 
+    border: 4px solid #d6b347; 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: 0.3s;
 }
-.headerToolbar input, .headerToolbar select, .headerToolbar button { 
-    padding: 10px; 
-    border-radius: 8px; 
-    border: 1px solid #cfd8e3; 
-    font-size: 13px;
+.creatorAvatar:hover { transform: scale(1.05); }
+.creatorCredit { 
+    font-size: 15px; 
+    font-weight: 800; 
+    color: #4b5563; 
+    margin-top: 10px; 
 }
 
-/* 아기자기한 탭 디자인 */
-.tabsWrap { margin-bottom: 20px; position: relative; z-index: 1; }
+/* ===== 탭 디자인 (아기자기한 스타일) ===== */
 .tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 15px; flex-wrap: wrap; }
 .tabs button { 
-    padding: 12px 18px; 
-    border: none; 
-    border-radius: 15px; 
-    background: #d8f2ff; 
-    color: #2d5468; 
-    cursor: pointer; 
-    font-weight: 700; 
-    font-size: 14px;
-    box-shadow: 0 4px 0px #b8d9eb;
-    transition: 0.2s;
+    padding: 12px 18px; border: none; border-radius: 15px; 
+    background: #d8f2ff; color: #2d5468; cursor: pointer; 
+    font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; transition: 0.2s;
 }
-.tabs button.active { 
-    background: #bfe7fb; 
-    box-shadow: 0 2px 0px #a8d5eb;
-    transform: translateY(2px);
+.tabs button.active { background: #bfe7fb; box-shadow: 0 2px 0px #a8d5eb; transform: translateY(2px); }
+
+/* ===== 관리자 패널 (스크린샷 문제 해결) ===== */
+.adminPanel {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%; max-width: 500px;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    z-index: 2000;
+    text-align: left;
+}
+.adminPanel.show { display: block; } /* 클릭 시 나타남 */
+.adminCloseBtn { position: absolute; top: 15px; right: 15px; font-size: 24px; border: none; background: none; cursor: pointer; }
+
+.adminSection {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.adminSection h4 { margin: 0 0 10px 0; font-size: 16px; color: #1f2937; }
+
+.logsBox {
+    height: 120px; overflow-y: auto;
+    background: #111827; color: #10b981;
+    font-family: monospace; font-size: 12px;
+    padding: 10px; border-radius: 8px;
 }
 
-.slotStats { font-size: 13px; display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
-.availableDot, .mineDot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 4px; }
-.availableDot { background: #8bd18b; }
-.mineDot { background: #5b60df; }
+/* 버튼 공통 스타일 */
+button { cursor: pointer; }
+.buttonRow { display: flex; gap: 10px; }
+.adminSection button {
+    padding: 8px 12px; border: 1px solid #cfd8e3; border-radius: 8px;
+    background: white; font-weight: bold; font-size: 13px;
+}
+.adminSection button:hover { background: #f3f4f6; }
 
-/* 핵심: 그리드 및 슬롯 카드 디자인 */
-.grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-    gap: 15px; 
-    padding: 20px; 
-    max-width: 1200px; 
-    margin: 0 auto; 
-    position: relative; 
-    z-index: 1; 
-}
-
-.slot { 
-    background: white; 
-    border-radius: 12px; 
-    padding: 15px; 
-    text-align: left; 
-    border-left: 6px solid #8bd18b; 
-    cursor: pointer; 
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
-    transition: 0.2s;
-    display: flex;
-    flex-direction: column;
-}
-.slot:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
-.slot.myReservation { border-left-color: #5b60df; background: #f0f3ff; }
-
-.timeRow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-.timeUTC { font-size: 15px; font-weight: bold; color: #111; }
-.timeLocal { font-size: 12px; color: #666; margin-bottom: 10px; }
-.statusAvailable { font-size: 11px; color: #3f9b3f; font-weight: bold; }
-
-/* 예약자 리스트 스타일 */
-.attendeeListWrap { 
-    margin-top: auto; 
-    border-top: 1px solid #eee; 
-    padding-top: 10px; 
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-.attendeeItem { 
-    display: flex; 
-    justify-content: space-between; 
-    font-size: 12px; 
-    background: #f8f9fa; 
-    padding: 4px 8px; 
-    border-radius: 4px; 
-}
-.attendeeItem.isMine { background: #dbe4ff; font-weight: bold; color: #3730a3; }
-.attendeeItem .days { font-weight: bold; color: #2c3e50; }
-
-/* 모달 및 입력창 */
-.modal { 
-    display: none; 
-    position: fixed; 
-    inset: 0; 
-    background: rgba(0,0,0,0.5); 
-    z-index: 1000; 
-    align-items: center; 
-    justify-content: center; 
-}
-.modal.show { display: flex; }
-.modalBox { 
-    background: white; 
-    padding: 25px; 
-    border-radius: 15px; 
-    width: 90%; 
-    max-width: 420px; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 12px; 
-}
-.modalBox input { 
-    width: 100%; 
-    height: 48px; 
-    padding: 0 12px; 
-    font-size: 16px; 
-    border: 1px solid #cfd8e3; 
-    border-radius: 8px; 
-    box-sizing: border-box; 
-}
-.btn-primary { background: #7da7ff; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-.btn-secondary { background: #eee; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
-.btn-danger { background: #ff7d7d; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-.buttonRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* ===== 그리드 슬롯 카드 ===== */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding: 20px; }
+.slot { background: white; border-radius: 12px; padding: 15px; text-align: left; border-left: 6px solid #8bd18b; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
