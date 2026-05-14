@@ -1,10 +1,6 @@
-/* 기본 설정 */
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 header { padding: 20px; position: relative; z-index: 1; }
-h1 { margin-bottom: 5px; }
-
-/* 카운트다운 스타일 */
 .countdown { font-size: 15px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
 
 .creatorBadge { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
@@ -16,28 +12,20 @@ h1 { margin-bottom: 5px; }
 .headerToolbar input { min-width: 250px; padding: 10px; border-radius: 8px; border: 1px solid #cfd8e3; }
 .headerToolbar select, .headerToolbar button { padding: 10px; border-radius: 8px; border: 1px solid #cfd8e3; background: #fff; cursor: pointer; }
 
-/* 탭 디자인 */
 .tabsWrap { max-width: 1300px; margin: 0 auto 25px; padding: 0 20px; position: relative; z-index: 1; }
 .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-bottom: 15px; }
 .tabs button { padding: 16px 5px; border: none; border-radius: 15px; background: #d8f2ff; color: #2d5468; cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; transition: 0.2s; white-space: nowrap; }
 .tabs button.active { background: #bfe7fb; box-shadow: 0 2px 0px #a8d5eb; transform: translateY(2px); }
 
-/* 그리드 */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
-
 .slot { border-radius: 16px; padding: 15px; text-align: left; border: none; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; min-height: 100px; box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.05); }
 
-/* [오전 AM] 요청하신 연한 노란빛 */
+/* 색상 수정 */
 .slot.am-slot { background-color: #fffdf0; border: 1px solid #f9f2d0; }
-.slot.am-slot:hover { background-color: #fff9cf; box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08); }
-
-/* [오후 PM] 살구색 */
 .slot.pm-slot { background-color: #fff4e6; border: 1px solid #ffebd9; }
-.slot.pm-slot:hover { background-color: #ffe8d1; box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08); }
-
-/* [예약 완료] 요청하신 선명한 녹색 */
-.slot.myReservation { background-color: #def9e5 !important; border: 2px solid #b2f5c0 !important; box-shadow: 4px 4px 0px #81e69b !important; }
-.slot.myReservation:hover { background-color: #c9f4d2 !important; }
+.slot.locked { background-color: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
+/* 예약 완료: 연한 파스텔 연두색으로 수정 */
+.slot.myReservation { background-color: #f0fff4 !important; border: 2px solid #c6f6d5 !important; box-shadow: 4px 4px 0px #9ae6b4 !important; }
 
 .timeRow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .timeUTC { font-size: 18px; font-weight: 800; color: #2d3748; }
@@ -45,22 +33,20 @@ h1 { margin-bottom: 5px; }
 .statusAvailable { font-size: 11px; color: #3f9b3f; font-weight: bold; }
 .bookingStatusMsgHighlight { font-size: 14px; font-weight: bold; color: #2d5468; margin-bottom: 10px; }
 
-.attendeeListWrap { margin-top: auto; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 10px; display: flex; flex-direction: column; gap: 4px; }
-.attendeeItem { display: flex; justify-content: space-between; font-size: 12px; background: rgba(0,0,0,0.03); padding: 5px 8px; border-radius: 6px; }
-.attendeeItem.isMine { background: #81e69b; font-weight: bold; }
-
-/* 관리자 패널 */
 .adminPanel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 550px; background: white; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.4); z-index: 3000; overflow: hidden; border: 1px solid #e1e8ed; text-align: left; }
 .adminPanel.show { display: block; }
 .adminHeader { background: #f8f9fa; padding: 20px; border-bottom: 1px solid #eee; text-align: center; }
-.adminBody { padding: 25px; }
+.adminBody { padding: 20px; max-height: 70vh; overflow-y: auto; }
 .adminSection { margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; }
-.adminInputRow { margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-.adminInputRow input { padding: 8px; border-radius: 8px; border: 1px solid #ddd; width: 60%; }
-.adminBtn { flex: 1; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+.adminButtonGroup { display: flex; gap: 8px; margin-top: 10px; }
+.adminBtn { flex: 1; padding: 10px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; }
+.adminBtn.open { background: #48bb78; color: white; }
+.adminBtn.lock { background: #f56565; color: white; }
 .adminBtn.excel { background: #21a366; color: white; }
-.adminBtn.clear { background: #e81123; color: white; }
-.logsBox { background: #1e1e1e; color: #dcdcdc; padding: 15px; font-family: monospace; font-size: 12px; border-radius: 12px; height: 100px; overflow-y: auto; }
+.adminBtn.clear { background: #4a5568; color: white; }
+.adminInputRow { display: flex; gap: 5px; margin-bottom: 10px; }
+.adminInputRow input { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid #ddd; }
+.logsBox { background: #1e1e1e; color: #dcdcdc; padding: 10px; font-family: monospace; font-size: 11px; border-radius: 10px; height: 100px; overflow-y: auto; }
 .adminCloseBtn { position: absolute; top: 15px; right: 15px; font-size: 24px; border: none; background: none; cursor: pointer; }
 
 /* 모달 생략(이전과 동일) */
@@ -72,3 +58,5 @@ h1 { margin-bottom: 5px; }
 .btn-danger { background: #ef4444; color: white; border: none; height: 54px; border-radius: 12px; cursor: pointer; font-weight: 800; }
 .btn-secondary { background: #f3f4f6; color: #333; border: none; height: 50px; border-radius: 12px; cursor: pointer; }
 .buttonRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.attendeeListDetail { max-height: 150px; overflow-y: auto; }
+.attendeeItem { display: flex; justify-content: space-between; font-size: 12px; background: rgba(0,0,0,0.03); padding: 5px 8px; border-radius: 6px; margin-bottom: 4px; }
