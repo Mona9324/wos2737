@@ -64,7 +64,7 @@ function renderAll() {
 
 function toggleTabStatus(day) {
     bookingSettings.tabs[day].isOpen = !bookingSettings.tabs[day].isOpen;
-    db.collection("settings").doc("booking").update(bookingSettings).then(() => addLog(`${day} 상태 변경`));
+    db.collection("settings").doc("booking").update(bookingSettings).then(() => addLog(`${day} On/Off`));
 }
 
 function toggleAllTabs(status) {
@@ -88,6 +88,7 @@ function exportAllCSV() {
 }
 
 function handleAdminAccess() { sc++; if(sc>=3) { sc=0; if(prompt("Pass:")==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); addLog("관리자 로그인"); } } }
+function closeAdmin() { document.getElementById("adminPanel").classList.remove("show"); }
 function clearSearch() { document.getElementById("searchInput").value = ""; renderAll(); }
 function updateStatusMessage() { 
     var el = document.getElementById("bookingStatusMsg");
@@ -99,5 +100,5 @@ function updateCountdown() {
     var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000);
     if(document.getElementById("countdown")) document.getElementById("countdown").innerText = `Next SVS in ${d}d ${h}h ${m}m`;
 }
-
+// ... 나머지 예약/취소 함수들 (이전 로직 유지) ...
 init();
