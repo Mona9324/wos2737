@@ -1,45 +1,45 @@
-/* 기본 설정 유지 */
+/* 기본 배경 및 폰트 */
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 header { padding: 20px; position: relative; z-index: 1; }
 .countdown { font-size: 15px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
 
+/* 아바타 */
 .creatorAvatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #d6b347; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
 .creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
-/* 검색바 영역 수정: 너비를 충분히 확보 */
-.headerToolbar { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 20px auto; max-width: 900px; flex-wrap: wrap; padding: 0 15px; }
-#searchInput { flex: 2; min-width: 300px; padding: 12px; border-radius: 10px; border: 1px solid #cfd8e3; font-size: 14px; outline: none; }
-#filterStatus { flex: 1; min-width: 150px; padding: 12px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; }
-.btn-reset { padding: 12px 20px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-weight: bold; }
+/* 검색바: 너비를 90%까지 시원하게 확장 */
+.headerToolbar { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 25px auto; width: 90%; max-width: 1000px; flex-wrap: wrap; }
+#searchInput { flex: 3; min-width: 350px; padding: 14px; border-radius: 12px; border: 1px solid #cfd8e3; outline: none; font-size: 14px; }
+#filterStatus { flex: 1; min-width: 160px; padding: 14px; border-radius: 12px; border: 1px solid #cfd8e3; background: white; cursor: pointer; }
 
+/* 요일 탭 */
 .tabs { display: flex; justify-content: center; gap: 10px; max-width: 1200px; margin: 0 auto 20px; padding: 0 10px; }
 .tabs button { flex: 1; padding: 14px 5px; border: none; border-radius: 12px; background: #d8f2ff; color: #2d5468; cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; }
 .tabs button.active { background: #bfe7fb; box-shadow: 0 2px 0px #a8d5eb; transform: translateY(2px); }
 
+/* 슬롯 내부 닉네임-가속 분리 */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
 .slot { background: #fffdf0; border-radius: 16px; padding: 18px; text-align: left; cursor: pointer; min-height: 140px; border: 1px solid #f9f2d0; box-shadow: 4px 4px 0px rgba(0,0,0,0.05); }
-.slot.pm-slot { background: #fff4e6; border-color: #ffebd9; }
 .slot.locked { background: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
 .slot.myReservation { border: 2px solid #38a169 !important; background: #f0fff4 !important; box-shadow: 4px 4px 0px #9ae6b4 !important; }
 
 .timeRow { display: flex; justify-content: space-between; align-items: center; font-weight: 800; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px; margin-bottom: 10px; }
-.timeUTC { font-size: 15px; color: #2d3748; }
+.miniItem { display: flex; justify-content: space-between; padding: 4px 0; }
+.pName { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pDays { font-weight: 800; color: #1976d2; margin-left: 10px; }
 
-/* 닉네임과 가속 일수 구분 (핵심 수정) */
-.miniItem { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 13px; color: #4a5568; }
-.miniItem .pName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px; flex: 1; }
-.miniItem .pDays { font-weight: 800; color: #2d3748; background: rgba(0,0,0,0.03); padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
-
+/* 모달 및 입력창: 세로로 길게 배치 (캡처 오류 해결) */
 .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
 .modal.show { display: flex; }
-.modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 500px; text-align: left; box-sizing: border-box; }
+.modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 480px; text-align: left; box-sizing: border-box; }
+
+.inputGroup { display: flex !important; flex-direction: column !important; gap: 15px !important; margin: 25px 0; }
+.inputGroup input, .cancelArea input { width: 100% !important; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 15px; box-sizing: border-box; display: block !important; }
 
 .buttonRow { display: flex; gap: 12px; margin-top: 15px; width: 100%; }
 .btn-primary { flex: 1; background: #bbdefb; color: #1976d2; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 .btn-danger { flex: 1; background: #ffcdd2; color: #e53935; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
-.btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 20px; display: block; }
+.btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 20px; }
 
-.logsBox { background: #1e1e1e; color: #00ff00; padding: 10px; font-family: monospace; font-size: 11px; border-radius: 10px; height: 100px; overflow-y: auto; text-align: left; }
-
-@media (max-width: 768px) { .headerToolbar { flex-direction: column; align-items: stretch; } #searchInput, #filterStatus { min-width: 100%; } .tabs { flex-direction: column; } }
+@media (max-width: 600px) { .headerToolbar { flex-direction: column; } #searchInput { min-width: 100%; } }
