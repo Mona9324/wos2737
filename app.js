@@ -40,7 +40,7 @@ function renderAll() {
             div.className = "slot " + pmClass + (isLocked ? " locked" : "") + myClass;
             const listHtml = slot.attendees.slice(0,3).map((a,i) => `<div class='miniItem'><span class="pName">${i+1}. ${a.player}</span><span class="pDays">${a.daysSaved}d</span></div>`).join('');
             div.innerHTML = `<div class="dayBadge">${dayLabel}</div><div class="timeRow"><span class="timeUTC">${tId}~${eId} UTC</span><span>${slot.attendees.length}명</span></div><div class="localTime">Local: ${formatLocalTime(new Date(new Date().setUTCHours(h,m,0,0)))}</div><div class="attendeeMiniList">${listHtml || '<div style="color:#cbd5e0; text-align:center; font-size:12px;">No Reservation</div>'}</div>${slot.attendees.length > 3 ? `<div style="text-align:center; font-size:10px; color:#a0aec0; margin-top:5px;">+ ${slot.attendees.length - 3} more</div>` : ''}`;
-            div.onclick = () => { if(isLocked && !adminAuthenticated) return alert("마감."); selectedSlot = id; if (slot.attendees.length > 0) openReservedModal(id); else openReserveModal(); };
+            div.onclick = () => { if(isLocked && !adminAuthenticated) return alert("마감되었습니다. / Locked."); selectedSlot = id; if (slot.attendees.length > 0) openReservedModal(id); else openReserveModal(); };
             grid.appendChild(div);
         }
     }
@@ -48,18 +48,18 @@ function renderAll() {
 
 function confirmBooking() {
     var a = document.getElementById("alliance").value, p = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("cancelKey").value;
-    if(!a || !p || !idNum || !d || !pass) return alert("모든 항목 필수! / Fill all.");
-    if(idNum.length !== 9 || isNaN(idNum)) return alert("ID 9자리 숫자! / 9 digits.");
+    if(!a || !p || !idNum || !d || !pass) return alert("모든 항목 필수! / Please fill all fields.");
+    if(idNum.length !== 9 || isNaN(idNum)) return alert("ID 9자리 숫자! / 9 digits ID.");
     var newEntry = { alliance: a, player: p, playerId: idNum, playerNormalized: normalizeText(p), daysSaved: d, passwordHash: simpleHash(pass), createdAt: Date.now() };
     db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(() => { 
         localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p, playerId: idNum, cancelKey: pass })); 
-        closeModal(); renderAll(); alert("성공! / Success!"); 
+        closeModal(); renderAll(); alert("예약 성공! / Success!"); 
     });
 }
 
 function confirmCancel() {
     var pass = document.getElementById("editCancelKey").value, m = localStorage.getItem(MY_BOOKING_KEY);
-    if(!m || !pass) return alert("Check password.");
+    if(!m || !pass) return alert("비밀번호 입력! / Check password.");
     var mine = JSON.parse(m), ref = db.collection("slots").doc(selectedSlot);
     ref.get().then(doc => {
         if(!doc.exists) return;
@@ -79,8 +79,8 @@ function exportAllCSV() {
             });
             if (rows.length > 0) { XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day); hasData = true; }
         });
-        if (!hasData) return alert("No data."); XLSX.writeFile(wb, `SVS_Export.xlsx`);
-    } catch (e) { alert("Fail."); }
+        if (!hasData) return alert("데이터 없음."); XLSX.writeFile(wb, `SVS_Export.xlsx`);
+    } catch (e) { alert("추출 실패"); }
 }
 
 function handleAdminAccess() { sc++; if(sc>=3) { sc=0; var p=prompt("Pass:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); updateAdminUI(); } } }
