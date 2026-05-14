@@ -38,7 +38,7 @@
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3>새 예약 추가</h3>
-            <div id="selectedSlotInfo"></div>
+            <div id="selectedSlotInfo" style="margin-bottom:10px; font-weight:bold; color:#2d3748;"></div>
             <div class="inputGroup">
                 <input id="alliance" type="text" placeholder="연맹명 (예: ZTP)">
                 <input id="player" type="text" placeholder="닉네임">
@@ -56,12 +56,12 @@
     <div id="reservedModal" class="modal">
         <div class="modalBox">
             <h3>예약 현황</h3>
-            <div id="reservedSlotInfo"></div>
-            <div id="attendeeListDetail" class="attendeeListDetail"></div>
+            <div id="reservedSlotInfo" style="margin-bottom:10px; font-weight:bold;"></div>
+            <div id="attendeeListDetail" class="attendeeListDetail" style="max-height:200px; overflow-y:auto; margin-bottom:15px;"></div>
             <hr>
             <div class="cancelArea">
-                <p>취소 비밀번호</p>
-                <input id="editPassword" type="password" placeholder="비밀번호">
+                <p style="font-size:12px; margin:10px 0 5px;">취소 비밀번호 입력</p>
+                <input id="editPassword" type="password" placeholder="비밀번호" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:5px; box-sizing:border-box;">
                 <div class="buttonRow">
                     <button type="button" onclick="confirmCancel()" class="btn-danger">취소하기</button>
                     <button type="button" onclick="openReserveFromStatus()" class="btn-primary">추가 예약</button>
