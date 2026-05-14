@@ -19,7 +19,7 @@
             <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search" oninput="renderAll()">
             <select id="filterStatus" onchange="renderAll()">
                 <option value="all">전체 보기 / View All</option>
-                <option value="mine">내 예약 / My Booking</option>
+                <option value="mine">내 예약 확인 / My Booking</option>
             </select>
             <button type="button" onclick="clearSearch()" style="padding:10px; border-radius:8px; border:1px solid #ddd; background:#fff; cursor:pointer;">Reset</button>
         </div>
@@ -86,13 +86,13 @@
             <div class="adminSection">
                 <p style="font-size:13px; font-weight:800;">요일별 제어 / Day Control</p>
                 <div class="buttonRow">
-                    <button type="button" onclick="toggleTabStatus('monday')" id="btn-admin-monday" class="btn-primary">Mon</button>
-                    <button type="button" onclick="toggleTabStatus('tuesday')" id="btn-admin-tuesday" class="btn-primary">Tue</button>
-                    <button type="button" onclick="toggleTabStatus('thursday')" id="btn-admin-thursday" class="btn-primary">Thu</button>
+                    <button type="button" onclick="toggleTabStatus('monday')" id="btn-admin-monday">Mon On/Off</button>
+                    <button type="button" onclick="toggleTabStatus('tuesday')" id="btn-admin-tuesday">Tue On/Off</button>
+                    <button type="button" onclick="toggleTabStatus('thursday')" id="btn-admin-thursday">Thu On/Off</button>
                 </div>
                 <div class="buttonRow" style="margin-top:10px;">
-                    <button type="button" onclick="toggleAllTabs(true)" class="btn-primary">전체 열기</button>
-                    <button type="button" onclick="toggleAllTabs(false)" class="btn-danger">전체 닫기</button>
+                    <button type="button" onclick="toggleAllTabs(true)" class="btn-primary" style="background:#bbdefb; color:#1976d2;">전체 열기</button>
+                    <button type="button" onclick="toggleAllTabs(false)" class="btn-danger" style="background:#ffcdd2; color:#e53935;">전체 닫기</button>
                 </div>
             </div>
             <div class="adminSection">
