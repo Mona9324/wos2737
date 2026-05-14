@@ -13,7 +13,7 @@ function formatLocalTime(date) { return date.toLocaleTimeString([], { hour: '2-d
 function init() {
     db.collection("settings").doc("booking").onSnapshot(doc => { 
         if(doc.exists) bookingSettings = doc.data(); 
-        updateStatusMessage(); renderAll(); updateAdminUI();
+        updateStatusMessage(); updateAdminUI(); renderAll();
     });
     db.collection("slots").onSnapshot(snap => {
         allSlotsData = {}; snap.forEach(doc => { allSlotsData[doc.id] = doc.data(); });
@@ -51,7 +51,6 @@ function renderAll() {
             const div = document.createElement("div");
             div.className = "slot " + (h >= 12 ? "pm-slot" : "") + (isLocked ? " locked" : "");
             
-            // 캡처 수정 사항: flex를 사용하여 시간과 인원 분리
             div.innerHTML = `
                 <div class="timeRow"><span class="timeUTC">${tId}~${eId} UTC</span><span>${slot.attendees.length}명</span></div>
                 <div style="font-size:11px; color:#718096; margin-bottom:10px;">Local: ${formatLocalTime(new Date(new Date().setUTCHours(h,m,0,0)))}</div>
@@ -74,19 +73,31 @@ function toggleAllTabs(status) {
 }
 
 function exportAllCSV() {
-    const wb = XLSX.utils.book_new();
-    ["monday", "tuesday", "thursday"].forEach(day => {
-        const rows = [];
-        Object.keys(allSlotsData).filter(k=>k.startsWith(day)).sort().forEach(id => {
-            allSlotsData[id].attendees.forEach(a => rows.push({Time: id.split('_')[1], Alliance: a.alliance, Nickname: a.player, Days: a.daysSaved}));
+    try {
+        const wb = XLSX.utils.book_new();
+        ["monday", "tuesday", "thursday"].forEach(day => {
+            const rows = [];
+            Object.keys(allSlotsData).filter(k=>k.startsWith(day)).sort().forEach(id => {
+                allSlotsData[id].attendees.forEach(a => rows.push({Time: id.split('_')[1], Alliance: a.alliance, Nickname: a.player, Days: a.daysSaved}));
+            });
+            if(rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day);
         });
-        if(rows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day);
-    });
-    XLSX.writeFile(wb, "SVS_Booking.xlsx");
-    addLog("엑셀 추출 완료");
+        XLSX.writeFile(wb, "SVS_Booking.xlsx");
+        addLog("엑셀 추출 완료");
+    } catch(e) { alert("XLSX 라이브러리 오류"); }
 }
 
 function handleAdminAccess() { sc++; if(sc>=3) { sc=0; if(prompt("Pass:")==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); addLog("관리자 로그인"); } } }
-function init() { /* 위와 동일 */ } 
-// ... 나머지 취소/예약 함수들 (이전 로직 유지) ...
+function clearSearch() { document.getElementById("searchInput").value = ""; renderAll(); }
+function updateStatusMessage() { 
+    var el = document.getElementById("bookingStatusMsg");
+    if(el) el.innerText = bookingSettings.tabs[currentBuff].isOpen ? "✅ 모든 슬롯 예약 가능 / Booking is Open" : "🔒 예약 잠금 상태 / Booking is Locked";
+}
+function updateCountdown() {
+    var diff = new Date(bookingSettings.baseDate) - new Date();
+    while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000;
+    var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000);
+    if(document.getElementById("countdown")) document.getElementById("countdown").innerText = `Next SVS in ${d}d ${h}h ${m}m`;
+}
+
 init();
