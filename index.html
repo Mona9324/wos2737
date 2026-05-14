@@ -34,28 +34,24 @@
         <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
     </section>
 
-    <main>
-        <div id="slots" class="grid"></div>
-    </main>
+    <main><div id="slots" class="grid"></div></main>
 
-    <!-- 예약 신청 모달 -->
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3>새 예약 추가 / New Booking</h3>
             <div id="selectedSlotInfo" class="selectedSlotInfo"></div>
             <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="연맹명 / Alliance (e.g. ZTP)">
+                <input id="alliance" type="text" placeholder="연맹명 / Alliance">
                 <input id="player" type="text" placeholder="닉네임 / Nickname">
-                <input id="playerId" type="text" placeholder="ID (숫자 9개) / Player ID" maxlength="9">
-                <input id="daysSaved" type="number" placeholder="사용 가속(일) / Speed-up Days">
-                <input id="password" type="password" placeholder="비밀번호(취소용) / Password">
+                <input id="playerId" type="text" placeholder="ID (숫자 9개)" maxlength="9">
+                <input id="daysSaved" type="number" placeholder="사용 가속(일)">
+                <input id="password" type="password" placeholder="비밀번호(취소용)">
             </div>
-            <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정 / Confirm Booking</button>
-            <button type="button" onclick="closeModal()" class="btn-secondary">닫기 / Close</button>
+            <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정</button>
+            <button type="button" onclick="closeModal()" class="btn-secondary">닫기</button>
         </div>
     </div>
 
-    <!-- 현황 모달 -->
     <div id="reservedModal" class="modal">
         <div class="modalBox">
             <h3>예약 현황 / Booking Status</h3>
@@ -63,58 +59,52 @@
             <div id="attendeeListDetail" class="attendeeListDetail"></div>
             <hr>
             <div class="cancelArea">
-                <p>예약 취소시 사용할 비밀번호 / Enter password to cancel</p>
-                <input id="editPassword" type="password" placeholder="비밀번호 / Password">
+                <p>예약 취소시 사용할 비밀번호</p>
+                <input id="editPassword" type="password" placeholder="비밀번호">
                 <div class="buttonRow">
-                    <button type="button" onclick="confirmCancel()" class="btn-danger">예약 취소 / Cancel</button>
-                    <button type="button" onclick="openReserveModal(selectedSlot)" class="btn-primary">추가 예약 / Add More</button>
+                    <button type="button" onclick="confirmCancel()" class="btn-danger">예약 취소</button>
+                    <button type="button" onclick="openReserveModal(selectedSlot)" class="btn-primary">추가 예약</button>
                 </div>
             </div>
-            <button type="button" onclick="closeReservedModal()" class="btn-secondary" style="width:100%; margin-top:10px;">닫기 / Close</button>
+            <button type="button" onclick="closeReservedModal()" class="btn-secondary" style="width:100%; margin-top:10px;">닫기</button>
         </div>
     </div>
 
-    <!-- 서버 관리자 시스템 -->
     <div id="adminPanel" class="adminPanel">
         <button type="button" class="adminCloseBtn" onclick="closeAdmin()">×</button>
-        <div class="adminHeader">
-            <h3>서버 관리자 시스템 / Admin System</h3>
-        </div>
+        <div class="adminHeader"><h3>서버 관리자 시스템</h3></div>
         <div class="adminBody">
             <div class="adminSection">
-                <h4>SvS 기준일 설정 / SvS Base Date</h4>
+                <h4>SvS 기준일 설정</h4>
                 <div class="adminInputRow">
                     <input id="adminBaseDate" type="datetime-local">
                     <button onclick="saveAdminBaseDate()" class="adminBtn excel" style="width:30%;">저장</button>
                 </div>
             </div>
             <div class="adminSection">
-                <h4>요일별 예약 제어 / Toggle Tabs</h4>
+                <h4>요일별 예약 제어</h4>
                 <div class="adminButtonGroup" style="flex-wrap: wrap;">
-                    <button onclick="toggleTabStatus('monday')" class="adminBtn open">Monday On/Off</button>
-                    <button onclick="toggleTabStatus('tuesday')" class="adminBtn open">Tuesday On/Off</button>
-                    <button onclick="toggleTabStatus('thursday')" class="adminBtn open">Thursday On/Off</button>
-                    <button onclick="toggleAllTabs(true)" class="adminBtn open" style="background:#2d5468">전체 오픈</button>
+                    <button onclick="toggleTabStatus('monday')" class="adminBtn">Monday On/Off</button>
+                    <button onclick="toggleTabStatus('tuesday')" class="adminBtn">Tuesday On/Off</button>
+                    <button onclick="toggleTabStatus('thursday')" class="adminBtn">Thursday On/Off</button>
+                    <button onclick="toggleAllTabs(true)" class="adminBtn">전체 오픈</button>
                     <button onclick="toggleAllTabs(false)" class="adminBtn lock">전체 잠금</button>
                 </div>
             </div>
             <div class="adminSection">
-                <h4>데이터 관리 / Data</h4>
+                <h4>데이터 관리</h4>
                 <div class="adminButtonGroup">
-                    <button onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출 / Excel</button>
-                    <button onclick="backupAndClearAll()" class="adminBtn clear">전체 초기화 / All Cancle</button>
+                    <button onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출</button>
+                    <button onclick="backupAndClearAll()" class="adminBtn clear">전체 초기화</button>
                 </div>
             </div>
             <div class="adminSection">
-                <h4>시스템 로그 / Logs</h4>
+                <h4>시스템 로그</h4>
                 <div id="logsBox" class="logsBox"></div>
             </div>
         </div>
     </div>
 
-    <div id="toastContainer" class="toastContainer"></div>
-
-    <!-- 스크립트 라이브러리 로드 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
