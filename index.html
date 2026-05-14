@@ -10,7 +10,9 @@
     <canvas id="snow"></canvas>
     <header>
         <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
-        <div id="countdown"></div>
+        <!-- SVS 카운트다운 복구 -->
+        <div id="countdown" class="countdown"></div>
+        
         <div class="creatorBadge">
             <img src="creator-dino.png" alt="Creator" class="creatorAvatar">
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
@@ -31,10 +33,8 @@
             <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (기술연구버프) / Tue (Research)</button>
             <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (용병훈련버프) / Thu (Train)</button>
         </div>
-        <div class="slotStats">
-            <span class="availableDot"></span> <span>예약 가능 / Available</span>
-            <span class="mineDot"></span> <span>내 예약 포함 / My Booking Incl.</span>
-        </div>
+        <!-- 예약 오픈 상태 메시지 -->
+        <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
     </section>
 
     <main>
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <!-- 상세 현황 모달 -->
+    <!-- 현황 모달 -->
     <div id="reservedModal" class="modal">
         <div class="modalBox">
             <h3>예약 현황 / Booking Status</h3>
@@ -86,15 +86,20 @@
         </div>
         <div class="adminBody">
             <div class="adminSection">
-                <h4>개별 예약 관리 / Select Slot to Manage</h4>
-                <div id="adminSelectedSlotLabel" class="selectedSlotInfo" style="margin-bottom:10px;">슬롯을 먼저 선택하세요</div>
-                <div id="adminAttendeeList" class="attendeeListDetail"></div>
+                <h4>예약 오픈 시간 설정 / Auto Schedule</h4>
+                <div class="adminInputRow">
+                    <label>Open At:</label> <input id="scheduleOpenAt" type="datetime-local">
+                </div>
+                <div class="adminInputRow">
+                    <label>Close At:</label> <input id="scheduleCloseAt" type="datetime-local">
+                </div>
+                <button onclick="saveAdminSchedule()" class="adminBtn excel" style="width:100%; margin-top:10px;">스케줄 저장 (Save Schedule)</button>
             </div>
             <div class="adminSection">
                 <h4>데이터 관리 / Data Management</h4>
                 <div class="adminButtonGroup">
                     <button onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출 (Excel)</button>
-                    <button onclick="backupAndClearAll()" class="adminBtn clear">데이터 전체 초기화 (Reset)</button>
+                    <button onclick="backupAndClearAll()" class="adminBtn clear">전체 데이터 초기화 (Reset)</button>
                 </div>
             </div>
             <div class="adminSection">
