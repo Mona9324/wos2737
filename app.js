@@ -9,7 +9,6 @@ var bookingSettings = {
     tabs: { monday: { isOpen: true }, tuesday: { isOpen: true }, thursday: { isOpen: true } } 
 };
 
-// 시간 포맷 함수 (00:00 형태로 반환)
 function padTime(h, m) { 
     if (m >= 60) { h += Math.floor(m / 60); m = m % 60; } h = h % 24; 
     return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0"); 
@@ -37,10 +36,9 @@ function init() {
 function updateStatusMessage() {
     var el = document.getElementById("bookingStatusMsg");
     var isOpen = (bookingSettings.tabs && bookingSettings.tabs[currentBuff]) ? bookingSettings.tabs[currentBuff].isOpen : false;
-    if(el) el.innerText = isOpen ? "✅ 모든 슬롯 예약 가능 / Booking is Open" : "🔒 예약이 잠겨 있습니다 / Booking is Locked";
+    if(el) el.innerText = isOpen ? "✅ 모든 슬롯 예약 가능 / Booking is Open" : "🔒 예약 잠금 상태 / Booking is Locked";
 }
 
-// 메인 화면 그리기 함수 (시간 범위 및 상위 3명 노출)
 function renderAll() {
     var grid = document.getElementById("slots");
     if (!grid) return;
@@ -55,32 +53,30 @@ function renderAll() {
             var timeId = padTime(h, m), endId = padTime(h, m + 30), id = currentBuff + "_" + timeId;
             var slot = allSlotsData[id] || { attendees: [] }, attendees = slot.attendees || [];
             
-            // 필터링 및 검색 로직
             if (filter === "mine" && !attendees.some(isMyReservation)) continue;
             if (search && !attendees.some(a => normalizeText(a.player).includes(search) || normalizeText(a.alliance).includes(search))) continue;
 
             var div = document.createElement("div");
             div.className = "slot " + (h >= 12 ? "pm-slot" : "") + (isTabLocked ? " locked" : "") + (attendees.some(isMyReservation) ? " myReservation" : "");
             
-            // 상위 3명 명단 생성
             var miniListHtml = "";
             attendees.slice(0, 3).forEach((a, i) => {
                 miniListHtml += `<div class="miniItem"><span>${i+1}. ${a.player}</span><span>${a.daysSaved}d</span></div>`;
             });
-            if (attendees.length > 3) miniListHtml += `<div style="text-align:center; font-size:10px; color:#a0aec0; margin-top:3px;">+ ${attendees.length - 3}명 더 있음</div>`;
+            if (attendees.length > 3) miniListHtml += `<div style="text-align:center; font-size:10px; color:#a0aec0; margin-top:3px;">+ ${attendees.length - 3} more</div>`;
 
             div.innerHTML = `
                 <div class="timeRow">
                     <span class="timeUTC">${timeId}~${endId} UTC</span>
-                    <span style="font-size:12px;">${attendees.length}명</span>
+                    <span style="font-size:11px;">${attendees.length} Booked</span>
                 </div>
                 <div style="font-size:11px; color:#718096; margin-bottom:10px;">Local: ${formatLocalTime(new Date(new Date().setUTCHours(h, m, 0, 0)))}</div>
-                <div class="attendeeMiniList">${miniListHtml || '<div style="color:#cbd5e0; text-align:center;">예약 없음</div>'}</div>
+                <div class="attendeeMiniList">${miniListHtml || '<div style="color:#cbd5e0; text-align:center; font-size:11px;">No Reservation</div>'}</div>
             `;
             
             div.onclick = (function(sId, lock) { 
                 return function() { 
-                    if(lock) return alert("잠겨있습니다."); 
+                    if(lock) return alert("잠겨있습니다 / Locked."); 
                     selectedSlot = sId; 
                     if (allSlotsData[sId]?.attendees?.length > 0) openReservedModal(sId);
                     else openReserveModal();
@@ -114,7 +110,7 @@ function openReservedModal(id) {
     allSlotsData[id]?.attendees?.forEach((a, i) => {
         var d = document.createElement("div");
         d.className = "miniItem"; d.style.fontSize = "14px"; d.style.padding = "5px 0";
-        d.innerHTML = `<span>${i+1}. [${a.alliance}] ${a.player}</span><span>${a.daysSaved}일 가속</span>`;
+        d.innerHTML = `<span>${i+1}. [${a.alliance}] ${a.player}</span><span>${a.daysSaved}d Speed-up</span>`;
         list.appendChild(d);
     });
     document.getElementById("reservedModal").classList.add("show");
@@ -122,22 +118,21 @@ function openReservedModal(id) {
 function closeReservedModal() { document.getElementById("reservedModal").classList.remove("show"); }
 function openReserveFromStatus() { closeReservedModal(); openReserveModal(); }
 
-// 예약 확정 로직
 function confirmBooking() {
     var a = document.getElementById("alliance").value, p = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("password").value;
-    if(!a || !p || !idNum || !pass) return alert("필수 정보를 입력하세요.");
+    if(!a || !p || !idNum || !pass) return alert("항목을 모두 입력하세요 / Fill all fields.");
     var newEntry = { alliance: a, player: p, playerId: idNum, playerNormalized: normalizeText(p), daysSaved: d, passwordHash: simpleHash(pass), createdAt: Date.now() };
     db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true})
-    .then(() => { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p })); closeModal(); alert("예약 성공!"); });
+    .then(() => { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p })); closeModal(); alert("예약 성공 / Success!"); });
 }
 
 function confirmCancel() {
     var pass = document.getElementById("editPassword").value, m = localStorage.getItem(MY_BOOKING_KEY);
-    if(!m || !pass) return alert("정보가 부족합니다.");
+    if(!m || !pass) return alert("정보가 부족합니다 / Missing info.");
     var mine = JSON.parse(m), ref = db.collection("slots").doc(selectedSlot);
     ref.get().then(doc => {
         var list = doc.data().attendees.filter(a => !(normalizeText(a.player) === normalizeText(mine.player) && a.passwordHash === simpleHash(pass)));
-        ref.update({ attendees: list }).then(() => { closeReservedModal(); alert("취소 완료"); });
+        ref.update({ attendees: list }).then(() => { closeReservedModal(); alert("취소 완료 / Cancelled."); });
     });
 }
 
@@ -152,5 +147,7 @@ function updateCountdown() {
     var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000);
     if(document.getElementById("countdown")) document.getElementById("countdown").innerText = `Next SVS in ${d}d ${h}h ${m}m`;
 }
+
+function clearSearch() { document.getElementById("searchInput").value = ""; renderAll(); }
 
 init();
