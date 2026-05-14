@@ -60,13 +60,20 @@ function renderAll() {
             if (search && !attendees.some(a => normalizeText(a.player).includes(search) || normalizeText(a.alliance).includes(search))) continue;
 
             var div = document.createElement("div");
-            div.className = "slot" + (attendees.some(isMyReservation) ? " myReservation" : "");
+            
+            // 시간대별 클래스 추가 (00~11시는 am, 12~23시는 pm)
+            var timeClass = (h < 12) ? "am-slot" : "pm-slot";
+            div.className = "slot " + timeClass + (attendees.some(isMyReservation) ? " myReservation" : "");
             
             var utcStart = timeId;
             var utcEnd = padTime(h, m + 30);
             var localDate = new Date(); localDate.setUTCHours(h, m, 0, 0);
 
-            var html = `<div class="timeRow"><span class="timeUTC">${utcStart}-${utcEnd} UTC</span><span class="statusAvailable">${attendees.length} Booked</span></div>`;
+            // UTC0 버그 수정: UTC 글자와 숫자 사이에 명확한 구분 추가
+            var html = `<div class="timeRow">
+                            <span class="timeUTC">${utcStart}-${utcEnd} UTC</span>
+                            <span class="statusAvailable">${attendees.length} 명 예약됨 / Booked</span>
+                        </div>`;
             html += `<div class="timeLocal">Local: ${formatLocalTime(localDate)}</div><div class="attendeeListWrap">`;
             
             attendees.slice(0, 3).forEach((p, i) => {
@@ -92,7 +99,7 @@ function renderAll() {
 function updateTabs() { document.querySelectorAll(".tabs button").forEach(btn => btn.classList.toggle("active", btn.id === "tab-" + currentBuff)); }
 function switchBuff(b) { currentBuff = b; renderAll(); }
 
-// 모달 전환 로직
+// 모달 전환 로직 (Add More 클릭 시 현황 창 닫고 바로 예약 창 열기)
 function openReserveModal(id) {
     closeReservedModal();
     selectedSlot = id;
@@ -173,13 +180,13 @@ function confirmCancel() {
     }).then(() => { closeReservedModal(); alert("취소됨 / Cancelled."); }).catch(e => alert(e));
 }
 
-// 관리자 보안 및 기능
+// 관리자 보안
 var sc = 0;
 document.querySelector(".creatorAvatar").onclick = function() {
     var now = Date.now();
     if (now < lockoutTime) {
         var remain = Math.ceil((lockoutTime - now) / 60000);
-        alert(`보안 잠금 중입니다. ${remain}분 후 다시 시도하세요 / Locked for ${remain}m.`);
+        alert(`보안 잠금 중: ${remain}분 후 가능 / Locked for ${remain}m.`);
         return;
     }
     sc++;
@@ -195,9 +202,9 @@ document.querySelector(".creatorAvatar").onclick = function() {
             loginAttempts++;
             if (loginAttempts >= 3) {
                 lockoutTime = Date.now() + 3600000;
-                alert("3회 실패: 1시간 동안 차단됩니다 / 3 failures: Locked for 1h.");
+                alert("3회 실패: 1시간 차단 / Locked for 1h.");
             } else {
-                alert(`비밀번호가 틀렸습니다 (${loginAttempts}/3) / Wrong password.`);
+                alert(`틀림 (${loginAttempts}/3) / Wrong.`);
             }
         }
     }
@@ -208,7 +215,7 @@ function closeAdmin() { document.getElementById("adminPanel").classList.remove("
 function updateAdminAttendeeList() {
     var label = document.getElementById("adminSelectedSlotLabel");
     var list = document.getElementById("adminAttendeeList");
-    if(!selectedSlot) { label.innerText = "슬롯을 먼저 클릭하세요"; list.innerHTML = ""; return; }
+    if(!selectedSlot) { label.innerText = "슬롯 선택 필요"; list.innerHTML = ""; return; }
     
     label.innerText = `관리 중: ${selectedSlot}`;
     var slot = allSlotsData[selectedSlot];
@@ -219,14 +226,14 @@ function updateAdminAttendeeList() {
             var d = document.createElement("div");
             d.className = "attendeeItem";
             d.innerHTML = `<span>${i+1}. [${a.alliance}] ${a.player}</span>
-                           <button onclick="adminCancelBooking('${a.playerNormalized}', '${a.createdAt}')" style="background:#ff7d7d; border:none; color:white; border-radius:4px; padding:2px 5px; cursor:pointer;">삭제</button>`;
+                           <button onclick="adminCancelBooking('${a.playerNormalized}', '${a.createdAt}')" style="background:#ff7d7d; border:none; color:white; border-radius:4px; padding:4px 8px; cursor:pointer;">삭제</button>`;
             list.appendChild(d);
         });
     } else { list.innerHTML = "예약자 없음"; }
 }
 
 function adminCancelBooking(playerNorm, createdAt) {
-    if(!confirm("이 예약을 삭제하시겠습니까? / Delete this?")) return;
+    if(!confirm("삭제하시겠습니까? / Delete?")) return;
     var ref = db.collection("slots").doc(selectedSlot);
     db.runTransaction(t => {
         return t.get(ref).then(doc => {
@@ -234,7 +241,7 @@ function adminCancelBooking(playerNorm, createdAt) {
             var newList = attendees.filter(a => !(a.playerNormalized === playerNorm && a.createdAt == createdAt));
             t.update(ref, { attendees: newList });
         });
-    }).then(() => alert("삭제 완료"));
+    }).then(() => { alert("삭제 완료"); updateAdminAttendeeList(); });
 }
 
 function loadLogs() { document.getElementById("logsBox").innerHTML = "[" + new Date().toLocaleString() + "] Admin session started."; }
