@@ -1,33 +1,106 @@
-<!-- 헤더 영역 수정 -->
-<div class="creatorBadge">
-    <img src="creator-dino.png" alt="Creator" class="creatorAvatar">
-    <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
-</div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2737 SVS Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="snow"></canvas>
+    <header>
+        <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
+        <div id="countdown"></div>
+        <div class="creatorBadge">
+            <img src="creator-dino.png" alt="Creator" class="creatorAvatar">
+            <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
+        </div>
+        <div class="headerToolbar">
+            <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search Alliance or Nickname">
+            <select id="filterStatus" onchange="renderAll()">
+                <option value="all">전체 보기 / View All</option>
+                <option value="mine">내 예약 확인 / My Booking</option>
+            </select>
+            <button type="button" onclick="clearSearch()">초기화 / Reset</button>
+        </div>
+    </header>
 
-<!-- 상세 관리자 패널 (Admin Panel) 추가 -->
-<div id="adminPanel" class="adminPanel">
-    <button type="button" class="adminCloseBtn" onclick="closeAdmin()">×</button>
-    <h3>관리자 패널 / Admin Panel</h3>
-    
-    <div class="adminSection">
-        <h4>데이터 관리 / Data Management</h4>
-        <div class="buttonRow">
-            <button type="button" onclick="exportAllCSV()">전체 엑셀 출력 (Excel)</button>
-            <button type="button" onclick="backupAndClearAll()">전체 데이터 초기화 (Clear)</button>
+    <section class="tabsWrap">
+        <div class="tabs">
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월 (건설) / Mon (Build)</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화 (연구) / Tue (Research)</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목 (훈련) / Thu (Train)</button>
+        </div>
+        <div class="slotStats">
+            <span class="availableDot"></span> <span>예약 가능 / Available</span>
+            <span class="mineDot"></span> <span>내 예약 포함 / My Booking Incl.</span>
+        </div>
+    </section>
+
+    <main>
+        <div id="slots" class="grid"></div>
+    </main>
+
+    <!-- 예약 신청 모달 -->
+    <div id="modal" class="modal">
+        <div class="modalBox">
+            <h3>새 예약 추가 / New Booking</h3>
+            <div id="selectedSlotInfo" class="selectedSlotInfo"></div>
+            <div class="inputGroup">
+                <input id="alliance" type="text" placeholder="연맹명 / Alliance (e.g. ZTP)" list="allianceSuggestions">
+                <datalist id="allianceSuggestions"></datalist>
+                <input id="player" type="text" placeholder="닉네임 / Nickname">
+                <input id="daysSaved" type="number" placeholder="사용 가속(일) / Speed-up Days">
+                <input id="password" type="password" placeholder="비밀번호(취소용) / Password">
+            </div>
+            <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정 / Confirm Booking</button>
+            <button type="button" onclick="closeModal()" class="btn-secondary">닫기 / Close</button>
         </div>
     </div>
 
-    <div class="adminSection">
-        <h4>예약 제어 / Booking Control</h4>
-        <div class="buttonRow">
-            <button type="button" onclick="setManualBooking('monday', true)">월요일 열기</button>
-            <button type="button" onclick="setManualBooking('monday', false)">월요일 잠금</button>
+    <!-- 상세 현황 모달 -->
+    <div id="reservedModal" class="modal">
+        <div class="modalBox">
+            <h3>예약 현황 / Booking Status</h3>
+            <div id="reservedSlotInfo" class="selectedSlotInfo"></div>
+            <div id="attendeeListDetail" class="attendeeListDetail"></div>
+            <hr>
+            <div class="cancelArea">
+                <p>본인 예약 취소 시 비밀번호 입력 / Enter password to cancel</p>
+                <input id="editPassword" type="password" placeholder="비밀번호 / Password">
+                <div class="buttonRow">
+                    <button type="button" onclick="confirmCancel()" class="btn-danger">예약 취소 / Cancel</button>
+                    <button type="button" onclick="openReserveModal(selectedSlot)" class="btn-primary">추가 예약 / Add More</button>
+                </div>
+            </div>
+            <button type="button" onclick="closeReservedModal()" class="btn-secondary" style="width:100%; margin-top:10px;">닫기 / Close</button>
         </div>
-        <p style="font-size:11px; color:gray; margin-top:5px;">* 수동으로 예약 가능 여부를 설정할 수 있습니다.</p>
     </div>
 
-    <div class="adminSection">
-        <h4>시스템 로그 / Logs</h4>
-        <div id="logsBox" class="logsBox">로그를 불러오는 중...</div>
+    <!-- 관리자 패널 -->
+    <div id="adminPanel" class="adminPanel">
+        <button type="button" class="adminCloseBtn" onclick="closeAdmin()">×</button>
+        <h3>관리자 패널 / Admin Panel</h3>
+        <div class="adminSection">
+            <h4>데이터 관리 / Data Management</h4>
+            <div class="buttonRow">
+                <button type="button" onclick="exportAllCSV()">엑셀 출력 (Excel)</button>
+                <button type="button" onclick="backupAndClearAll()">데이터 초기화 (Clear)</button>
+            </div>
+        </div>
+        <div class="adminSection">
+            <h4>시스템 로그 / Logs</h4>
+            <div id="logsBox" class="logsBox">로그 대기 중...</div>
+        </div>
     </div>
-</div>
+
+    <div id="toastContainer" class="toastContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
