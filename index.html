@@ -97,7 +97,7 @@
             <div class="adminSection">
                 <h4>데이터 관리 / Data</h4>
                 <div class="adminButtonGroup">
-                    <button onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출</button>
+                    <button id="exportBtn" onclick="exportAllCSV()" class="adminBtn excel">엑셀 추출</button>
                     <button onclick="backupAndClearAll()" class="adminBtn clear">전체 초기화</button>
                 </div>
             </div>
@@ -109,7 +109,10 @@
     </div>
 
     <div id="toastContainer" class="toastContainer"></div>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    
+    <!-- 엑셀 라이브러리 (cdnjs 사용) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- 파이어베이스 -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
