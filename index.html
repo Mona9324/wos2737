@@ -16,7 +16,7 @@
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
         </div>
         <div class="headerToolbar">
-            <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search Alliance or Nickname" oninput="renderAll()">
+            <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search" oninput="renderAll()">
             <select id="filterStatus" onchange="renderAll()">
                 <option value="all">전체 보기 / View All</option>
                 <option value="mine">내 예약 확인 / My Booking</option>
@@ -34,7 +34,7 @@
 
     <main><div id="slots" class="grid"></div></main>
 
-    <!-- 예약 신청 모달 / New Booking Modal -->
+    <!-- 새 예약 모달 / New Booking -->
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3>새 예약 추가 / New Booking</h3>
@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <!-- 예약 현황 모달 / Status Modal -->
+    <!-- 현황 모달 / Status -->
     <div id="reservedModal" class="modal">
         <div class="modalBox">
             <h3>예약 현황 / Booking Status</h3>
@@ -61,7 +61,7 @@
             <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
             <hr>
             <div class="cancelArea" style="margin-top:20px;">
-                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 입력 / Password to Cancel</p>
+                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 / Password to Cancel</p>
                 <input id="editPassword" type="password" placeholder="Password">
                 <div class="buttonRow">
                     <button type="button" onclick="confirmCancel()" class="btn-danger">취소하기 / Cancel</button>
@@ -72,8 +72,41 @@
         </div>
     </div>
 
-    <!-- 관리자 패널 생략 (이전과 동일) -->
-    
+    <!-- 관리자 패널 / Admin -->
+    <div id="adminPanel" class="modal">
+        <div class="modalBox" style="max-width: 550px;">
+            <h3>관리자 시스템 / Admin System</h3>
+            <div class="adminSection">
+                <p style="font-size:13px; font-weight:800;">SVS 기준일 설정 / Base Date</p>
+                <div class="buttonRow">
+                    <input id="adminBaseDate" type="datetime-local" style="flex:2; padding:10px; border-radius:8px; border:1px solid #ddd;">
+                    <button onclick="saveAdminBaseDate()" class="btn-primary" style="flex:1;">저장</button>
+                </div>
+            </div>
+            <div class="adminSection">
+                <p style="font-size:13px; font-weight:800;">요일별 제어 / Day Control</p>
+                <div class="buttonRow">
+                    <button id="btn-admin-monday" onclick="toggleTabStatus('monday')">Mon</button>
+                    <button id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tue</button>
+                    <button id="btn-admin-thursday" onclick="toggleTabStatus('thursday')">Thu</button>
+                </div>
+                <div class="buttonRow" style="margin-top:10px;">
+                    <button onclick="toggleAllTabs(true)" class="btn-primary">전체 열기</button>
+                    <button onclick="toggleAllTabs(false)" class="btn-danger">전체 닫기</button>
+                </div>
+            </div>
+            <div class="adminSection">
+                <p style="font-size:13px; font-weight:800;">데이터 관리 / Data</p>
+                <div class="buttonRow">
+                    <button onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출</button>
+                    <button onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button>
+                </div>
+            </div>
+            <div id="logsBox" class="logsBox"></div>
+            <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
