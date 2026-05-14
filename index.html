@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2737 SVS Booking (Multi)</title>
+    <title>2737 SVS Booking</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,7 +19,7 @@
             <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색">
             <select id="filterStatus" onchange="renderAll()">
                 <option value="all">전체 보기</option>
-                <option value="mine">내 예약만</option>
+                <option value="mine">내 예약 확인</option>
             </select>
             <button type="button" onclick="clearSearch()">초기화</button>
         </div>
@@ -27,13 +27,13 @@
 
     <section class="tabsWrap">
         <div class="tabs">
-            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월 (건설)</button>
-            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화 (연구)</button>
-            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목 (훈련)</button>
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설)</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구)</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련)</button>
         </div>
         <div class="slotStats">
             <span class="availableDot"></span> <span>예약 가능</span>
-            <span class="mineDot"></span> <span>내 예약 포함</span>
+            <span class="mineDot"></span> <span>내 예약 포함됨</span>
         </div>
     </section>
 
@@ -41,33 +41,35 @@
         <div id="slots" class="grid"></div>
     </main>
 
-    <!-- 예약하기 모달 -->
+    <!-- 예약 신청 모달 -->
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3>새 예약 추가</h3>
             <div id="selectedSlotInfo" class="selectedSlotInfo"></div>
-            <input id="alliance" type="text" placeholder="연맹명" list="allianceSuggestions">
+            <input id="alliance" type="text" placeholder="연맹명 (예: ABC)" list="allianceSuggestions">
             <datalist id="allianceSuggestions"></datalist>
-            <input id="player" type="text" placeholder="플레이어 닉네임">
-            <input id="daysSaved" type="number" placeholder="사용 가속 (일)">
+            <input id="player" type="text" placeholder="게임 닉네임">
+            <input id="daysSaved" type="number" placeholder="사용 가속 (일 단위)">
             <input id="password" type="password" placeholder="취소용 비밀번호">
-            <button type="button" onclick="confirmBooking()" class="btn-primary">예약하기</button>
+            <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정</button>
             <button type="button" onclick="closeModal()" class="btn-secondary">닫기</button>
         </div>
     </div>
 
-    <!-- 예약 확인/관리 모달 -->
+    <!-- 예약 현황 및 관리 모달 -->
     <div id="reservedModal" class="modal">
         <div class="modalBox">
             <h3>슬롯 예약 현황</h3>
             <div id="reservedSlotInfo" class="selectedSlotInfo"></div>
             <div id="attendeeListDetail" class="attendeeListDetail"></div>
             <hr>
-            <p style="font-size:12px; color:gray;">본인 예약을 취소하려면 아래 비밀번호를 입력하세요.</p>
-            <input id="editPassword" type="password" placeholder="비밀번호">
-            <div class="buttonRow">
-                <button type="button" onclick="confirmCancel()" class="btn-danger">내 예약 취소</button>
-                <button type="button" onclick="openReserveModal(selectedSlot)" class="btn-primary">추가 예약하기</button>
+            <div class="cancelArea">
+                <p>본인 예약을 취소하려면 비밀번호를 입력하세요.</p>
+                <input id="editPassword" type="password" placeholder="비밀번호">
+                <div class="buttonRow">
+                    <button type="button" onclick="confirmCancel()" class="btn-danger">내 예약 취소</button>
+                    <button type="button" onclick="openReserveModal(selectedSlot)" class="btn-primary">추가 예약하기</button>
+                </div>
             </div>
             <button type="button" onclick="closeReservedModal()" class="btn-secondary" style="width:100%; margin-top:10px;">닫기</button>
         </div>
