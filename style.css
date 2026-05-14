@@ -1,78 +1,56 @@
-/* ===== 기본 설정 및 레이아웃 ===== */
+/* 기본 배경 및 폰트 */
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 header { padding: 20px; position: relative; z-index: 1; }
 
-/* ===== 프로필 이미지 확대 및 텍스트 수정 ===== */
+/* 프로필 이미지 확대 및 텍스트 */
 .creatorBadge { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
 .creatorAvatar { 
-    width: 120px; /* 크기 확대 */
-    height: 120px; 
-    border-radius: 50%; 
-    border: 4px solid #d6b347; 
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-    cursor: pointer;
-    transition: 0.3s;
+    width: 120px; height: 120px; border-radius: 50%; border: 4px solid #d6b347; 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15); cursor: pointer; transition: 0.3s;
 }
 .creatorAvatar:hover { transform: scale(1.05); }
-.creatorCredit { 
-    font-size: 15px; 
-    font-weight: 800; 
-    color: #4b5563; 
-    margin-top: 10px; 
-}
+.creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
-/* ===== 탭 디자인 (아기자기한 스타일) ===== */
+/* 툴바 */
+.headerToolbar { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; padding: 0 10px; }
+.headerToolbar input { min-width: 250px; }
+.headerToolbar input, .headerToolbar select, .headerToolbar button { padding: 10px; border-radius: 8px; border: 1px solid #cfd8e3; font-size: 13px; }
+
+/* 아기자기한 탭 디자인 */
 .tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 15px; flex-wrap: wrap; }
 .tabs button { 
-    padding: 12px 18px; border: none; border-radius: 15px; 
-    background: #d8f2ff; color: #2d5468; cursor: pointer; 
-    font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; transition: 0.2s;
+    padding: 12px 18px; border: none; border-radius: 15px; background: #d8f2ff; color: #2d5468; 
+    cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; transition: 0.2s;
 }
 .tabs button.active { background: #bfe7fb; box-shadow: 0 2px 0px #a8d5eb; transform: translateY(2px); }
 
-/* ===== 관리자 패널 (스크린샷 문제 해결) ===== */
-.adminPanel {
-    display: none; /* 기본적으로 숨김 */
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%; max-width: 500px;
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    z-index: 2000;
-    text-align: left;
+/* 그리드 및 카드 슬롯 */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
+.slot { 
+    background: white; border-radius: 16px; padding: 20px; text-align: left; border-left: 8px solid #8bd18b; 
+    cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
-.adminPanel.show { display: block; } /* 클릭 시 나타남 */
+.slot.myReservation { border-left-color: #5b60df; background: #f0f4ff; }
+.timeUTC { font-size: 17px; font-weight: 800; }
+
+/* 예약자 리스트 */
+.attendeeListWrap { margin-top: 12px; border-top: 1px solid #eee; padding-top: 12px; display: flex; flex-direction: column; gap: 5px; }
+.attendeeItem { display: flex; justify-content: space-between; font-size: 13px; background: #f9fafb; padding: 6px 10px; border-radius: 6px; }
+.attendeeItem.isMine { background: #e0e7ff; font-weight: bold; border: 1px solid #c7d2fe; }
+
+/* 모달 및 입력창 */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+.modal.show { display: flex; }
+.modalBox { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 460px; display: flex; flex-direction: column; gap: 15px; }
+.modalBox input { width: 100%; height: 52px; padding: 0 16px; font-size: 16px; border: 2px solid #e5e7eb; border-radius: 12px; box-sizing: border-box; outline: none; }
+.btn-primary { background: #7da7ff; color: white; border: none; height: 54px; border-radius: 12px; cursor: pointer; font-weight: 800; font-size: 16px; }
+.btn-secondary { background: #f3f4f6; color: #333; border: none; height: 50px; border-radius: 12px; cursor: pointer; }
+.btn-danger { background: #ef4444; color: white; border: none; height: 54px; border-radius: 12px; cursor: pointer; font-weight: 800; }
+
+/* 관리자 패널 디자인 */
+.adminPanel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); z-index: 2000; text-align: left; }
+.adminPanel.show { display: block; }
+.adminSection { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+.logsBox { height: 120px; overflow-y: auto; background: #111827; color: #10b981; font-family: monospace; font-size: 12px; padding: 10px; border-radius: 8px; }
 .adminCloseBtn { position: absolute; top: 15px; right: 15px; font-size: 24px; border: none; background: none; cursor: pointer; }
-
-.adminSection {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-}
-.adminSection h4 { margin: 0 0 10px 0; font-size: 16px; color: #1f2937; }
-
-.logsBox {
-    height: 120px; overflow-y: auto;
-    background: #111827; color: #10b981;
-    font-family: monospace; font-size: 12px;
-    padding: 10px; border-radius: 8px;
-}
-
-/* 버튼 공통 스타일 */
-button { cursor: pointer; }
-.buttonRow { display: flex; gap: 10px; }
-.adminSection button {
-    padding: 8px 12px; border: 1px solid #cfd8e3; border-radius: 8px;
-    background: white; font-weight: bold; font-size: 13px;
-}
-.adminSection button:hover { background: #f3f4f6; }
-
-/* ===== 그리드 슬롯 카드 ===== */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding: 20px; }
-.slot { background: white; border-radius: 12px; padding: 15px; text-align: left; border-left: 6px solid #8bd18b; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
