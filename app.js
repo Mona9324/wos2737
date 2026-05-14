@@ -87,7 +87,7 @@ function renderAll() {
 }
 
 function confirmBooking() {
-    var a = document.getElementById("alliance").value, p = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("password").value;
+    var a = document.getElementById("alliance").value, p = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("cancelKey").value;
     if(!a || !p || !idNum || !pass) return alert("필수 정보를 입력하세요. / Fill all fields.");
     if(idNum.length !== 9 || isNaN(idNum)) return alert("ID는 9자리 숫자여야 합니다. / ID must be 9 digits.");
     
@@ -95,19 +95,25 @@ function confirmBooking() {
     db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true})
     .then(() => { 
         localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p })); 
-        closeModal(); addLog(`New Booking: ${p} (${selectedSlot})`); alert("예약 성공! / Success!"); 
+        closeModal(); addLog(`New Booking: ${p} (${selectedSlot})`); 
+        document.getElementById("cancelKey").value = "";
+        alert("예약 성공! / Success!"); 
     });
 }
 
 function confirmCancel() {
-    var pass = document.getElementById("editPassword").value, m = localStorage.getItem(MY_BOOKING_KEY);
+    var pass = document.getElementById("editCancelKey").value, m = localStorage.getItem(MY_BOOKING_KEY);
     if(!m || !pass) return alert("비밀번호를 입력하세요. / Check password.");
     var mine = JSON.parse(m), ref = db.collection("slots").doc(selectedSlot);
     ref.get().then(doc => {
         if(!doc.exists) return;
         var list = doc.data().attendees.filter(a => !(normalizeText(a.player) === normalizeText(mine.player) && a.passwordHash === simpleHash(pass)));
         if(list.length === doc.data().attendees.length) return alert("비밀번호가 틀렸습니다. / Wrong password.");
-        ref.update({ attendees: list }).then(() => { closeReservedModal(); addLog(`Cancelled: ${mine.player} (${selectedSlot})`); alert("취소 완료 / Cancelled."); });
+        ref.update({ attendees: list }).then(() => { 
+            closeReservedModal(); addLog(`Cancelled: ${mine.player} (${selectedSlot})`); 
+            document.getElementById("editCancelKey").value = "";
+            alert("취소 완료 / Cancelled."); 
+        });
     });
 }
 
@@ -143,7 +149,16 @@ function clearSearch() { document.getElementById("searchInput").value = ""; rend
 function closeModal() { document.getElementById("modal").classList.remove("show"); }
 function closeReservedModal() { document.getElementById("reservedModal").classList.remove("show"); }
 function closeAdmin() { document.getElementById("adminPanel").classList.remove("show"); }
-function openReserveModal() { var m = localStorage.getItem(MY_BOOKING_KEY); if(m) { var mine = JSON.parse(m); document.getElementById("alliance").value = mine.alliance; document.getElementById("player").value = mine.player; } document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; document.getElementById("modal").classList.add("show"); }
+function openReserveModal() { 
+    var m = localStorage.getItem(MY_BOOKING_KEY); 
+    if(m) { 
+        var mine = JSON.parse(m); 
+        document.getElementById("alliance").value = mine.alliance || ""; 
+        document.getElementById("player").value = mine.player || ""; 
+    } 
+    document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; 
+    document.getElementById("modal").classList.add("show"); 
+}
 
 function openReservedModal(id) { 
     document.getElementById("reservedSlotInfo").innerText = id.replace('_', ' ') + " UTC"; 
