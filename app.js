@@ -4,6 +4,10 @@ var allSlotsData = {};
 var db = window.db;
 var MY_BOOKING_KEY = "svs_my_booking_info";
 
+// 관리자 보안 설정
+var loginAttempts = 0;
+var lockoutTime = 0;
+
 // Utils
 function padTime(h, m) { 
     if (m >= 60) { h += Math.floor(m / 60); m = m % 60; }
@@ -34,10 +38,10 @@ function init() {
         allSlotsData = {};
         snap.forEach(doc => { allSlotsData[doc.id] = doc.data(); });
         renderAll();
+        if(document.getElementById("adminPanel").classList.contains("show")) updateAdminAttendeeList();
     });
 }
 
-// Render
 function renderAll() {
     var grid = document.getElementById("slots");
     if (!grid) return;
@@ -88,9 +92,9 @@ function renderAll() {
 function updateTabs() { document.querySelectorAll(".tabs button").forEach(btn => btn.classList.toggle("active", btn.id === "tab-" + currentBuff)); }
 function switchBuff(b) { currentBuff = b; renderAll(); }
 
-// 모달 전환 로직 수정 (현황 창 닫고 바로 예약 창 열기)
+// 모달 전환 로직
 function openReserveModal(id) {
-    closeReservedModal(); // 현황 창 닫기
+    closeReservedModal();
     selectedSlot = id;
     var info = id.split("_");
     document.getElementById("selectedSlotInfo").innerHTML = `<b>${info[0].toUpperCase()} / ${info[1]} UTC</b><br>예약 신청 / New Booking`;
@@ -123,7 +127,7 @@ function openReservedModal(id) {
 }
 function closeReservedModal() { document.getElementById("reservedModal").classList.remove("show"); }
 
-// Booking Actions (ID 포함)
+// Booking Actions
 function confirmBooking() {
     var a = document.getElementById("alliance").value.trim();
     var p = document.getElementById("player").value.trim();
@@ -131,7 +135,7 @@ function confirmBooking() {
     var d = document.getElementById("daysSaved").value;
     var pass = document.getElementById("password").value;
 
-    if(!/^\d{9}$/.test(idNum)) { alert("ID는 숫자 9자리를 입력해주세요.\nPlayer ID must be 9 digits."); return; }
+    if(!/^\d{9}$/.test(idNum)) { alert("ID는 숫자 9자리를 입력해주세요 / 9 digits ID required."); return; }
     if(!a || !p || !pass) { alert("모든 칸을 입력하세요 / Fill all fields."); return; }
 
     var newEntry = { alliance: a, player: p, playerId: idNum, playerNormalized: normalizeText(p), daysSaved: d, passwordHash: simpleHash(pass), createdAt: Date.now() };
@@ -169,26 +173,79 @@ function confirmCancel() {
     }).then(() => { closeReservedModal(); alert("취소됨 / Cancelled."); }).catch(e => alert(e));
 }
 
-// Admin Logic
+// 관리자 보안 및 기능
 var sc = 0;
 document.querySelector(".creatorAvatar").onclick = function() {
+    var now = Date.now();
+    if (now < lockoutTime) {
+        var remain = Math.ceil((lockoutTime - now) / 60000);
+        alert(`보안 잠금 중입니다. ${remain}분 후 다시 시도하세요 / Locked for ${remain}m.`);
+        return;
+    }
     sc++;
     if (sc >= 3) {
         sc = 0;
         var p = prompt("Admin Password:");
-        if (p === "2737") { document.getElementById("adminPanel").classList.add("show"); loadLogs(); }
-        else alert("Wrong!");
+        if (p === "2737") {
+            loginAttempts = 0;
+            document.getElementById("adminPanel").classList.add("show");
+            updateAdminAttendeeList();
+            loadLogs();
+        } else {
+            loginAttempts++;
+            if (loginAttempts >= 3) {
+                lockoutTime = Date.now() + 3600000;
+                alert("3회 실패: 1시간 동안 차단됩니다 / 3 failures: Locked for 1h.");
+            } else {
+                alert(`비밀번호가 틀렸습니다 (${loginAttempts}/3) / Wrong password.`);
+            }
+        }
     }
 };
+
 function closeAdmin() { document.getElementById("adminPanel").classList.remove("show"); }
+
+function updateAdminAttendeeList() {
+    var label = document.getElementById("adminSelectedSlotLabel");
+    var list = document.getElementById("adminAttendeeList");
+    if(!selectedSlot) { label.innerText = "슬롯을 먼저 클릭하세요"; list.innerHTML = ""; return; }
+    
+    label.innerText = `관리 중: ${selectedSlot}`;
+    var slot = allSlotsData[selectedSlot];
+    list.innerHTML = "";
+    
+    if(slot && slot.attendees) {
+        slot.attendees.forEach((a, i) => {
+            var d = document.createElement("div");
+            d.className = "attendeeItem";
+            d.innerHTML = `<span>${i+1}. [${a.alliance}] ${a.player}</span>
+                           <button onclick="adminCancelBooking('${a.playerNormalized}', '${a.createdAt}')" style="background:#ff7d7d; border:none; color:white; border-radius:4px; padding:2px 5px; cursor:pointer;">삭제</button>`;
+            list.appendChild(d);
+        });
+    } else { list.innerHTML = "예약자 없음"; }
+}
+
+function adminCancelBooking(playerNorm, createdAt) {
+    if(!confirm("이 예약을 삭제하시겠습니까? / Delete this?")) return;
+    var ref = db.collection("slots").doc(selectedSlot);
+    db.runTransaction(t => {
+        return t.get(ref).then(doc => {
+            var attendees = doc.data().attendees;
+            var newList = attendees.filter(a => !(a.playerNormalized === playerNorm && a.createdAt == createdAt));
+            t.update(ref, { attendees: newList });
+        });
+    }).then(() => alert("삭제 완료"));
+}
+
 function loadLogs() { document.getElementById("logsBox").innerHTML = "[" + new Date().toLocaleString() + "] Admin session started."; }
+
 function exportAllCSV() {
     var rows = [];
     Object.keys(allSlotsData).forEach(id => {
         var slot = allSlotsData[id];
         if (slot.attendees) {
             slot.attendees.forEach((a, idx) => {
-                rows.push({ Buff: id.split("_")[0], Time: id.split("_")[1], ID: a.playerId, Player: a.player, Days: a.daysSaved });
+                rows.push({ Buff: id.split("_")[0], Time: id.split("_")[1], ID: a.playerId, Alliance: a.alliance, Player: a.player, Days: a.daysSaved });
             });
         }
     });
@@ -197,6 +254,7 @@ function exportAllCSV() {
     XLSX.utils.book_append_sheet(wb, ws, "SVS");
     XLSX.writeFile(wb, "SVS_Booking.xlsx");
 }
+
 function backupAndClearAll() {
     if (confirm("Clear all data?")) {
         db.collection("slots").get().then(snap => {
@@ -205,6 +263,7 @@ function backupAndClearAll() {
         }).then(() => { alert("Cleared."); location.reload(); });
     }
 }
+
 function clearSearch() { document.getElementById("searchInput").value = ""; renderAll(); }
 document.getElementById("searchInput").oninput = renderAll;
 init();
