@@ -12,47 +12,46 @@
         <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
         <div id="countdown" class="countdown"></div>
         <div class="creatorBadge">
-            <img src="creator-dino.png" alt="Creator" class="creatorAvatar">
+            <!-- 클릭 이벤트 복구 -->
+            <img src="creator-dino.png" alt="Creator" class="creatorAvatar" id="adminTrigger" onclick="handleAdminAccess()">
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
         </div>
         <div class="headerToolbar">
-            <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search Alliance or Nickname" oninput="renderAll()">
+            <input id="searchInput" type="text" placeholder="검색 / Search" oninput="renderAll()">
             <select id="filterStatus" onchange="renderAll()">
-                <option value="all">전체 보기 / View All</option>
-                <option value="mine">내 예약 확인 / My Booking</option>
+                <option value="all">View All</option>
+                <option value="mine">My Booking</option>
             </select>
-            <button type="button" onclick="clearSearch()">초기화 / Reset</button>
+            <button type="button" onclick="clearSearch()">Reset</button>
         </div>
     </header>
 
     <section class="tabsWrap">
         <div class="tabs">
-            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설) / Monday (Construction Buff)</button>
-            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tuesday (Research Buff)</button>
-            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thursday (Troops train Buff)</button>
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설) / Mon</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tue</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thu</button>
         </div>
         <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
     </section>
 
-    <main>
-        <div id="slots" class="grid"></div>
-    </main>
+    <main><div id="slots" class="grid"></div></main>
 
     <!-- 예약 신청 모달 -->
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3>새 예약 추가 / New Booking</h3>
-            <div id="selectedSlotInfo" style="margin-bottom:10px; font-weight:bold; color:#2d3748;"></div>
+            <div id="selectedSlotInfo" style="margin-bottom:15px; font-weight:bold;"></div>
             <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="연맹명 / Alliance (ex.ZTP,BUG,ZYZ)">
+                <input id="alliance" type="text" placeholder="연맹명 / Alliance">
                 <input id="player" type="text" placeholder="닉네임 / Nickname">
-                <input id="playerId" type="text" placeholder="ID (숫자9개) / ID (9Number)" maxlength="9">
-                <input id="daysSaved" type="number" placeholder="사용 가속(일) / Speed-up (Days)">
-                <input id="password" type="password" placeholder="비밀번호(취소용) / Cancel Password">
+                <input id="playerId" type="text" placeholder="ID (9자리)" maxlength="9">
+                <input id="daysSaved" type="number" placeholder="사용 가속(일)">
+                <input id="password" type="password" placeholder="비밀번호(취소용)">
             </div>
             <div class="buttonRow">
-                <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정 / Confirm</button>
-                <button type="button" onclick="closeModal()" class="btn-secondary">닫기 / Close</button>
+                <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정</button>
+                <button type="button" onclick="closeModal()" class="btn-secondary" style="margin-top:0; width:auto; flex:1;">닫기</button>
             </div>
         </div>
     </div>
@@ -60,23 +59,37 @@
     <!-- 예약 현황 모달 -->
     <div id="reservedModal" class="modal">
         <div class="modalBox">
-            <h3>예약 현황 / Booking Status</h3>
-            <div id="reservedSlotInfo" style="margin-bottom:10px; font-weight:bold;"></div>
-            <div id="attendeeListDetail" class="attendeeListDetail" style="max-height:200px; overflow-y:auto; margin-bottom:15px;"></div>
+            <h3>예약 현황 / Status</h3>
+            <div id="reservedSlotInfo" style="margin-bottom:15px; font-weight:bold;"></div>
+            <div id="attendeeListDetail" class="attendeeListDetail"></div>
             <hr>
-            <div class="cancelArea">
-                <p style="font-size:12px; margin:10px 0 5px;">취소 비밀번호 입력 / Password to Cancel</p>
+            <div class="cancelArea" style="margin-top:15px;">
+                <p style="font-size:13px; font-weight:bold; margin-bottom:8px;">취소 비밀번호 / Cancel Password</p>
                 <input id="editPassword" type="password" placeholder="Password">
                 <div class="buttonRow">
-                    <button type="button" onclick="confirmCancel()" class="btn-danger">취소하기 / Cancel</button>
-                    <button type="button" onclick="openReserveFromStatus()" class="btn-primary">추가 예약 / Add More</button>
+                    <button type="button" onclick="confirmCancel()" class="btn-danger">취소하기</button>
+                    <button type="button" onclick="openReserveFromStatus()" class="btn-primary">추가 예약</button>
                 </div>
             </div>
-            <button type="button" onclick="closeReservedModal()" class="btn-secondary" style="width:100%; margin-top:10px;">닫기 / Close</button>
+            <button type="button" onclick="closeReservedModal()" class="btn-secondary">닫기 / Close</button>
         </div>
     </div>
 
-    <!-- 라이브러리 및 스크립트 (순서 중요) -->
+    <!-- 관리자 패널 -->
+    <div id="adminPanel" class="modal">
+        <div class="modalBox">
+            <h3>관리자 시스템 / Admin</h3>
+            <div class="inputGroup">
+                <p>기준 시간 설정 / Base Date</p>
+                <input id="adminBaseDate" type="datetime-local">
+            </div>
+            <div class="buttonRow">
+                <button type="button" onclick="saveAdminBaseDate()" class="btn-primary">저장 / Save</button>
+                <button type="button" onclick="closeAdmin()" class="btn-secondary" style="margin-top:0; width:auto; flex:1;">닫기</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="firebase.js"></script>
