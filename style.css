@@ -1,55 +1,51 @@
-/* 기존 스타일에 아래 내용을 덮어쓰거나 추가하세요 */
-.grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-}
+body { font-family: Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
+#snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+header { padding: 20px; position: relative; z-index: 1; }
+h1 { margin: 0; font-size: 28px; }
+#countdown { font-size: 15px; font-weight: 700; margin: 10px 0; color: #374151; }
 
-.slot {
-    min-height: 160px;
-    justify-content: flex-start;
-    border-left: 5px solid #8bd18b;
-}
+.creatorBadge { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; }
+.creatorAvatar { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #d6b347; }
+.creatorCredit { font-size: 12px; font-weight: bold; color: #7a6a52; margin-top: 5px; }
 
-.slot.reserved {
-    border-left-color: #7da7ff;
-}
+.headerToolbar { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+.headerToolbar input, .headerToolbar select, .headerToolbar button { padding: 10px; border-radius: 8px; border: 1px solid #cfd8e3; }
 
-.slot.myReservation {
-    border-left-color: #5b60df;
-    background: #f0f3ff;
-}
+.tabsWrap { margin-bottom: 20px; position: relative; z-index: 1; }
+.tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+.tabs button { padding: 12px 20px; border: none; border-radius: 10px; background: #d8f2ff; cursor: pointer; font-weight: bold; }
+.tabs button.active { background: #2c3e50; color: white; }
 
-/* 예약자 리스트 스타일 */
-.attendeeListWrap {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding: 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 
-.attendeeItem {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-    padding: 4px 6px;
-    background: rgba(0,0,0,0.03);
-    border-radius: 4px;
-}
+.slot { background: white; border-radius: 12px; padding: 15px; text-align: left; border-left: 6px solid #8bd18b; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.slot:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+.slot.myReservation { border-left-color: #5b60df; background: #f0f3ff; }
 
-.attendeeItem.isMine {
-    background: #dbe4ff;
-    font-weight: bold;
-}
+.timeUTC { font-size: 16px; font-weight: bold; }
+.timeLocal { font-size: 12px; color: #666; margin-bottom: 10px; }
+.statusAvailable { float: right; font-size: 12px; color: #3f9b3f; font-weight: bold; }
 
-.attendeeItem .rank { color: #888; margin-right: 5px; }
-.attendeeItem .days { font-weight: bold; color: #2d5468; }
+.attendeeListWrap { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; }
+.attendeeItem { display: flex; justify-content: space-between; font-size: 13px; background: #f8f9fa; padding: 4px 8px; border-radius: 4px; }
+.attendeeItem.isMine { background: #dbe4ff; font-weight: bold; border: 1px solid #5b60df; }
+.attendeeItem .days { font-weight: bold; color: #2c3e50; }
 
-.attendeeListDetail {
-    max-height: 200px;
-    overflow-y: auto;
-    text-align: left;
-    margin: 10px 0;
-}
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+.modal.show { display: flex; }
+.modalBox { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 10px; }
+.selectedSlotInfo { background: #eef5ff; padding: 10px; border-radius: 8px; font-size: 13px; margin-bottom: 10px; }
+.attendeeListDetail { max-height: 200px; overflow-y: auto; margin: 15px 0; }
 
-.btn-primary { background: #7da7ff; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; }
-.btn-secondary { background: #eee; color: #333; border: none; padding: 10px; border-radius: 5px; cursor: pointer; }
-.btn-danger { background: #ff7d7d; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; }
+.btn-primary { background: #7da7ff; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.btn-secondary { background: #eee; color: #333; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
+.btn-danger { background: #ff7d7d; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+.buttonRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.toastContainer { position: fixed; top: 20px; right: 20px; z-index: 2000; }
+.toast { background: #333; color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 5px; animation: fadeIn 0.3s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+.slotStats { font-size: 14px; display: flex; justify-content: center; gap: 15px; }
+.availableDot { width: 10px; height: 10px; background: #8bd18b; border-radius: 50%; display: inline-block; }
+.mineDot { width: 10px; height: 10px; background: #5b60df; border-radius: 50%; display: inline-block; }
