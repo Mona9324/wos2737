@@ -21,18 +21,15 @@ header { padding: 20px; position: relative; z-index: 1; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
 .slot { border-radius: 16px; padding: 15px; text-align: left; border: none; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; min-height: 100px; box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.05); }
 
-/* 오전 시간대 클래스 */
+/* 오전/오후 시간대 배경색 */
 .slot.am-slot { background-color: #fffdf0; border: 1px solid #f9f2d0; }
 .slot.am-slot:hover { background-color: #fff9cf; box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08); }
-
-/* 오후 시간대 클래스 */
 .slot.pm-slot { background-color: #fff4e6; border: 1px solid #ffebd9; }
 .slot.pm-slot:hover { background-color: #ffe8d1; box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08); }
 
 .slot.locked { background-color: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
 /* 예약 완료: 연한 파스텔 연두색 */
 .slot.myReservation { background-color: #f0fff4 !important; border: 2px solid #c6f6d5 !important; box-shadow: 4px 4px 0px #9ae6b4 !important; }
-.slot.myReservation:hover { background-color: #e0fde7 !important; }
 
 .timeRow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .timeUTC { font-size: 18px; font-weight: 800; color: #2d3748; }
@@ -40,24 +37,27 @@ header { padding: 20px; position: relative; z-index: 1; }
 .statusAvailable { font-size: 11px; color: #3f9b3f; font-weight: bold; }
 .bookingStatusMsgHighlight { font-size: 14px; font-weight: bold; color: #2d5468; margin-bottom: 10px; }
 
-/* 관리자 패널 관련 */
+/* 관리자 패널 및 버튼 상태 색상 */
 .adminPanel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 550px; background: white; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.4); z-index: 3000; overflow: hidden; border: 1px solid #e1e8ed; text-align: left; }
 .adminPanel.show { display: block; }
 .adminHeader { background: #f8f9fa; padding: 20px; border-bottom: 1px solid #eee; text-align: center; }
 .adminBody { padding: 20px; max-height: 70vh; overflow-y: auto; }
 .adminSection { margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; }
 .adminButtonGroup { display: flex; gap: 8px; margin-top: 10px; }
-.adminBtn { flex: 1; padding: 10px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; }
-.adminBtn.open { background: #48bb78; color: white; }
-.adminBtn.lock { background: #f56565; color: white; }
-.adminBtn.excel { background: #21a366; color: white; }
-.adminBtn.clear { background: #4a5568; color: white; }
+.adminBtn { flex: 1; padding: 10px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 12px; background: #4a5568; color: white; }
+
+/* 버튼 상태별 색상 강제 적용 */
+.adminBtn.status-on { background-color: #48bb78 !important; }  /* 초록 */
+.adminBtn.status-off { background-color: #a0aec0 !important; } /* 회색 */
+.adminBtn.clear { background-color: #f56565 !important; }      /* 빨강 */
+.adminBtn.excel { background-color: #21a366 !important; }      /* 엑셀 녹색 */
+
 .adminInputRow { display: flex; gap: 5px; margin-bottom: 10px; }
 .adminInputRow input { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid #ddd; }
-.logsBox { background: #1e1e1e; color: #dcdcdc; padding: 10px; font-family: monospace; font-size: 11px; border-radius: 10px; height: 100px; overflow-y: auto; }
+.logsBox { background: #1e1e1e; color: #00ff00; padding: 10px; font-family: monospace; font-size: 11px; border-radius: 10px; height: 120px; overflow-y: auto; line-height: 1.5; }
 .adminCloseBtn { position: absolute; top: 15px; right: 15px; font-size: 24px; border: none; background: none; cursor: pointer; }
 
-/* 모달 관련 */
+/* 모달 및 리스트 */
 .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
 .modal.show { display: flex; }
 .modalBox { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 460px; display: flex; flex-direction: column; gap: 15px; }
@@ -71,31 +71,12 @@ header { padding: 20px; position: relative; z-index: 1; }
 .attendeeItem { display: flex; justify-content: space-between; font-size: 12px; background: rgba(0,0,0,0.03); padding: 5px 8px; border-radius: 6px; margin-bottom: 4px; }
 .attendeeItem.isMine { background: #9ae6b4; font-weight: bold; }
 
-/* 모바일 최적화 (화면 너비 600px 이하) 추가 */
+/* 모바일 최적화 */
 @media (max-width: 600px) {
-    .tabs {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
-    .tabs button {
-        padding: 14px 10px;
-        font-size: 14px;
-        white-space: normal;
-        word-break: keep-all;
-    }
-    .headerToolbar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .headerToolbar input, .headerToolbar select, .headerToolbar button {
-        width: 100%;
-        min-width: 0;
-    }
-    .grid {
-        padding: 10px;
-        gap: 12px;
-    }
-    .timeUTC {
-        font-size: 16px;
-    }
+    .tabs { grid-template-columns: 1fr; gap: 8px; }
+    .tabs button { padding: 14px 10px; font-size: 14px; white-space: normal; word-break: keep-all; }
+    .headerToolbar { flex-direction: column; align-items: stretch; }
+    .headerToolbar input, .headerToolbar select, .headerToolbar button { width: 100%; min-width: 0; }
+    .grid { padding: 10px; gap: 12px; }
+    .timeUTC { font-size: 16px; }
 }
