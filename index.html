@@ -86,20 +86,20 @@
             <div class="adminSection">
                 <p style="font-size:13px; font-weight:800;">요일별 제어 / Day Control</p>
                 <div class="buttonRow">
-                    <button type="button" id="btn-admin-monday" onclick="toggleTabStatus('monday')">Mon</button>
-                    <button type="button" id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tue</button>
-                    <button type="button" id="btn-admin-thursday" onclick="toggleTabStatus('thursday')">Thu</button>
+                    <button type="button" id="btn-admin-monday" onclick="toggleTabStatus('monday')">Monday</button>
+                    <button type="button" id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tuesday</button>
+                    <button type="button" id="btn-admin-thursday" onclick="toggleTabStatus('thursday')">Thursday</button>
                 </div>
                 <div class="buttonRow" style="margin-top:10px;">
-                    <button type="button" onclick="toggleAllTabs(true)" class="btn-primary">전체 열기</button>
-                    <button type="button" onclick="toggleAllTabs(false)" class="btn-danger">전체 닫기</button>
+                    <button type="button" onclick="toggleAllTabs(true)" class="btn-primary">전체 열기 / Open all reservations</button>
+                    <button type="button" onclick="toggleAllTabs(false)" class="btn-danger">전체 닫기 / Close all reservations</button>
                 </div>
             </div>
             <div class="adminSection">
                 <p style="font-size:13px; font-weight:800;">데이터 관리 / Data</p>
                 <div class="buttonRow">
-                    <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출</button>
-                    <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button>
+                    <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출 / EXCEL</button>
+                    <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제 / Delete all</button>
                 </div>
             </div>
             <div id="logsBox" class="logsBox"></div>
