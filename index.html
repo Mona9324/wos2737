@@ -27,30 +27,30 @@
 
     <section class="tabsWrap">
         <div class="tabs">
-            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설버프) / Monday</button>
-            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구버프) / Tuesday</button>
-            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (병사훈련버프) / Thursday</button>
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설버프)</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구버프)</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련버프)</button>
         </div>
         <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
     </section>
 
     <main><div id="slots" class="grid"></div></main>
 
-    <!-- 새 예약 추가 모달 -->
+    <!-- 예약 신청 모달 -->
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3>새 예약 추가 / New Booking</h3>
             <div id="selectedSlotInfo" class="selectedSlotInfo"></div>
             <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="연맹명 / Alliance">
+                <input id="alliance" type="text" placeholder="연맹명 (e.g. ZTP)">
                 <input id="player" type="text" placeholder="닉네임 / Nickname">
-                <input id="playerId" type="text" placeholder="ID (숫자 9개)" maxlength="9">
+                <input id="playerId" type="text" placeholder="ID (숫자 9자리)" maxlength="9">
                 <input id="daysSaved" type="number" placeholder="사용 가속(일)">
                 <input id="password" type="password" placeholder="비밀번호(취소용)">
             </div>
-            <div class="modalButtons">
-                <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정 / Confirm</button>
-                <button type="button" onclick="closeModal()" class="btn-secondary">닫기 / Close</button>
+            <div class="buttonRow">
+                <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정</button>
+                <button type="button" onclick="closeModal()" class="btn-secondary">닫기</button>
             </div>
         </div>
     </div>
@@ -71,33 +71,6 @@
                 </div>
             </div>
             <button type="button" onclick="closeReservedModal()" class="btn-secondary" style="width:100%; margin-top:10px;">닫기 / Close</button>
-        </div>
-    </div>
-
-    <!-- 관리자 패널 -->
-    <div id="adminPanel" class="adminPanel">
-        <button type="button" class="adminCloseBtn" onclick="closeAdmin()">×</button>
-        <div class="adminHeader"><h3>Admin System</h3></div>
-        <div class="adminBody">
-            <div class="adminSection">
-                <h4>SvS 기준일 설정</h4>
-                <div class="adminInputRow">
-                    <input id="adminBaseDate" type="datetime-local">
-                    <button onclick="saveAdminBaseDate()" class="adminBtn excel">저장</button>
-                </div>
-            </div>
-            <div class="adminSection">
-                <h4>예약 On/Off 제어</h4>
-                <div class="adminButtonGroup">
-                    <button onclick="toggleTabStatus('monday')" class="adminBtn">월요일</button>
-                    <button onclick="toggleTabStatus('tuesday')" class="adminBtn">화요일</button>
-                    <button onclick="toggleTabStatus('thursday')" class="adminBtn">목요일</button>
-                </div>
-            </div>
-            <div class="adminSection">
-                <h4>시스템 로그</h4>
-                <div id="logsBox" class="logsBox"></div>
-            </div>
         </div>
     </div>
 
