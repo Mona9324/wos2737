@@ -11,12 +11,10 @@
     <header>
         <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
         <div id="countdown" class="countdown"></div>
-        
         <div class="creatorBadge">
             <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="handleAdminAccess()">
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
         </div>
-        
         <div class="headerToolbar">
             <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search Alliance or Nickname" oninput="renderAll()">
             <div class="filterGroup">
@@ -34,12 +32,9 @@
         <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tuesday</button>
         <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thursday</button>
     </div>
-    
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 20px; color: #2d3748;"></div>
 
-    <main>
-        <div id="slots" class="grid"></div>
-    </main>
+    <main><div id="slots" class="grid"></div></main>
 
     <div id="modal" class="modal">
         <div class="modalBox">
@@ -80,7 +75,6 @@
     <div id="adminPanel" class="modal">
         <div class="modalBox" style="max-width: 550px;">
             <h3>관리자 시스템 / Admin System</h3>
-            
             <div class="adminSection">
                 <p style="font-size:13px; font-weight:800;">SVS 기준일 설정 / Base Date</p>
                 <div class="buttonRow">
@@ -88,7 +82,6 @@
                     <button type="button" onclick="saveAdminBaseDate()" class="btn-primary" style="flex:1;">저장 / Save</button>
                 </div>
             </div>
-            
             <div class="adminSection">
                 <p style="font-size:13px; font-weight:800;">요일별 제어 / Day Control</p>
                 <div class="buttonRow">
@@ -101,7 +94,6 @@
                     <button type="button" onclick="toggleAllTabs(false)" class="btn-danger">전체 닫기 / Close all reservations</button>
                 </div>
             </div>
-            
             <div class="adminSection">
                 <p style="font-size:13px; font-weight:800;">데이터 관리 / Data</p>
                 <div class="buttonRow">
@@ -109,9 +101,7 @@
                     <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제 / Delete all</button>
                 </div>
             </div>
-            
             <div id="logsBox" class="logsBox"></div>
-            
             <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button>
         </div>
     </div>
