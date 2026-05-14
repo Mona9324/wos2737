@@ -15,20 +15,23 @@
             <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="handleAdminAccess()">
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
         </div>
+        
         <div class="headerToolbar">
             <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search Alliance or Nickname" oninput="renderAll()">
-            <select id="filterStatus" onchange="renderAll()">
-                <option value="all">전체 보기 / View All</option>
-                <option value="mine">내 예약 확인 / My Booking</option>
-            </select>
-            <button type="button" class="btn-reset" onclick="clearSearch()">Reset</button>
+            <div class="filterGroup">
+                <select id="filterStatus" onchange="renderAll()">
+                    <option value="all">전체 보기 / View All</option>
+                    <option value="mine">내 예약 확인 / My Booking</option>
+                </select>
+                <button type="button" class="btn-reset" onclick="clearSearch()">Reset</button>
+            </div>
         </div>
     </header>
 
     <div class="tabs">
-        <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설) / Monday (Construction Buff)</button>
-        <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tuesday (Research Buff)</button>
-        <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thursday (Troops Training Buff)</button>
+        <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설) / Monday</button>
+        <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tuesday</button>
+        <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thursday</button>
     </div>
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 20px; color: #2d3748;"></div>
 
