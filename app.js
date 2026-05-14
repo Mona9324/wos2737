@@ -60,8 +60,6 @@ function renderAll() {
             if (search && !attendees.some(a => normalizeText(a.player).includes(search) || normalizeText(a.alliance).includes(search))) continue;
 
             var div = document.createElement("div");
-            
-            // 시간대별 클래스 추가 (00~11시는 am, 12~23시는 pm)
             var timeClass = (h < 12) ? "am-slot" : "pm-slot";
             div.className = "slot " + timeClass + (attendees.some(isMyReservation) ? " myReservation" : "");
             
@@ -69,7 +67,6 @@ function renderAll() {
             var utcEnd = padTime(h, m + 30);
             var localDate = new Date(); localDate.setUTCHours(h, m, 0, 0);
 
-            // UTC0 버그 수정: UTC 글자와 숫자 사이에 명확한 구분 추가
             var html = `<div class="timeRow">
                             <span class="timeUTC">${utcStart}-${utcEnd} UTC</span>
                             <span class="statusAvailable">${attendees.length} 명 예약됨 / Booked</span>
@@ -99,7 +96,6 @@ function renderAll() {
 function updateTabs() { document.querySelectorAll(".tabs button").forEach(btn => btn.classList.toggle("active", btn.id === "tab-" + currentBuff)); }
 function switchBuff(b) { currentBuff = b; renderAll(); }
 
-// 모달 전환 로직 (Add More 클릭 시 현황 창 닫고 바로 예약 창 열기)
 function openReserveModal(id) {
     closeReservedModal();
     selectedSlot = id;
@@ -134,7 +130,6 @@ function openReservedModal(id) {
 }
 function closeReservedModal() { document.getElementById("reservedModal").classList.remove("show"); }
 
-// Booking Actions
 function confirmBooking() {
     var a = document.getElementById("alliance").value.trim();
     var p = document.getElementById("player").value.trim();
