@@ -4,11 +4,9 @@ var allSlotsData = {};
 var db = window.db;
 var MY_BOOKING_KEY = "svs_my_booking_info";
 
-// 관리자 보안 설정
 var loginAttempts = 0;
 var lockoutTime = 0;
 
-// Utils
 function padTime(h, m) { 
     if (m >= 60) { h += Math.floor(m / 60); m = m % 60; }
     h = h % 24;
@@ -22,7 +20,6 @@ function simpleHash(v) {
 }
 function formatLocalTime(date) { return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
 
-// Identity
 function saveMyBookingInfo(a, p, id) { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p, playerId: id })); }
 function getMyBookingInfo() { try { return JSON.parse(localStorage.getItem(MY_BOOKING_KEY)); } catch(e) { return null; } }
 function isMyReservation(person) {
@@ -31,7 +28,6 @@ function isMyReservation(person) {
     return normalizeText(person.player) === normalizeText(mine.player) && normalizeText(person.alliance) === normalizeText(mine.alliance);
 }
 
-// Init
 function init() {
     db.collection("settings").doc("booking").onSnapshot(doc => { renderAll(); });
     db.collection("slots").onSnapshot(snap => {
@@ -69,14 +65,15 @@ function renderAll() {
 
             var html = `<div class="timeRow">
                             <span class="timeUTC">${utcStart}-${utcEnd} UTC</span>
-                            <span class="statusAvailable">${attendees.length} 명 예약됨 / Booked</span>
+                            <span class="statusAvailable">${attendees.length}명 예약됨</span>
                         </div>`;
             html += `<div class="timeLocal">Local: ${formatLocalTime(localDate)}</div><div class="attendeeListWrap">`;
             
             attendees.slice(0, 3).forEach((p, i) => {
-                html += `<div class="attendeeItem ${isMyReservation(p) ? 'isMine' : ''}"><span>${i+1}. ${p.player}</span><span class="days">${p.daysSaved}d</span></div>`;
+                var mineClass = isMyReservation(p) ? 'isMine' : '';
+                html += `<div class="attendeeItem ${mineClass}"><span>${i+1}. ${p.player}</span><span class="days">${p.daysSaved}d</span></div>`;
             });
-            if(attendees.length > 3) html += `<div style="font-size:10px; color:gray; text-align:center;">+ ${attendees.length-3} more</div>`;
+            if(attendees.length > 3) html += `<div style="font-size:10px; color:gray; text-align:center; margin-top:5px;">+ ${attendees.length-3} more</div>`;
             html += `</div>`;
 
             div.innerHTML = html;
@@ -175,7 +172,6 @@ function confirmCancel() {
     }).then(() => { closeReservedModal(); alert("취소됨 / Cancelled."); }).catch(e => alert(e));
 }
 
-// 관리자 보안
 var sc = 0;
 document.querySelector(".creatorAvatar").onclick = function() {
     var now = Date.now();
