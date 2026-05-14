@@ -12,7 +12,12 @@ header { padding: 20px; position: relative; z-index: 1; }
 .creatorAvatar:hover { transform: scale(1.05); }
 .creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
-/* 탭 (넓게 3등분) */
+/* 툴바 */
+.headerToolbar { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; padding: 0 10px; }
+.headerToolbar input { min-width: 250px; padding: 10px; border-radius: 8px; border: 1px solid #cfd8e3; }
+.headerToolbar select, .headerToolbar button { padding: 10px; border-radius: 8px; border: 1px solid #cfd8e3; background: #fff; cursor: pointer; }
+
+/* 탭 (넓게 3등분 복구) */
 .tabsWrap { max-width: 1300px; margin: 0 auto 25px; padding: 0 20px; position: relative; z-index: 1; }
 .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-bottom: 15px; }
 .tabs button { 
@@ -29,9 +34,9 @@ header { padding: 20px; position: relative; z-index: 1; }
 }
 .slot:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
 
-/* 시간대별 파스텔 색상 */
-.slot.am-slot { background-color: #f2fdf2; } /* 연한 파스텔 연두 (00:00~12:00) */
-.slot.pm-slot { background-color: #f0f7ff; } /* 연한 파스텔 하늘 (12:00~24:00) */
+/* 추천 시간대별 파스텔 색상 */
+.slot.am-slot { background-color: #f2fdf2; } /* 연한 파스텔 연두 (오전) */
+.slot.pm-slot { background-color: #fff8f0; } /* 추천: 연한 파스텔 오렌지/살구 (오후) - 배경과 확연히 구분됨 */
 .slot.myReservation { border-left-color: #5b60df; background-color: #f4f5ff !important; }
 
 .timeRow { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
