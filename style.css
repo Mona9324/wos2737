@@ -13,30 +13,30 @@ header { padding: 20px; position: relative; z-index: 1; }
 .tabs button.active { background: #bfe7fb; box-shadow: 0 2px 0px #a8d5eb; transform: translateY(2px); }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
-.slot { border-radius: 16px; padding: 18px; text-align: left; border: none; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; min-height: 110px; box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.05); }
+.slot { border-radius: 16px; padding: 18px; text-align: left; border: none; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; min-height: 120px; box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.05); background-color: #fffdf0; }
 
-.slot.am-slot { background-color: #fffdf0; border: 1px solid #f9f2d0; }
-.slot.pm-slot { background-color: #fff4e6; border: 1px solid #ffebd9; }
+.slot.pm-slot { background-color: #fff4e6; }
 .slot.locked { background-color: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
-.slot.myReservation { background-color: #f0fff4 !important; border: 2px solid #c6f6d5 !important; box-shadow: 4px 4px 0px #9ae6b4 !important; }
+.slot.myReservation { background-color: #f0fff4 !important; border: 2px solid #c6f6d5 !important; }
 
-/* 모달 스타일 수정 */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+/* 슬롯 내부 디자인 */
+.timeRow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 800; }
+.timeUTC { font-size: 16px; color: #2d3748; }
+.attendeeMiniList { margin-top: 8px; font-size: 12px; color: #4a5568; line-height: 1.6; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 8px; }
+.attendeeMiniItem { display: flex; justify-content: space-between; }
+
+/* 모달 디자인 */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
 .modal.show { display: flex; }
-.modalBox { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 440px; display: flex; flex-direction: column; gap: 15px; box-sizing: border-box; }
-.inputGroup { display: flex; flex-direction: column; gap: 10px; }
-.inputGroup input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 16px; box-sizing: border-box; }
+.modalBox { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 440px; box-sizing: border-box; }
+.inputGroup { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; }
+.inputGroup input { padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 15px; }
 
-.modalButtons, .buttonRow { display: flex; gap: 10px; width: 100%; margin-top: 5px; }
-.btn-primary { flex: 1; background: #7da7ff; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; }
-.btn-danger { flex: 1; background: #ff5a5a; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; }
-.btn-secondary { background: #f3f4f6; color: #4a5568; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
-
-/* 관리자 상태 */
-.adminBtn.status-on { background-color: #48bb78 !important; }
-.adminBtn.status-off { background-color: #a0aec0 !important; }
+.buttonRow { display: flex; gap: 10px; width: 100%; }
+.btn-primary { flex: 1; background: #7da7ff; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+.btn-danger { flex: 1; background: #ff5a5a; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+.btn-secondary { background: #f3f4f6; color: #4a5568; border: none; padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
 @media (max-width: 600px) {
     .tabs { grid-template-columns: 1fr; }
-    .tabs button { white-space: normal; }
 }
