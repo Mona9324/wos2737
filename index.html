@@ -1,170 +1,85 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2737 SVS Booking</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2737 SVS Booking (Multi)</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="snow"></canvas>
-
-  <header>
-    <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
-
-    <div id="countdown"></div>
-
-    <div class="creatorBadge">
-      <img src="creator-dino.png" alt="Creator artwork" class="creatorAvatar">
-      <div class="creatorCredit">Mona</div>
-    </div>
-
-    <div class="headerToolbar">
-      <input id="searchInput" type="text" placeholder="Search alliance / player">
-      <select id="filterStatus" onchange="renderAll()">
-        <option value="all">All</option>
-        <option value="available">Available only</option>
-        <option value="reserved">Reserved only</option>
-        <option value="mine">My reservation only</option>
-      </select>
-      <button type="button" onclick="clearSearch()">Clear</button>
-    </div>
-
-    <div id="bookingGuide" class="bookingGuideGrid">
-      <div id="bookingCloseText" class="bookingCloseText"></div>
-    </div>
-  </header>
-
-  <section class="tabsWrap">
-    <div class="tabs">
-      <button type="button" id="tab-monday" onclick="switchBuff('monday')">Monday (Construction)</button>
-      <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">Tuesday (Research)</button>
-      <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">Thursday (Troop Training)</button>
-    </div>
-
-    <div class="slotStats">
-      <span class="availableDot"></span>
-      <span id="availableCount">Available 0</span>
-      <span class="reservedDot"></span>
-      <span id="reservedCount">Reserved 0</span>
-      <span class="mineDot"></span>
-      <span id="myCount">My Reservation 0</span>
-    </div>
-  </section>
-
-  <main>
-    <div id="slots" class="grid"></div>
-  </main>
-
-  <div id="modal" class="modal">
-    <div class="modalBox">
-      <h3>Reserve Slot</h3>
-      <div id="selectedSlotInfo" class="selectedSlotInfo"></div>
-
-      <input id="alliance" type="text" placeholder="Alliance (연맹이름)" autocomplete="off" list="allianceSuggestions">
-      <datalist id="allianceSuggestions"></datalist>
-
-      <input id="player" type="text" placeholder="ID Number (ID 숫자)" autocomplete="off">
-      <input id="daysSaved" type="number" placeholder="Use Speed-up (사용 가속일수)" min="0" max="9999">
-      <input id="password" type="password" placeholder="Cancel & Edit Password (취소&수정 비밀번호)" autocomplete="new-password">
-
-      <button type="button" onclick="confirmBooking()">Reserve (예약)</button>
-      <button type="button" onclick="closeModal()">Close (닫기)</button>
-    </div>
-  </div>
-
-  <div id="reservedModal" class="modal">
-    <div class="modalBox">
-      <h3>Reservation</h3>
-      <div id="reservedSlotInfo" class="selectedSlotInfo"></div>
-      <div id="reservedDetail" class="reservedDetail"></div>
-
-      <input id="editAlliance" type="text" placeholder="New Alliance">
-      <input id="editDaysSaved" type="number" placeholder="New Use Speed-up" min="0" max="9999">
-      <input id="editPassword" type="password" placeholder="Password" autocomplete="current-password">
-
-      <button type="button" onclick="confirmUpdateBooking()">Update Reservation (예약 수정)</button>
-      <button type="button" onclick="confirmCancel()">Cancel Reservation (예약 취소)</button>
-      <button type="button" onclick="closeReservedModal()">Close (닫기)</button>
-    </div>
-  </div>
-
-  <div id="adminPanel" class="adminPanel">
-    <button type="button" class="adminCloseBtn" onclick="closeAdmin()" aria-label="관리자 패널 닫기">×</button>
-    <h3>관리자 패널</h3>
-
-    <div id="adminLogin">
-      <div id="adminUserInfo" class="adminUserInfo">관리자 로그인이 필요합니다.</div>
-      <div class="buttonRow">
-        <button type="button" onclick="adminGoogleLogin()">Google 로그인</button>
-        <button type="button" onclick="adminLogout()">로그아웃</button>
-      </div>
-    </div>
-
-    <div id="adminControls" style="display:none;">
-      <div class="adminSection">
-        <h4>현재 탭 예약 제어</h4>
-        <div class="buttonRow">
-          <button type="button" onclick="setManualBooking(currentBuff, true)">현재 탭 예약 열기</button>
-          <button type="button" onclick="setManualBooking(currentBuff, false)">현재 탭 예약 잠금</button>
+    <canvas id="snow"></canvas>
+    <header>
+        <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
+        <div id="countdown"></div>
+        <div class="creatorBadge">
+            <img src="creator-dino.png" alt="Creator" class="creatorAvatar">
+            <div class="creatorCredit">Mona</div>
         </div>
-      </div>
-
-      <div class="adminSection">
-        <h4>자동 오픈/마감</h4>
-        <label>Open At</label>
-        <input id="scheduleOpenAt" type="datetime-local">
-        <label>Close At</label>
-        <input id="scheduleCloseAt" type="datetime-local">
-        <button type="button" onclick="saveTabSchedule()">현재 탭 일정 저장</button>
-      </div>
-
-      <div class="adminSection">
-        <h4>SVS 기준일</h4>
-        <input id="svsBaseDateInput" type="date">
-        <button type="button" onclick="saveSvsBaseDate()">기준일 저장</button>
-      </div>
-
-      <div class="adminSection">
-        <h4>현재 탭 백업/삭제</h4>
-        <div class="buttonRow">
-          <button type="button" onclick="exportCurrentBuffCSV()">현재 탭 엑셀 내보내기</button>
-          <button type="button" onclick="backupAndClearCurrentBuff()">현재 탭 백업 후 삭제</button>
+        <div class="headerToolbar">
+            <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색">
+            <select id="filterStatus" onchange="renderAll()">
+                <option value="all">전체 보기</option>
+                <option value="mine">내 예약만</option>
+            </select>
+            <button type="button" onclick="clearSearch()">초기화</button>
         </div>
-      </div>
+    </header>
 
-      <div class="adminSection">
-        <h4>전체 백업/삭제</h4>
-        <div class="buttonRow">
-          <button type="button" onclick="exportAllCSV()">전체 엑셀 내보내기</button>
-          <button type="button" onclick="backupAndClearAll()">전체 백업 후 삭제</button>
+    <section class="tabsWrap">
+        <div class="tabs">
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월 (건설)</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화 (연구)</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목 (훈련)</button>
         </div>
-      </div>
-
-      <div class="adminSection">
-        <h4>관리자 메모</h4>
-        <div id="adminSelectedSlotLabel" class="adminSelectedSlotLabel">선택된 슬롯 없음</div>
-        <textarea id="adminNoteInput" placeholder="선택한 슬롯의 관리자 메모"></textarea>
-        <button type="button" onclick="saveAdminNote()">선택 슬롯 메모 저장</button>
-      </div>
-
-      <div class="adminSection">
-        <h4>관리자 로그</h4>
-        <div class="buttonRow">
-          <button type="button" onclick="loadLogs()">로그 새로고침</button>
-          <button type="button" onclick="downloadLogsCSV()">로그 다운로드</button>
+        <div class="slotStats">
+            <span class="availableDot"></span> <span>예약 가능</span>
+            <span class="mineDot"></span> <span>내 예약 포함</span>
         </div>
-        <div id="logsBox" class="logsBox"></div>
-      </div>
+    </section>
+
+    <main>
+        <div id="slots" class="grid"></div>
+    </main>
+
+    <!-- 예약하기 모달 -->
+    <div id="modal" class="modal">
+        <div class="modalBox">
+            <h3>새 예약 추가</h3>
+            <div id="selectedSlotInfo" class="selectedSlotInfo"></div>
+            <input id="alliance" type="text" placeholder="연맹명" list="allianceSuggestions">
+            <datalist id="allianceSuggestions"></datalist>
+            <input id="player" type="text" placeholder="플레이어 닉네임">
+            <input id="daysSaved" type="number" placeholder="사용 가속 (일)">
+            <input id="password" type="password" placeholder="취소용 비밀번호">
+            <button type="button" onclick="confirmBooking()" class="btn-primary">예약하기</button>
+            <button type="button" onclick="closeModal()" class="btn-secondary">닫기</button>
+        </div>
     </div>
-  </div>
 
-  <div id="toastContainer" class="toastContainer"></div>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-  <script src="firebase.js"></script>
-  <script src="app.js"></script>
+    <!-- 예약 확인/관리 모달 -->
+    <div id="reservedModal" class="modal">
+        <div class="modalBox">
+            <h3>슬롯 예약 현황</h3>
+            <div id="reservedSlotInfo" class="selectedSlotInfo"></div>
+            <div id="attendeeListDetail" class="attendeeListDetail"></div>
+            <hr>
+            <p style="font-size:12px; color:gray;">본인 예약을 취소하려면 아래 비밀번호를 입력하세요.</p>
+            <input id="editPassword" type="password" placeholder="비밀번호">
+            <div class="buttonRow">
+                <button type="button" onclick="confirmCancel()" class="btn-danger">내 예약 취소</button>
+                <button type="button" onclick="openReserveModal(selectedSlot)" class="btn-primary">추가 예약하기</button>
+            </div>
+            <button type="button" onclick="closeReservedModal()" class="btn-secondary" style="width:100%; margin-top:10px;">닫기</button>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toastContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
