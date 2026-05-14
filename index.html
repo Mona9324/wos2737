@@ -34,13 +34,13 @@
 
     <main><div id="slots" class="grid"></div></main>
 
-    <!-- 예약 신청 모달 -->
+    <!-- 새 예약 모달 (문구 수정 반영) -->
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3>새 예약 추가 / New Booking</h3>
             <div id="selectedSlotInfo" style="margin-bottom:10px; font-weight:800; color:#1976d2;"></div>
             <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="연맹 / Alliance (ZTP,BUG,ZYZ..ect)">
+                <input id="alliance" type="text" placeholder="연맹 / Alliance (e.g. ZTP)">
                 <input id="player" type="text" placeholder="닉네임 / Nickname">
                 <input id="playerId" type="text" placeholder="ID (숫자 9개) / ID (9 Number)" maxlength="9">
                 <input id="daysSaved" type="number" placeholder="사용 가속(일) / Speed-up (Days)">
@@ -72,7 +72,40 @@
         </div>
     </div>
 
-    <!-- 관리자 패널 생략 (동일) -->
+    <!-- 관리자 패널 -->
+    <div id="adminPanel" class="modal">
+        <div class="modalBox" style="max-width: 550px;">
+            <h3>관리자 시스템 / Admin System</h3>
+            <div class="adminSection">
+                <p style="font-size:13px; font-weight:800;">SVS 기준일 설정 / Base Date</p>
+                <div class="buttonRow">
+                    <input id="adminBaseDate" type="datetime-local" style="flex:2; padding:10px; border-radius:8px; border:1px solid #ddd;">
+                    <button type="button" onclick="saveAdminBaseDate()" class="btn-primary" style="flex:1;">저장</button>
+                </div>
+            </div>
+            <div class="adminSection">
+                <p style="font-size:13px; font-weight:800;">요일별 제어 / Day Control</p>
+                <div class="buttonRow">
+                    <button type="button" id="btn-admin-monday" onclick="toggleTabStatus('monday')">Mon</button>
+                    <button type="button" id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tue</button>
+                    <button type="button" id="btn-admin-thursday" onclick="toggleTabStatus('thursday')">Thu</button>
+                </div>
+                <div class="buttonRow" style="margin-top:10px;">
+                    <button type="button" onclick="toggleAllTabs(true)" class="btn-primary">전체 열기</button>
+                    <button type="button" onclick="toggleAllTabs(false)" class="btn-danger">전체 닫기</button>
+                </div>
+            </div>
+            <div class="adminSection">
+                <p style="font-size:13px; font-weight:800;">데이터 관리 / Data</p>
+                <div class="buttonRow">
+                    <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출</button>
+                    <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button>
+                </div>
+            </div>
+            <div id="logsBox" class="logsBox"></div>
+            <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
