@@ -1,21 +1,32 @@
+/* 기본 설정 */
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 header { padding: 20px; position: relative; z-index: 1; }
 
+/* 프로필 이미지 */
 .creatorBadge { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
-.creatorAvatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #d6b347; box-shadow: 0 6px 15px rgba(0,0,0,0.15); cursor: pointer; transition: 0.3s; }
+.creatorAvatar { 
+    width: 120px; height: 120px; border-radius: 50%; border: 4px solid #d6b347; 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15); cursor: pointer; transition: 0.3s;
+}
 .creatorAvatar:hover { transform: scale(1.05); }
 .creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
+/* 툴바 */
 .headerToolbar { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; padding: 0 10px; }
 .headerToolbar input { min-width: 250px; padding: 10px; border-radius: 8px; border: 1px solid #cfd8e3; }
 .headerToolbar select, .headerToolbar button { padding: 10px; border-radius: 8px; border: 1px solid #cfd8e3; background: #fff; cursor: pointer; }
 
+/* 탭 (넓게 3등분) */
 .tabsWrap { max-width: 1300px; margin: 0 auto 25px; padding: 0 20px; position: relative; z-index: 1; }
 .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-bottom: 15px; }
-.tabs button { padding: 16px 5px; border: none; border-radius: 15px; background: #d8f2ff; color: #2d5468; cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; transition: 0.2s; white-space: nowrap; }
+.tabs button { 
+    padding: 16px 5px; border: none; border-radius: 15px; background: #d8f2ff; color: #2d5468; 
+    cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; transition: 0.2s; white-space: nowrap; 
+}
 .tabs button.active { background: #bfe7fb; box-shadow: 0 2px 0px #a8d5eb; transform: translateY(2px); }
 
+/* 그리드 및 슬롯 카드 */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
 
 .slot { 
@@ -23,25 +34,49 @@ header { padding: 20px; position: relative; z-index: 1; }
     transition: all 0.2s ease; display: flex; flex-direction: column; min-height: 100px;
     box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.05);
 }
-.slot:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1);
-    filter: brightness(0.95);
+
+/* [오전 AM] 연한 파스텔 연두 */
+.slot.am-slot { 
+    background-color: #f2fdf2; 
+    border: 1px solid #e0f5e0;
+}
+.slot.am-slot:hover {
+    background-color: #dbf3db; /* 원래 연두색보다 더 진하게 */
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08);
 }
 
-.slot.am-slot { background-color: #fffdf0; border: 1px solid #f9f2d0; }
-.slot.pm-slot { background-color: #f6f7ff; border: 1px solid #e2e4f5; }
-.slot.myReservation { background-color: #e6fffa !important; border: 2px solid #b2f5ea !important; box-shadow: 4px 4px 0px #81e6d9 !important; }
+/* [오후 PM] 살구색 복구 */
+.slot.pm-slot { 
+    background-color: #fff4e6; 
+    border: 1px solid #ffebd9;
+}
+.slot.pm-slot:hover {
+    background-color: #ffe8d1; /* 살구색 자체가 진해지도록 */
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08);
+}
 
+/* [예약 완료] 요청하신 직관적인 녹색 복구 */
+.slot.myReservation { 
+    background-color: #e6ffeb !important; 
+    border: 2px solid #b2f5c0 !important; 
+    box-shadow: 4px 4px 0px #81e69b !important;
+}
+.slot.myReservation:hover {
+    background-color: #d1ffd9 !important; /* 녹색이 더 진해지도록 */
+}
+
+/* 시간 텍스트 확대 */
 .timeRow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .timeUTC { font-size: 18px; font-weight: 800; color: #2d3748; }
 .timeLocal { font-size: 13px; color: #718096; margin-bottom: 10px; }
 .statusAvailable { font-size: 11px; color: #3f9b3f; font-weight: bold; }
 
-.attendeeListWrap { margin-top: auto; border-top: 1px solid #eee; padding-top: 10px; display: flex; flex-direction: column; gap: 4px; }
-.attendeeItem { display: flex; justify-content: space-between; font-size: 12px; background: rgba(0,0,0,0.02); padding: 5px 8px; border-radius: 6px; }
-.attendeeItem.isMine { background: #b2f5ea; font-weight: bold; border: 1px solid #81e6d9; }
+/* 예약자 리스트 */
+.attendeeListWrap { margin-top: auto; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.attendeeItem { display: flex; justify-content: space-between; font-size: 12px; background: rgba(0,0,0,0.03); padding: 5px 8px; border-radius: 6px; }
+.attendeeItem.isMine { background: #81e69b; font-weight: bold; border: 1px solid #5cb87a; }
 
+/* 모달 & 버튼 */
 .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
 .modal.show { display: flex; }
 .modalBox { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 460px; display: flex; flex-direction: column; gap: 15px; }
@@ -51,6 +86,7 @@ header { padding: 20px; position: relative; z-index: 1; }
 .btn-secondary { background: #f3f4f6; color: #333; border: none; height: 50px; border-radius: 12px; cursor: pointer; }
 .buttonRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
+/* 관리자 패널 */
 .adminPanel { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 550px; background: white; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.4); z-index: 3000; overflow: hidden; border: 1px solid #e1e8ed; text-align: left; }
 .adminPanel.show { display: block; }
 .adminHeader { background: #f8f9fa; padding: 20px; border-bottom: 1px solid #eee; text-align: center; }
@@ -63,4 +99,4 @@ header { padding: 20px; position: relative; z-index: 1; }
 .logsBox { background: #1e1e1e; color: #dcdcdc; padding: 15px; font-family: monospace; font-size: 12px; border-radius: 12px; height: 120px; overflow-y: auto; }
 .adminCloseBtn { position: absolute; top: 15px; right: 15px; font-size: 24px; border: none; background: none; cursor: pointer; }
 
-@media (max-width: 600px) { .tabs button { font-size: 12px; padding: 12px 2px; } }
+@media (max-width: 600px) { .tabs button { font-size: 11px; padding: 12px 2px; } }
