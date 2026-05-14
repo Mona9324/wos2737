@@ -27,9 +27,9 @@
 
     <section class="tabsWrap">
         <div class="tabs">
-            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설) / Mon (Build)</button>
-            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tue (Research)</button>
-            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thu (Train)</button>
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설) / Monday (Construction Buff)</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tuesday (Research Buff)</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thursday (Troops train Buff)</button>
         </div>
         <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
     </section>
@@ -46,9 +46,9 @@
             <div class="inputGroup">
                 <input id="alliance" type="text" placeholder="연맹명 / Alliance (e.g. ZTP)">
                 <input id="player" type="text" placeholder="닉네임 / Nickname">
-                <input id="playerId" type="text" placeholder="ID (9 Digits)" maxlength="9">
-                <input id="daysSaved" type="number" placeholder="사용 가속(일) / Speed-up Days">
-                <input id="password" type="password" placeholder="비밀번호(취소용) / Password">
+                <input id="playerId" type="text" placeholder="ID (숫자9개) / ID (9Number)" maxlength="9">
+                <input id="daysSaved" type="number" placeholder="사용 가속(일) / Speed-up (Days)">
+                <input id="password" type="password" placeholder="비밀번호(취소용) / Cancel Password">
             </div>
             <div class="buttonRow">
                 <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정 / Confirm</button>
