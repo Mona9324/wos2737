@@ -18,32 +18,30 @@
         <div class="headerToolbar">
             <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색">
             <select id="filterStatus" onchange="renderAll()">
-                <option value="all">전체 보기 / View All</option>
-                <option value="mine">내 예약 확인 / My Booking</option>
+                <option value="all">전체 보기</option>
+                <option value="mine">내 예약 확인</option>
             </select>
-            <button type="button" onclick="clearSearch()">초기화 / Reset</button>
         </div>
     </header>
 
     <section class="tabsWrap">
         <div class="tabs">
-            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설버프)</button>
-            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구버프)</button>
-            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련버프)</button>
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설)</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구)</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련)</button>
         </div>
         <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
     </section>
 
     <main><div id="slots" class="grid"></div></main>
 
-    <!-- 예약 신청 모달 -->
     <div id="modal" class="modal">
         <div class="modalBox">
-            <h3>새 예약 추가 / New Booking</h3>
-            <div id="selectedSlotInfo" class="selectedSlotInfo"></div>
+            <h3>새 예약 추가</h3>
+            <div id="selectedSlotInfo"></div>
             <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="연맹명 (e.g. ZTP)">
-                <input id="player" type="text" placeholder="닉네임 / Nickname">
+                <input id="alliance" type="text" placeholder="연맹명 (예: ZTP)">
+                <input id="player" type="text" placeholder="닉네임">
                 <input id="playerId" type="text" placeholder="ID (숫자 9자리)" maxlength="9">
                 <input id="daysSaved" type="number" placeholder="사용 가속(일)">
                 <input id="password" type="password" placeholder="비밀번호(취소용)">
@@ -55,28 +53,25 @@
         </div>
     </div>
 
-    <!-- 예약 현황 모달 -->
     <div id="reservedModal" class="modal">
         <div class="modalBox">
-            <h3>예약 현황 / Booking Status</h3>
-            <div id="reservedSlotInfo" class="selectedSlotInfo"></div>
+            <h3>예약 현황</h3>
+            <div id="reservedSlotInfo"></div>
             <div id="attendeeListDetail" class="attendeeListDetail"></div>
             <hr>
             <div class="cancelArea">
-                <p>예약 취소 비밀번호 입력</p>
+                <p>취소 비밀번호</p>
                 <input id="editPassword" type="password" placeholder="비밀번호">
                 <div class="buttonRow">
-                    <button type="button" onclick="confirmCancel()" class="btn-danger">예약 취소</button>
-                    <button type="button" onclick="openReserveModalFromStatus()" class="btn-primary">추가 예약</button>
+                    <button type="button" onclick="confirmCancel()" class="btn-danger">취소하기</button>
+                    <button type="button" onclick="openReserveFromStatus()" class="btn-primary">추가 예약</button>
                 </div>
             </div>
-            <button type="button" onclick="closeReservedModal()" class="btn-secondary" style="width:100%; margin-top:10px;">닫기 / Close</button>
+            <button type="button" onclick="closeReservedModal()" class="btn-secondary" style="width:100%; margin-top:10px;">닫기</button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="firebase.js"></script>
     <script src="app.js"></script>
