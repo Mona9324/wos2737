@@ -4,9 +4,11 @@ var allSlotsData = {};
 var db = window.db;
 var MY_BOOKING_KEY = "svs_my_booking_info";
 
+// 관리자 보안 설정
 var loginAttempts = 0;
 var lockoutTime = 0;
 
+// Utils
 function padTime(h, m) { 
     if (m >= 60) { h += Math.floor(m / 60); m = m % 60; }
     h = h % 24;
@@ -20,6 +22,7 @@ function simpleHash(v) {
 }
 function formatLocalTime(date) { return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
 
+// Identity
 function saveMyBookingInfo(a, p, id) { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p, playerId: id })); }
 function getMyBookingInfo() { try { return JSON.parse(localStorage.getItem(MY_BOOKING_KEY)); } catch(e) { return null; } }
 function isMyReservation(person) {
@@ -28,6 +31,7 @@ function isMyReservation(person) {
     return normalizeText(person.player) === normalizeText(mine.player) && normalizeText(person.alliance) === normalizeText(mine.alliance);
 }
 
+// Init
 function init() {
     db.collection("settings").doc("booking").onSnapshot(doc => { renderAll(); });
     db.collection("slots").onSnapshot(snap => {
@@ -172,6 +176,7 @@ function confirmCancel() {
     }).then(() => { closeReservedModal(); alert("취소됨 / Cancelled."); }).catch(e => alert(e));
 }
 
+// 관리자 보안
 var sc = 0;
 document.querySelector(".creatorAvatar").onclick = function() {
     var now = Date.now();
@@ -195,7 +200,7 @@ document.querySelector(".creatorAvatar").onclick = function() {
                 lockoutTime = Date.now() + 3600000;
                 alert("3회 실패: 1시간 차단 / Locked for 1h.");
             } else {
-                alert(`틀림 (${loginAttempts}/3) / Wrong.`);
+                alert(`비밀번호 틀림 (${loginAttempts}/3) / Wrong Password.`);
             }
         }
     }
