@@ -17,7 +17,7 @@ header { padding: 20px; position: relative; z-index: 1; }
 .slot.locked { background: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
 .slot.myReservation { border: 2px solid #38a169 !important; background: #f0fff4 !important; box-shadow: 4px 4px 0px #9ae6b4 !important; }
 
-/* 캡처 수정: 시간과 인원수 양끝 배치 */
+/* 캡처 요청 반영: 시간과 인원수 양끝 배치 */
 .timeRow { display: flex; justify-content: space-between; align-items: center; font-weight: 800; margin-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px; width: 100%; }
 .timeUTC { font-size: 15px; color: #2d3748; }
 
@@ -26,16 +26,16 @@ header { padding: 20px; position: relative; z-index: 1; }
 .modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 500px; text-align: left; box-sizing: border-box; }
 
 .inputGroup { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
-.inputGroup input, .cancelArea input { width: 100% !important; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 15px; box-sizing: border-box; display: block; }
+.inputGroup input, .cancelArea input { width: 100% !important; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 15px; box-sizing: border-box; display: block; outline: none; }
 
 .buttonRow { display: flex; gap: 12px; margin-top: 15px; width: 100%; }
 .btn-primary { flex: 1; background: #bbdefb; color: #1976d2; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 .btn-danger { flex: 1; background: #ffcdd2; color: #e53935; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 .btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 20px; display: block; }
 
-/* 관리자 버튼 상태 색상 (OFF 시 연한 파스텔 회색) */
-.admin-btn-on { background-color: #bbdefb !important; color: #1976d2 !important; }
-.admin-btn-off { background-color: #e2e8f0 !important; color: #94a3b8 !important; }
+/* 관리자 버튼 상태 색상 (OFF 시 파스텔 회색) */
+.admin-btn-on { background-color: #bbdefb !important; color: #1976d2 !important; border: none !important; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+.admin-btn-off { background-color: #e2e8f0 !important; color: #94a3b8 !important; border: none !important; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; }
 
 .adminSection { margin-bottom: 20px; padding: 15px; border-radius: 15px; background: #f8fafc; }
 .logsBox { background: #1e1e1e; color: #00ff00; padding: 10px; font-family: monospace; font-size: 11px; border-radius: 10px; height: 100px; overflow-y: auto; text-align: left; }
