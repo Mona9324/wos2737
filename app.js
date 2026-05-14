@@ -179,29 +179,59 @@ function exportAllCSV() {
             alert("엑셀 라이브러리 로딩 중입니다. 잠시 후 다시 시도해주세요.");
             return;
         }
-        var rows = [];
-        Object.keys(allSlotsData).sort().forEach(id => {
-            var slot = allSlotsData[id];
-            if (slot && slot.attendees && slot.attendees.length > 0) {
-                slot.attendees.forEach((a, idx) => {
-                    rows.push({
-                        "요일(Buff)": id.split('_')[0],
-                        "시간(UTC)": id.split('_')[1],
-                        "연맹(Alliance)": a.alliance,
-                        "닉네임(Player)": a.player,
-                        "ID": a.playerId,
-                        "가속(Days)": a.daysSaved
-                    });
-                });
+
+        var wb = XLSX.utils.book_new();
+        var hasData = false;
+
+        // 요일별 시트 이름 설정
+        var dayNames = {
+            monday: "월요일 (Monday)",
+            tuesday: "화요일 (Tuesday)",
+            thursday: "목요일 (Thursday)"
+        };
+
+        // 각 요일별로 데이터를 분류하여 시트 생성
+        ["monday", "tuesday", "thursday"].forEach(day => {
+            var rows = [];
+            Object.keys(allSlotsData).sort().forEach(id => {
+                // 현재 처리 중인 요일에 해당하는 데이터만 필터링
+                if (id.startsWith(day)) {
+                    var slot = allSlotsData[id];
+                    if (slot && slot.attendees && slot.attendees.length > 0) {
+                        slot.attendees.forEach((a, idx) => {
+                            rows.push({
+                                "시간(UTC)": id.split('_')[1],
+                                "연맹(Alliance)": a.alliance,
+                                "닉네임(Player)": a.player,
+                                "ID": a.playerId,
+                                "가속(Days)": a.daysSaved,
+                                "순서": idx + 1
+                            });
+                        });
+                    }
+                }
+            });
+
+            // 해당 요일에 데이터가 있는 경우에만 시트 추가
+            if (rows.length > 0) {
+                var ws = XLSX.utils.json_to_sheet(rows);
+                XLSX.utils.book_append_sheet(wb, ws, dayNames[day]);
+                hasData = true;
             }
         });
-        if (rows.length === 0) return alert("데이터가 없습니다.");
-        var ws = XLSX.utils.json_to_sheet(rows);
-        var wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "SVS_Booking");
-        XLSX.writeFile(wb, "SVS_Booking_" + new Date().toISOString().slice(0,10) + ".xlsx");
+
+        if (!hasData) {
+            return alert("추출할 데이터가 없습니다.");
+        }
+
+        // 파일 저장
+        var fileName = "2737_SVS_Booking_" + new Date().toISOString().slice(0, 10) + ".xlsx";
+        XLSX.writeFile(wb, fileName);
+        
+        alert("요일별로 분리된 엑셀 파일 다운로드를 시작합니다.");
     } catch (e) {
-        alert("엑셀 추출 오류: " + e.message);
+        console.error("Excel Export Error:", e);
+        alert("엑셀 추출 중 오류가 발생했습니다: " + e.message);
     }
 }
 
