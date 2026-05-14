@@ -1,39 +1,39 @@
-/* 기존 색상 및 기본 설정 유지 */
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 header { padding: 20px; position: relative; z-index: 1; }
 .countdown { font-size: 15px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
 
-/* 아바타 고정 */
 .creatorBadge { margin-bottom: 20px; }
 .creatorAvatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #d6b347; box-shadow: 0 6px 15px rgba(0,0,0,0.15); cursor: pointer; transition: 0.3s; }
 .creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
-/* 탭 메뉴 */
 .tabs { display: flex; justify-content: center; gap: 10px; max-width: 1200px; margin: 0 auto 20px; padding: 0 10px; }
 .tabs button { flex: 1; padding: 14px 5px; border: none; border-radius: 12px; background: #d8f2ff; color: #2d5468; cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; transition: 0.2s; }
 .tabs button.active { background: #bfe7fb; box-shadow: 0 2px 0px #a8d5eb; transform: translateY(2px); }
 
-/* 슬롯 디자인 (캡처 수정 사항 반영) */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
 .slot { background: #fffdf0; border-radius: 16px; padding: 18px; text-align: left; cursor: pointer; min-height: 140px; border: 1px solid #f9f2d0; box-shadow: 4px 4px 0px rgba(0,0,0,0.05); }
 .slot.pm-slot { background: #fff4e6; border-color: #ffebd9; }
 .slot.locked { background: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
+.slot.myReservation { border: 2px solid #38a169 !important; background: #f0fff4 !important; box-shadow: 4px 4px 0px #9ae6b4 !important; }
 
-/* 시간과 인원 분리 핵심 코드 */
+/* 캡처 수정: 시간과 인원수 양끝 배치 */
 .timeRow { display: flex; justify-content: space-between; align-items: center; font-weight: 800; margin-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px; width: 100%; }
 .timeUTC { font-size: 15px; color: #2d3748; }
 
-/* 모달 및 버튼 (사용자 요청 파스텔톤) */
 .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
 .modal.show { display: flex; }
 .modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 500px; text-align: left; box-sizing: border-box; }
+
+.inputGroup { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+.inputGroup input, .cancelArea input { width: 100% !important; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 15px; box-sizing: border-box; display: block; }
+
 .buttonRow { display: flex; gap: 12px; margin-top: 15px; width: 100%; }
 .btn-primary { flex: 1; background: #bbdefb; color: #1976d2; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 .btn-danger { flex: 1; background: #ffcdd2; color: #e53935; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 .btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 20px; }
 
-/* 관리자 버튼 상태 색상 (OFF 시 연한 파스텔 회색) */
+/* 관리자 버튼 상태 색상 */
 .admin-btn-on { background-color: #bbdefb !important; color: #1976d2 !important; }
 .admin-btn-off { background-color: #e2e8f0 !important; color: #94a3b8 !important; }
 
