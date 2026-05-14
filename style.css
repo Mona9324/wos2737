@@ -1,42 +1,35 @@
-body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
+body { font-family: sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 header { padding: 20px; position: relative; z-index: 1; }
-.countdown { font-size: 15px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
+.countdown { font-size: 14px; font-weight: bold; color: #d34b4b; background: rgba(255,255,255,0.8); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
 
-.creatorBadge { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
-.creatorAvatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #d6b347; box-shadow: 0 6px 15px rgba(0,0,0,0.15); cursor: pointer; transition: 0.3s; }
-.creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 10px; }
+.creatorBadge { margin-bottom: 20px; }
+.creatorAvatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #d6b347; }
+.creatorCredit { font-size: 14px; font-weight: bold; color: #4b5563; margin-top: 5px; }
 
-.tabsWrap { max-width: 1300px; margin: 0 auto 25px; padding: 0 20px; position: relative; z-index: 1; }
-.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; margin-bottom: 15px; }
-.tabs button { padding: 16px 5px; border: none; border-radius: 15px; background: #d8f2ff; color: #2d5468; cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; transition: 0.2s; white-space: nowrap; }
-.tabs button.active { background: #bfe7fb; box-shadow: 0 2px 0px #a8d5eb; transform: translateY(2px); }
+.tabsWrap { max-width: 1200px; margin: 0 auto 20px; padding: 0 10px; position: relative; z-index: 1; }
+.tabs { display: flex; justify-content: center; gap: 10px; }
+.tabs button { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #d8f2ff; cursor: pointer; font-weight: bold; }
+.tabs button.active { background: #bfe7fb; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
-.slot { border-radius: 16px; padding: 18px; text-align: left; border: none; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; min-height: 130px; box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.05); background-color: #fffdf0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; padding: 20px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+.slot { background: #fffdf0; border-radius: 12px; padding: 15px; text-align: left; cursor: pointer; box-shadow: 2px 2px 5px rgba(0,0,0,0.05); min-height: 120px; }
+.slot.pm-slot { background: #fff4e6; }
+.slot.myReservation { border: 2px solid #38a169; background: #f0fff4 !important; }
 
-.slot.pm-slot { background-color: #fff4e6; }
-.slot.locked { background-color: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
-.slot.myReservation { background-color: #f0fff4 !important; border: 2px solid #c6f6d5 !important; }
+.timeRow { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+.attendeeMiniList { font-size: 12px; color: #4a5568; }
+.miniItem { display: flex; justify-content: space-between; margin-bottom: 2px; }
 
-/* 슬롯 내부 디자인 (시간 범위 및 예약자 리스트) */
-.timeRow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 800; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px; }
-.timeUTC { font-size: 15px; color: #2d3748; }
-.attendeeMiniList { margin-top: 5px; font-size: 12px; color: #4a5568; line-height: 1.6; }
-.attendeeMiniItem { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(0,0,0,0.03); padding: 2px 0; }
-
-/* 모달 디자인 */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
 .modal.show { display: flex; }
-.modalBox { background: white; padding: 25px; border-radius: 20px; width: 100%; max-width: 440px; box-sizing: border-box; }
-.inputGroup { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; }
-.inputGroup input { padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 15px; }
+.modalBox { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; text-align: left; }
+.inputGroup { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; }
+.inputGroup input { padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
 
-.buttonRow { display: flex; gap: 10px; width: 100%; }
-.btn-primary { flex: 1; background: #7da7ff; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; }
-.btn-danger { flex: 1; background: #ff5a5a; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; }
-.btn-secondary { background: #f3f4f6; color: #4a5568; border: none; padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+.buttonRow { display: flex; gap: 10px; }
+.btn-primary { flex: 1; background: #7da7ff; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.btn-danger { flex: 1; background: #ff5a5a; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.btn-secondary { background: #eee; color: #444; border: none; padding: 10px; border-radius: 8px; cursor: pointer; }
 
-@media (max-width: 600px) {
-    .tabs { grid-template-columns: 1fr; }
-}
+@media (max-width: 600px) { .tabs { flex-direction: column; } }
