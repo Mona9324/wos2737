@@ -1,15 +1,15 @@
-/* 기본 배경 및 폰트 설정 */
+/* 기본 배경 및 폰트 */
 body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 header { padding: 20px; position: relative; z-index: 1; }
 .countdown { font-size: 15px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
 
-/* 공룡 프로필 확대 유지 */
+/* 공룡 프로필 확대 */
 .creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.2); object-fit: cover; margin-top: 10px; }
 .creatorAvatar:hover { transform: scale(1.05); }
 .creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 15px; }
 
-/* 툴바 레이아웃 (PC 기본: 1줄) */
+/* 툴바 레이아웃 (PC: 기본 1줄) */
 .headerToolbar { 
     display: flex; 
     flex-direction: row; 
@@ -20,41 +20,10 @@ header { padding: 20px; position: relative; z-index: 1; }
     width: 95%; 
     max-width: 1000px; 
 }
-
-#searchInput { 
-    flex: 3; 
-    padding: 14px; 
-    border-radius: 12px; 
-    border: 1px solid #cfd8e3; 
-    outline: none; 
-    font-size: 14px; 
-}
-
-.filterGroup {
-    display: flex;
-    flex: 2;
-    gap: 10px;
-}
-
-#filterStatus { 
-    flex: 1; 
-    padding: 14px; 
-    border-radius: 12px; 
-    border: 1px solid #cfd8e3; 
-    background: white; 
-    cursor: pointer; 
-    font-size: 14px;
-}
-
-.btn-reset { 
-    padding: 14px 20px; 
-    border-radius: 12px; 
-    border: 1px solid #cfd8e3; 
-    background: white; 
-    cursor: pointer; 
-    font-weight: bold; 
-    white-space: nowrap;
-}
+#searchInput { flex: 3; padding: 14px; border-radius: 12px; border: 1px solid #cfd8e3; outline: none; font-size: 14px; }
+.filterGroup { display: flex; flex: 2; gap: 10px; }
+#filterStatus { flex: 1; padding: 14px; border-radius: 12px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-size: 14px; }
+.btn-reset { padding: 14px 20px; border-radius: 12px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-weight: bold; white-space: nowrap; }
 
 /* 요일 탭 */
 .tabs { display: flex; justify-content: center; gap: 10px; max-width: 1200px; margin: 0 auto 20px; padding: 0 10px; }
@@ -65,37 +34,47 @@ header { padding: 20px; position: relative; z-index: 1; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
 .slot { background: #fffdf0; border-radius: 16px; padding: 18px; text-align: left; cursor: pointer; min-height: 140px; border: 1px solid #f9f2d0; box-shadow: 4px 4px 0px rgba(0,0,0,0.05); }
 
-/* 오전 요일 뱃지 (진한 노랑 파스텔) */
+/* 요일 뱃지 (파스텔 노랑: 오전 슬롯용) */
 .slot .dayBadge {
     display: inline-block;
     padding: 4px 10px;
-    background-color: #f3eab5;
-    color: #857432;
+    background-color: #f3eab5; /* 조금 더 진한 파스텔 노랑 */
+    color: #857432; /* 진한 갈색 텍스트 */
     border-radius: 8px;
     font-size: 11px;
     font-weight: 800;
     margin-bottom: 8px;
 }
 
-/* 오후 요일 뱃지 (진한 살구 파스텔) */
+/* 요일 뱃지 (파스텔 살구: 오후 슬롯용) */
 .slot.pm-slot { background: #fff4e6 !important; border-color: #ffebd9 !important; }
 .slot.pm-slot .dayBadge {
-    background-color: #fcd9b8 !important;
-    color: #9c6231 !important;
+    background-color: #fcd9b8 !important; /* 조금 더 진한 파스텔 살구 */
+    color: #9c6231 !important; /* 진한 주황브라운 텍스트 */
 }
 
 .slot.locked { background: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
 .slot.myReservation { border: 2px solid #38a169 !important; background: #f0fff4 !important; box-shadow: 4px 4px 0px #9ae6b4 !important; }
 
+/* 텍스트 스타일 */
 .timeRow { display: flex; justify-content: space-between; align-items: center; font-weight: 800; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px; margin-bottom: 8px; }
 .localTime { font-size: 14px !important; font-weight: 700 !important; color: #4a5568 !important; margin-bottom: 12px; display: block; }
-
 .miniItem { display: flex; justify-content: space-between; padding: 4px 0; }
 .pName { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
 .pDays { font-weight: 600; color: #718096; margin-left: 10px; font-size: 13px; }
 
-/* 모달 디자인 */
-.modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 480px; text-align: left; box-sizing: border-box; }
+/* 모달 시스템 [중요: position fixed 필수] */
+.modal { 
+    display: none; 
+    position: fixed !important; 
+    inset: 0 !important; 
+    background: rgba(0,0,0,0.6); 
+    z-index: 9999 !important; 
+    align-items: center; 
+    justify-content: center; 
+}
+.modal.show { display: flex !important; }
+.modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 480px; text-align: left; box-sizing: border-box; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
 .inputGroup { display: flex !important; flex-direction: column !important; gap: 15px !important; margin: 25px 0 !important; }
 .inputGroup input, .cancelArea input { width: 100% !important; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 15px; box-sizing: border-box; display: block !important; outline: none; }
 .mask-input { -webkit-text-security: disc !important; text-security: disc !important; }
@@ -110,14 +89,8 @@ header { padding: 20px; position: relative; z-index: 1; }
 
 /* 모바일 반응형 조절 (2줄 레이아웃) */
 @media (max-width: 600px) { 
-    .headerToolbar { 
-        flex-direction: column; 
-    }
-    #searchInput { 
-        width: 100%; 
-    }
-    .filterGroup {
-        width: 100%;
-    }
+    .headerToolbar { flex-direction: column; }
+    #searchInput { width: 100%; }
+    .filterGroup { width: 100%; }
     .tabs { flex-direction: column; }
 }
