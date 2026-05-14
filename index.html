@@ -1,47 +1,130 @@
-<!-- 관리자 패널 (Admin Panel) -->
-<div id="adminPanel" class="modal">
-    <div class="modalBox" style="max-width: 600px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 style="margin: 0;">관리자 시스템 / Admin System</h3>
-            <button type="button" onclick="closeAdmin()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2737 SVS Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="snow"></canvas>
+    <header>
+        <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
+        <div id="countdown" class="countdown"></div>
+        <div class="creatorBadge">
+            <img src="creator-dino.png" alt="Creator" class="creatorAvatar" id="adminTrigger" onclick="handleAdminAccess()">
+            <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
         </div>
-
-        <!-- 기준 시간 설정 -->
-        <div class="adminSection" style="margin-bottom: 20px;">
-            <p class="inputLabel">SVS 기준일 설정 / Base Date Setting</p>
-            <div style="display: flex; gap: 10px;">
-                <input id="adminBaseDate" type="datetime-local" style="flex: 2; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
-                <button onclick="saveAdminBaseDate()" class="btn-primary" style="flex: 1; padding: 10px;">저장 / Save</button>
-            </div>
+        <div class="headerToolbar">
+            <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search Alliance or Nickname" oninput="renderAll()">
+            <select id="filterStatus" onchange="renderAll()">
+                <option value="all">전체 보기 / View All</option>
+                <option value="mine">내 예약 확인 / My Booking</option>
+            </select>
+            <button type="button" onclick="clearSearch()">초기화 / Reset</button>
         </div>
+    </header>
 
-        <!-- 요일별 제어 -->
-        <div class="adminSection" style="margin-bottom: 20px;">
-            <p class="inputLabel">요일별 예약 제어 / Day Control</p>
-            <div class="buttonRow" style="flex-wrap: wrap;">
-                <button onclick="toggleTabStatus('monday')" id="btn-admin-monday" class="btn-secondary">월요일 / Mon</button>
-                <button onclick="toggleTabStatus('tuesday')" id="btn-admin-tuesday" class="btn-secondary">화요일 / Tue</button>
-                <button onclick="toggleTabStatus('thursday')" id="btn-admin-thursday" class="btn-secondary">목요일 / Thu</button>
-            </div>
-            <div class="buttonRow" style="margin-top: 10px;">
-                <button onclick="toggleAllTabs(true)" class="btn-primary">전체 열림 / All Open</button>
-                <button onclick="toggleAllTabs(false)" class="btn-danger">전체 닫힘 / All Close</button>
-            </div>
+    <section class="tabsWrap">
+        <div class="tabs">
+            <button type="button" id="tab-monday" onclick="switchBuff('monday')">월요일 (건설) / Monday (Construction Buff)</button>
+            <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">화요일 (연구) / Tuesday (Research Buff)</button>
+            <button type="button" id="tab-thursday" onclick="switchBuff('thursday')">목요일 (훈련) / Thursday (Troops Training Buff)</button>
         </div>
+        <div id="bookingStatusMsg" class="bookingStatusMsgHighlight"></div>
+    </section>
 
-        <!-- 데이터 관리 -->
-        <div class="adminSection" style="margin-bottom: 20px;">
-            <p class="inputLabel">데이터 관리 / Data Management</p>
+    <main>
+        <div id="slots" class="grid"></div>
+    </main>
+
+    <!-- 예약 신청 모달 (New Booking) -->
+    <div id="modal" class="modal">
+        <div class="modalBox">
+            <h3>새 예약 추가 / New Booking</h3>
+            <div id="selectedSlotInfo" class="slotInfoText"></div>
+            <div class="inputGroup">
+                <input id="alliance" type="text" placeholder="연맹명 / Alliance (e.g. ZTP)">
+                <input id="player" type="text" placeholder="닉네임 / Nickname">
+                <input id="playerId" type="text" placeholder="ID (숫자 9개) / ID (9 Digits)" maxlength="9">
+                <input id="daysSaved" type="number" placeholder="사용 가속(일) / Speed-up (Days)">
+                <input id="password" type="password" placeholder="비밀번호(취소용) / Cancel Password">
+            </div>
             <div class="buttonRow">
-                <button onclick="exportAllCSV()" class="btn-primary" style="background: #21a366;">엑셀 추출 / Export Excel</button>
-                <button onclick="backupAndClearAll()" class="btn-danger">전체 지우기 / Clear All</button>
+                <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정 / Confirm</button>
+                <button type="button" onclick="closeModal()" class="btn-secondary">닫기 / Close</button>
             </div>
-        </div>
-
-        <!-- 시스템 로그 -->
-        <div class="adminSection">
-            <p class="inputLabel">시스템 로그 / System Logs</p>
-            <div id="logsBox" style="background: #1e1e1e; color: #00ff00; padding: 10px; font-family: monospace; font-size: 11px; border-radius: 10px; height: 100px; overflow-y: auto; text-align: left;"></div>
         </div>
     </div>
-</div>
+
+    <!-- 예약 현황 모달 (Status & Individual Delete) -->
+    <div id="reservedModal" class="modal">
+        <div class="modalBox">
+            <h3>예약 현황 / Booking Status</h3>
+            <div id="reservedSlotInfo" class="slotInfoText"></div>
+            <div id="attendeeListDetail" class="attendeeListDetail"></div>
+            <hr>
+            <div class="cancelArea">
+                <p class="inputLabel">취소 비밀번호 입력 / Password to Cancel</p>
+                <input id="editPassword" type="password" placeholder="Password">
+                <div class="buttonRow">
+                    <button type="button" onclick="confirmCancel()" class="btn-danger">취소하기 / Cancel</button>
+                    <button type="button" onclick="openReserveFromStatus()" class="btn-primary">추가 예약 / Add More</button>
+                </div>
+            </div>
+            <button type="button" onclick="closeReservedModal()" class="btn-secondary">닫기 / Close</button>
+        </div>
+    </div>
+
+    <!-- 관리자 패널 (Admin Controls & Logs) -->
+    <div id="adminPanel" class="modal">
+        <div class="modalBox" style="max-width: 600px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">관리자 시스템 / Admin System</h3>
+                <button type="button" onclick="closeAdmin()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+            </div>
+
+            <div class="adminSection" style="margin-bottom: 20px;">
+                <p class="inputLabel">SVS 기준일 설정 / Base Date Setting</p>
+                <div style="display: flex; gap: 10px;">
+                    <input id="adminBaseDate" type="datetime-local" style="flex: 2; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                    <button onclick="saveAdminBaseDate()" class="btn-primary" style="flex: 1; padding: 10px;">저장 / Save</button>
+                </div>
+            </div>
+
+            <div class="adminSection" style="margin-bottom: 20px;">
+                <p class="inputLabel">요일별 예약 제어 / Day Control</p>
+                <div class="buttonRow" style="flex-wrap: wrap;">
+                    <button type="button" onclick="toggleTabStatus('monday')" id="btn-admin-monday" class="btn-secondary">월요일 / Mon</button>
+                    <button type="button" onclick="toggleTabStatus('tuesday')" id="btn-admin-tuesday" class="btn-secondary">화요일 / Tue</button>
+                    <button type="button" onclick="toggleTabStatus('thursday')" id="btn-admin-thursday" class="btn-secondary">목요일 / Thu</button>
+                </div>
+                <div class="buttonRow" style="margin-top: 10px;">
+                    <button type="button" onclick="toggleAllTabs(true)" class="btn-primary">전체 열림 / All Open</button>
+                    <button type="button" onclick="toggleAllTabs(false)" class="btn-danger">전체 닫힘 / All Close</button>
+                </div>
+            </div>
+
+            <div class="adminSection" style="margin-bottom: 20px;">
+                <p class="inputLabel">데이터 관리 / Data Management</p>
+                <div class="buttonRow">
+                    <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background: #21a366;">엑셀 추출 / Export Excel</button>
+                    <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 지우기 / Clear All</button>
+                </div>
+            </div>
+
+            <div class="adminSection">
+                <p class="inputLabel">시스템 로그 / System Logs</p>
+                <div id="logsBox" style="background: #1e1e1e; color: #00ff00; padding: 10px; font-family: monospace; font-size: 11px; border-radius: 10px; height: 100px; overflow-y: auto; text-align: left;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
