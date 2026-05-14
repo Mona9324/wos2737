@@ -1,44 +1,44 @@
-/* 기본 설정 */
-body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef5fb; margin: 0; text-align: center; color: #1f2937; }
+/* 기본 배경 및 폰트 */
+body { font-family: 'Segoe UI', sans-serif; background: #f4f7fa; margin: 0; text-align: center; color: #4a5568; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-header { padding: 20px; position: relative; z-index: 1; }
-.countdown { font-size: 15px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
+header { padding: 30px 20px; position: relative; z-index: 1; }
 
-/* 아바타 설정 */
-.creatorBadge { margin-bottom: 20px; }
-.creatorAvatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #d6b347; box-shadow: 0 6px 15px rgba(0,0,0,0.15); cursor: pointer; transition: 0.3s; }
+/* 카운트다운 */
+.countdown { font-size: 14px; font-weight: bold; color: #e57373; background: #fff; display: inline-block; padding: 6px 16px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 12px; }
+
+/* 아바타 고정 */
+.creatorBadge { margin-bottom: 25px; }
+.creatorAvatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.3s ease; }
 .creatorAvatar:hover { transform: scale(1.05); }
-.creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
-/* 탭 및 버튼 */
-.tabsWrap { max-width: 1200px; margin: 0 auto 20px; padding: 0 10px; position: relative; z-index: 1; }
-.tabs { display: flex; justify-content: center; gap: 10px; }
-.tabs button { flex: 1; padding: 14px 5px; border: none; border-radius: 12px; background: #d8f2ff; color: #2d5468; cursor: pointer; font-weight: 700; font-size: 14px; box-shadow: 0 4px 0px #b8d9eb; transition: 0.2s; }
-.tabs button.active { background: #bfe7fb; box-shadow: 0 2px 0px #a8d5eb; transform: translateY(2px); }
+/* 탭 스타일 (파스텔 블루) */
+.tabs { display: flex; justify-content: center; gap: 10px; max-width: 1200px; margin: 0 auto 20px; padding: 0 15px; }
+.tabs button { flex: 1; padding: 14px; border: none; border-radius: 12px; background: #e3f2fd; color: #64b5f6; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.tabs button.active { background: #bbdefb; color: #1e88e5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
 
-/* 그리드 레이아웃 */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
-.slot { background: #fffdf0; border-radius: 16px; padding: 18px; text-align: left; cursor: pointer; min-height: 140px; border: 1px solid #f9f2d0; box-shadow: 4px 4px 0px rgba(0,0,0,0.05); }
-.slot.pm-slot { background: #fff4e6; }
-.slot.locked { background: #f3f4f6; cursor: not-allowed; opacity: 0.7; }
-.slot.myReservation { border: 2px solid #38a169 !important; background: #f0fff4 !important; box-shadow: 4px 4px 0px #9ae6b4 !important; }
+/* 그리드 및 슬롯 */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
+.slot { background: #ffffff; border-radius: 16px; padding: 20px; text-align: left; cursor: pointer; border: 1px solid #edf2f7; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+.slot.pm-slot { background: #fffcf5; }
+.slot.locked { background: #f7fafc; opacity: 0.6; cursor: not-allowed; }
+.slot.myReservation { border: 2px solid #a5d6a7 !important; background: #f1f8e9 !important; }
 
-/* 모달창 (핵심 수정) */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
+/* 모달 디자인 (파스텔 톤 적용) */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
 .modal.show { display: flex; }
-.modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 500px; text-align: left; box-sizing: border-box; }
+.modalBox { background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 480px; text-align: left; box-sizing: border-box; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.modalBox h3 { margin-top: 0; color: #2d3748; font-size: 20px; }
 
+/* 입력창 */
 .inputGroup { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
-.inputGroup input, .cancelArea input { width: 100% !important; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; font-size: 15px; box-sizing: border-box; display: block; }
+.inputGroup input, .cancelArea input { width: 100% !important; padding: 14px; border-radius: 12px; border: 1px solid #edf2f7; background: #f8fafc; font-size: 15px; box-sizing: border-box; outline: none; }
 
-.buttonRow { display: flex; gap: 12px; margin-top: 15px; width: 100%; }
-.btn-primary { flex: 1; background: #7da7ff; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
-.btn-danger { flex: 1; background: #ff5a5a; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+/* 버튼 (파스텔 컬러) */
+.buttonRow { display: flex; gap: 12px; margin-top: 20px; width: 100%; }
+.btn-primary { flex: 1; background: #bbdefb; color: #1976d2; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+.btn-danger { flex: 1; background: #ffcdd2; color: #e53935; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+.btn-close-full { width: 100%; background: #f1f5f9; color: #64748b; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 15px; }
 
-/* 닫기 버튼 겹침 해결 */
-.btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 20px; display: block; }
-
-.attendeeListDetail { margin-bottom: 20px; max-height: 200px; overflow-y: auto; }
-.miniItem { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px dashed #eee; }
-
-@media (max-width: 600px) { .tabs { flex-direction: column; } .buttonRow { flex-direction: column; } }
+/* 관리자 섹션 */
+.adminSection { margin-bottom: 25px; padding: 15px; border-radius: 12px; background: #f8fafc; }
+.logsBox { background: #2d3748; color: #a5d6a7; padding: 12px; border-radius: 12px; height: 100px; overflow-y: auto; font-size: 12px; font-family: monospace; }
