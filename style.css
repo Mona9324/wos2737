@@ -14,7 +14,7 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 #filterStatus { padding: 10px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; }
 .btn-reset { padding: 10px 15px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-weight: bold; }
 
-/* 프로필 및 곡선 문구 */
+/* 곡선 문구 & 프로필 */
 .creatorBadge { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 10px; }
 .profile-wrapper { position: relative; width: 400px; height: 190px; display: flex; justify-content: center; align-items: flex-end; }
 .curved-text-svg { position: absolute; top: -45px; width: 400px; height: 160px; pointer-events: none; }
@@ -23,7 +23,7 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .creatorAvatar:hover { transform: scale(1.1); }
 .creatorCredit { font-size: 16px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
-/* 공지사항 카드 */
+/* 공지사항 배너 */
 .ministerNotice { background: #ffffff; border-left: 6px solid #ffe066; color: #2d3748; padding: 15px; border-radius: 12px; margin: 15px auto; max-width: 1200px; width: 95%; box-shadow: 0 6px 15px rgba(0,0,0,0.06); text-align: center; font-size: 16px; font-weight: 900; word-break: keep-all; }
 
 /* 요일 탭 */
@@ -40,7 +40,7 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .localTime { font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 12px; display: block; }
 .dayBadge { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; margin-bottom: 8px; background-color: #fef3c7; color: #92400e; }
 
-/* 모달 및 버튼 */
+/* 모달 & 버튼 */
 .modal { display: none; position: fixed !important; inset: 0 !important; background: rgba(0,0,0,0.6); z-index: 9999 !important; align-items: center; justify-content: center; }
 .modal.show { display: flex !important; }
 .modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 520px; box-sizing: border-box; text-align: left; overflow-y: auto; max-height: 95vh; }
