@@ -1,5 +1,6 @@
 /**
- * 2737 SVS Booking - app.js (Bilingual & Bug Fixed)
+ * 2737 SVS Booking - app.js
+ * 모든 함수를 전역(window)으로 선언하여 호출 문제 해결
  */
 
 var currentBuff = "monday";
@@ -19,7 +20,6 @@ var bookingSettings = {
 var adminAuthenticated = false;
 var sc = 0;
 
-// 유틸리티
 function padTime(h, m) { if (m >= 60) { h += Math.floor(m / 60); m = m % 60; } h = h % 24; return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0"); }
 function formatLocalTime(date) { return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
 function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
@@ -82,21 +82,28 @@ window.renderAll = function() {
     }
 }
 
-// [중요 수정] 정밀 업데이트 로직
+// [핵심 해결] 수동 제어 버튼 로직 전면 수정
 window.toggleTabStatus = function(day) {
-    var c = bookingSettings.tabs[day].isOpen;
-    var newStatus = !c;
-    // 특정 요일의 상태만 업데이트
-    db.collection("settings").doc("booking").update({
-        [`tabs.${day}.isOpen`]: newStatus
-    }).then(() => {
+    if (!bookingSettings.tabs || !bookingSettings.tabs[day]) return;
+    var currentStatus = bookingSettings.tabs[day].isOpen;
+    var newStatus = !currentStatus;
+    
+    // Firestore 점 표기법을 사용하여 특정 필드만 즉시 업데이트
+    var updatePath = "tabs." + day + ".isOpen";
+    var updateData = {};
+    updateData[updatePath] = newStatus;
+    
+    db.collection("settings").doc("booking").update(updateData).then(() => {
         addLog(`${day.toUpperCase()} Toggle: ${newStatus ? 'OPEN' : 'CLOSED'}`);
-    }).catch(e => addLog("Error: " + e.message));
+    }).catch(e => {
+        console.error("Toggle Error:", e);
+        alert("업데이트 실패! / Update Failed!");
+    });
 };
 
 window.exportAllCSV = function() {
     try {
-        if (typeof XLSX === 'undefined') return alert("Loading... Try again.");
+        if (typeof XLSX === 'undefined') return alert("Loading XLSX...");
         const wb = XLSX.utils.book_new();
         let hasData = false;
         ["monday", "tuesday", "thursday"].forEach(day => {
@@ -114,6 +121,7 @@ window.exportAllCSV = function() {
     } catch (e) { alert("Failed."); }
 };
 
+// 이하 기존 보조 함수 유지
 window.handleAdminAccess = function() { sc++; if(sc>=3) { sc=0; var p=prompt("Admin Pass:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); addLog("Admin Login Success"); } } };
 window.saveAutoSchedule = function() { bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(d => { bookingSettings.tabs[d].closeTime = document.getElementById(`close-${d}`).value; }); db.collection("settings").doc("booking").update(bookingSettings).then(() => { alert("저장됨! / Saved!"); addLog("Schedule Updated"); }); };
 window.saveAdminBaseDate = function() { var val = document.getElementById("adminBaseDate").value; if(!val) return; db.collection("settings").doc("booking").update({baseDate: val}).then(()=> { addLog("Base Date Changed"); alert("Saved"); }); };
