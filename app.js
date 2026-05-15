@@ -3,7 +3,15 @@ var selectedSlot = null;
 var allSlotsData = {};
 var db = window.db;
 var MY_BOOKING_KEY = "svs_my_booking_info";
-var bookingSettings = { baseDate: "2026-05-23T21:00:00", globalOpenTime: "", tabs: { monday: { isOpen: true, closeTime: "" }, tuesday: { isOpen: true, closeTime: "" }, thursday: { isOpen: true, closeTime: "" } } };
+var bookingSettings = { 
+    baseDate: "2026-05-23T21:00:00", 
+    globalOpenTime: "", 
+    tabs: { 
+        monday: { isOpen: true, closeTime: "" }, 
+        tuesday: { isOpen: true, closeTime: "" }, 
+        thursday: { isOpen: true, closeTime: "" } 
+    } 
+};
 var adminAuthenticated = false;
 var sc = 0;
 
@@ -20,12 +28,6 @@ function init() {
     });
     db.collection("slots").onSnapshot(snap => { allSlotsData = {}; snap.forEach(doc => { allSlotsData[doc.id] = doc.data(); }); renderAll(); });
     setInterval(() => { updateCountdown(); updateTabCountdowns(); }, 1000);
-}
-
-function addLog(msg) {
-    const box = document.getElementById('logsBox'); if (!box) return;
-    const log = document.createElement('div');
-    log.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`; box.prepend(log);
 }
 
 function updateTabCountdowns() {
@@ -73,7 +75,6 @@ function renderAll() {
             div.className = "slot " + (h >= 12 ? "pm-slot " : "") + (!isOpen ? " locked" : "") + (slot.attendees.some(isMyReservation) ? " myReservation" : "");
             const listHtml = slot.attendees.slice(0,3).map((a,i) => `<div class='miniItem'>${i+1}. ${a.player}</div>`).join('');
             
-            // [복구] 요일 배지 포함된 HTML
             div.innerHTML = `<div class="dayBadge">${dayLabel}</div><div class="timeRow"><span>${tId}~${eId} UTC</span><span>${slot.attendees.length}명</span></div><div class="localTime">Local: ${formatLocalTime(new Date(new Date().setUTCHours(h,m,0,0)))}</div><div class="attendeeMiniList">${listHtml || 'No Reservation'}</div>`;
             div.onclick = () => { if(!isOpen && !adminAuthenticated) return alert("마감되었습니다. / Reservation Closed."); selectedSlot = id; if (slot.attendees.length > 0) openReservedModal(id); else openReserveModal(); };
             grid.appendChild(div);
@@ -81,7 +82,6 @@ function renderAll() {
     }
 }
 
-// [핵심 수정] ID 9자리 검증 및 한/영 병기 알림
 function confirmBooking() {
     var a = document.getElementById("alliance").value, p = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("cancelKey").value;
     if(!a || !p || !idNum || !d || !pass) return alert("항목 누락! / Please fill all fields.");
@@ -108,8 +108,6 @@ function confirmCancel() {
 function handleAdminAccess() { sc++; if(sc>=3) { sc=0; var p=prompt("Password:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); } } }
 function saveAutoSchedule() { bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(d => { bookingSettings.tabs[d].closeTime = document.getElementById(`close-${d}`).value; }); db.collection("settings").doc("booking").update(bookingSettings).then(() => alert("Saved!")); }
 function saveAdminBaseDate() { var val = document.getElementById("adminBaseDate").value; if(!val) return; db.collection("settings").doc("booking").update({baseDate: val}).then(()=> alert("Saved")); }
-function toggleTabStatus(day) { var c = bookingSettings.tabs[day].isOpen; bookingSettings.tabs[day].isOpen = !c; db.collection("settings").doc("booking").update(bookingSettings); }
-function toggleAllTabs(status) { Object.keys(bookingSettings.tabs).forEach(k => bookingSettings.tabs[k].isOpen = status); db.collection("settings").doc("booking").update(bookingSettings); }
 function backupAndClearAll() { if(!confirm("전체 삭제? / Clear all?")) return; db.collection("slots").get().then(snap => { var batch = db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit(); }); }
 function exportAllCSV() { try { const wb = XLSX.utils.book_new(); let hasData = false; ["monday", "tuesday", "thursday"].forEach(day => { const rows = []; Object.keys(allSlotsData).filter(k => k.startsWith(day)).forEach(id => { allSlotsData[id].attendees.forEach(a => { rows.push({ "Day": day, "Time": id.split('_')[1], "Alliance": a.alliance, "Nickname": a.player, "ID": a.playerId, "Speed-up Days": a.daysSaved }); }); }); if (rows.length > 0) { XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day); hasData = true; } }); if (!hasData) return alert("No data."); XLSX.writeFile(wb, `SVS_Booking.xlsx`); } catch (e) { alert("Fail."); } }
 function updateAdminUI() { ['monday', 'tuesday', 'thursday'].forEach(day => { const btn = document.getElementById(`btn-admin-${day}`); if (btn) btn.className = bookingSettings.tabs[day].isOpen ? "admin-btn-on" : "admin-btn-off"; }); }
