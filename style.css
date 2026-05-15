@@ -39,7 +39,7 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
     box-shadow: none;         /* 그림자 제거 */
     color: #2d5a8e;           /* 글자색을 약간 더 진하게 보정 */
     padding: 10px; 
-    font-size: 15.5px; 
+    font-size: 17.5px; 
     font-weight: 800; 
     margin: 5px auto 20px auto; 
     max-width: 1000px; 
