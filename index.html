@@ -95,7 +95,7 @@
             </div>
 
             <div class="adminSection">
-                <p>즉시 제어 / Manual Toggle</p>
+                <p>즉시 수동 제어 / Manual Switch</p>
                 <div class="buttonRow">
                     <button type="button" id="btn-admin-monday" onclick="toggleTabStatus('monday')">Mon</button>
                     <button type="button" id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tue</button>
@@ -106,21 +106,24 @@
             <div class="adminSection">
                 <p>자동 시간 설정 / Auto Schedule</p>
                 <div class="autoTimeGroup">
-                    <label>전체 오픈(Open All):</label>
-                    <input type="datetime-local" id="global-open-time">
+                    <div class="autoRow" style="margin-bottom:15px;">
+                        <label style="font-weight:800; color:#2b6cb0; font-size:12px;">[필수] 전체 오픈(Open All):</label>
+                        <input type="datetime-local" id="global-open-time" style="margin-top:5px;">
+                    </div>
+                    <hr style="border:0; border-top:1px dashed #ddd; margin:10px 0;">
                     <div class="autoRow"><span>월 마감(Mon):</span> <input type="datetime-local" id="close-monday"></div>
                     <div class="autoRow"><span>화 마감(Tue):</span> <input type="datetime-local" id="close-tuesday"></div>
                     <div class="autoRow"><span>목 마감(Thu):</span> <input type="datetime-local" id="close-thursday"></div>
                 </div>
-                <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save</button>
+                <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save Schedule</button>
             </div>
 
             <div id="logsBox" class="logsBox"></div>
             
             <div class="adminFooter">
                 <div class="buttonRow">
-                    <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 / Excel</button>
-                    <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제 / Clear</button>
+                    <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출</button>
+                    <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button>
                 </div>
                 <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button>
             </div>
