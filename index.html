@@ -31,7 +31,7 @@
         <div class="creatorBadge">
             <div class="profile-wrapper">
                 <svg viewBox="0 0 400 140" class="curved-text-svg">
-                    <path id="finalCurve" d="M 40,120 A 160,120 0 0,1 360,120" fill="transparent" />
+                    <path id="finalCurve" d="M 40,120 A 160,120 0 0,1 360,120" fill="transparent"></path>
                     <text>
                         <textPath xlink:href="#finalCurve" startOffset="50%" text-anchor="middle">
                             The website usage fee is Sunfire Island 💚+1
@@ -107,7 +107,6 @@
     <div id="adminPanel" class="modal">
         <div class="modalBox" style="max-width: 500px;">
             <h3>관리자 시스템 / Admin System</h3>
-            
             <div class="adminSection">
                 <p>SVS 기준일 설정 / Set Base Date</p>
                 <div class="buttonRow">
@@ -115,7 +114,6 @@
                     <button type="button" onclick="window.saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장 / Save</button>
                 </div>
             </div>
-            
             <div class="adminSection">
                 <p>즉시 수동 제어 / Manual Control</p>
                 <div class="buttonRow">
@@ -124,7 +122,6 @@
                     <button type="button" id="btn-admin-thursday" class="admin-tab-btn" onclick="window.toggleTabStatus('thursday')">Thu</button>
                 </div>
             </div>
-            
             <div class="adminSection">
                 <p>자동 시간 설정 / Auto Schedule</p>
                 <div class="autoTimeGroup">
@@ -147,11 +144,7 @@
                 </div>
                 <button type="button" onclick="window.saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save Schedule</button>
             </div>
-            
-            <div id="logsBox" class="logsBox">
-                <div>[System] Ready...</div>
-            </div>
-            
+            <div id="logsBox" class="logsBox"><div>[System] Ready...</div></div>
             <div class="adminFooter" style="border-top:1px solid #eee; padding-top:10px;">
                 <div class="buttonRow">
                     <button type="button" onclick="window.exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출 / Excel</button>
