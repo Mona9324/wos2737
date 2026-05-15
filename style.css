@@ -3,23 +3,28 @@ body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; }
 
-/* 레이아웃 */
+/* 상단 레이아웃 */
 .headerTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; flex-wrap: wrap; }
 .titleArea { text-align: left; flex: 1; }
 #mainTitle { margin: 0 0 5px 0; font-size: 24px; font-weight: 800; color: #1f2937; }
 .countdown { font-size: 14px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 4px 12px; border-radius: 12px; border: 1px solid #fed7d7; }
 
-/* 곡선 문구 헤일로 */
+/* 검색창 */
+.headerToolbar { display: flex; align-items: center; gap: 8px; }
+#searchInput { padding: 10px; border-radius: 10px; border: 1px solid #cfd8e3; width: 180px; outline: none; }
+#filterStatus { padding: 10px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; }
+.btn-reset { padding: 10px 15px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-weight: bold; }
+
+/* 프로필 & 곡선 문구 */
 .creatorBadge { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 10px; }
 .profile-wrapper { position: relative; width: 400px; height: 190px; display: flex; justify-content: center; align-items: flex-end; }
 .curved-text-svg { position: absolute; top: -45px; width: 400px; height: 160px; pointer-events: none; }
 .curved-text-svg text { font-size: 14.5px; font-weight: 900; fill: #d6b347; letter-spacing: 0.1px; }
-
 .creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; box-shadow: 0 8px 20px rgba(0,0,0,0.15); object-fit: cover; cursor: pointer; transition: transform 0.3s ease; z-index: 2; }
 .creatorAvatar:hover { transform: scale(1.1); }
 .creatorCredit { font-size: 16px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
-/* 공지사항 카드 */
+/* 공지사항 배너 */
 .ministerNotice { background: #ffffff; border-left: 6px solid #ffe066; color: #2d3748; padding: 15px; border-radius: 12px; margin: 15px auto; max-width: 1200px; width: 95%; box-shadow: 0 6px 15px rgba(0,0,0,0.06); text-align: center; font-size: 16px; font-weight: 900; word-break: keep-all; }
 
 /* 요일 탭 */
@@ -36,7 +41,7 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .localTime { font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 12px; display: block; }
 .dayBadge { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; margin-bottom: 8px; background-color: #fef3c7; color: #92400e; }
 
-/* 모달 & 관리자 버튼 */
+/* 모달 & 버튼 */
 .modal { display: none; position: fixed !important; inset: 0 !important; background: rgba(0,0,0,0.6); z-index: 9999 !important; align-items: center; justify-content: center; }
 .modal.show { display: flex !important; }
 .modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 520px; box-sizing: border-box; text-align: left; overflow-y: auto; max-height: 95vh; }
@@ -48,10 +53,9 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .btn-danger { background: #ffcdd2; color: #e53935; }
 .btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 10px; font-size: 13.5px; }
 
+/* 관리자 전용 스타일 (중요) */
 .adminSection { margin-bottom: 15px; padding: 15px; border-radius: 15px; background: #f8fafc; border: 1px solid #edf2f7; }
 .adminSection p { font-size: 13.3px; font-weight: 800; margin-bottom: 10px; }
-
-/* [중요] 관리자 요일 버튼 스타일 복구 */
 .admin-tab-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; cursor: pointer; font-weight: 800; background: #f1f5f9; color: #94a3b8; transition: 0.2s; }
 .admin-tab-btn.on { background: #bbdefb !important; color: #1976d2 !important; border-color: #90cdf4 !important; }
 
