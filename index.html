@@ -63,7 +63,10 @@
     </div>
     
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 10px; color: #2d3748;"></div>
-    <main><div id="slots" class="grid"></div></main>
+    
+    <main>
+        <div id="slots" class="grid"></div>
+    </main>
 
     <div id="modal" class="modal">
         <div class="modalBox">
@@ -105,10 +108,10 @@
         <div class="modalBox" style="max-width: 500px;">
             <h3>관리자 시스템 / Admin System</h3>
             <div class="adminSection">
-                <p>SVS 기준일 설정 / Set Base Date</p>
+                <p>SVS 기준일 설정</p>
                 <div class="buttonRow">
                     <input id="adminBaseDate" type="datetime-local" style="flex:1;">
-                    <button type="button" onclick="window.saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장 / Save</button>
+                    <button type="button" onclick="window.saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장</button>
                 </div>
             </div>
             <div class="adminSection">
@@ -120,22 +123,20 @@
                 </div>
             </div>
             <div class="adminSection">
-                <p>자동 시간 설정 / Auto Schedule</p>
-                <div class="autoTimeGroup">
-                    <div class="autoRow"><span class="autoLabel">전체오픈:</span><input type="datetime-local" id="global-open-time"></div>
-                    <div class="autoRow"><span class="autoLabel">월 마감:</span><input type="datetime-local" id="close-monday"></div>
-                    <div class="autoRow"><span class="autoLabel">화 마감:</span><input type="datetime-local" id="close-tuesday"></div>
-                    <div class="autoRow"><span class="autoLabel">목 마감:</span><input type="datetime-local" id="close-thursday"></div>
-                </div>
-                <button type="button" onclick="window.saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save Schedule</button>
+                <p>자동 시간 설정</p>
+                <div class="autoRow"><span class="autoLabel">전체오픈:</span><input type="datetime-local" id="global-open-time" style="flex:1;"></div>
+                <div class="autoRow" style="margin-top:8px;"><span class="autoLabel">월 마감:</span><input type="datetime-local" id="close-monday" style="flex:1;"></div>
+                <div class="autoRow" style="margin-top:4px;"><span class="autoLabel">화 마감:</span><input type="datetime-local" id="close-tuesday" style="flex:1;"></div>
+                <div class="autoRow" style="margin-top:4px;"><span class="autoLabel">목 마감:</span><input type="datetime-local" id="close-thursday" style="flex:1;"></div>
+                <button type="button" onclick="window.saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장</button>
             </div>
             <div id="logsBox" class="logsBox"><div>[System] Ready...</div></div>
-            <div class="adminFooter">
+            <div class="adminFooter" style="border-top:1px solid #eee; padding-top:10px;">
                 <div class="buttonRow">
-                    <button type="button" onclick="window.exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출 / Excel</button>
-                    <button type="button" onclick="window.backupAndClearAll()" class="btn-danger">전체 삭제 / All Reset</button>
+                    <button type="button" onclick="window.exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출</button>
+                    <button type="button" onclick="window.backupAndClearAll()" class="btn-danger">전체 삭제</button>
                 </div>
-                <button type="button" onclick="window.closeAdmin()" class="btn-close-full">닫기 / Close</button>
+                <button type="button" onclick="window.closeAdmin()" class="btn-close-full">닫기</button>
             </div>
         </div>
     </div>
