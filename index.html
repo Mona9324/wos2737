@@ -83,7 +83,7 @@
             <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
             <hr>
             <div class="cancelArea">
-                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">비밀번호 입력 / Password</p>
+                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 입력 / Password</p>
                 <input id="editCancelKey" type="text" class="mask-input" placeholder="Password">
                 <div class="buttonRow">
                     <button type="button" onclick="confirmCancel()" class="btn-danger">취소 / Cancel</button>
@@ -97,7 +97,6 @@
     <div id="adminPanel" class="modal">
         <div class="modalBox" style="max-width: 500px;">
             <h3>관리자 / Admin System</h3>
-            
             <div class="adminSection">
                 <p>SVS 기준일 설정</p>
                 <div class="buttonRow">
@@ -105,16 +104,14 @@
                     <button type="button" onclick="saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장</button>
                 </div>
             </div>
-
             <div class="adminSection">
-                <p>즉시 수동 제어</p>
+                <p>수동 제어</p>
                 <div class="buttonRow">
                     <button type="button" id="btn-admin-monday" class="admin-tab-btn" onclick="toggleTabStatus('monday')">Mon</button>
                     <button type="button" id="btn-admin-tuesday" class="admin-tab-btn" onclick="toggleTabStatus('tuesday')">Tue</button>
                     <button type="button" id="btn-admin-thursday" class="admin-tab-btn" onclick="toggleTabStatus('thursday')">Thu</button>
                 </div>
             </div>
-
             <div class="adminSection">
                 <p>자동 시간 설정</p>
                 <div class="autoTimeGroup">
@@ -133,11 +130,9 @@
                         <input type="datetime-local" id="close-thursday" style="flex:1;">
                     </div>
                 </div>
-                <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">저장 / Save</button>
+                <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save</button>
             </div>
-
             <div id="logsBox" class="logsBox"><div>[System] Ready...</div></div>
-            
             <div class="adminFooter" style="border-top:1px solid #eee; padding-top:15px; margin-top:10px;">
                 <div class="buttonRow">
                     <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출</button>
@@ -150,7 +145,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script> <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="firebase.js"></script>
     <script src="app.js"></script>
 </body>
