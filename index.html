@@ -9,22 +9,25 @@
 <body>
     <canvas id="snow"></canvas>
     <header>
-        <h1><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
+        <div class="headerTop">
+            <h1 id="mainTitle"><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
+            <div class="headerToolbar">
+                <input id="searchInput" type="text" placeholder="검색 / Search" oninput="renderAll()">
+                <div class="filterGroup">
+                    <select id="filterStatus" onchange="renderAll()">
+                        <option value="all">전체 / All</option>
+                        <option value="mine">내 예약 / Mine</option>
+                    </select>
+                    <button type="button" class="btn-reset" onclick="clearSearch()">Reset</button>
+                </div>
+            </div>
+        </div>
+
         <div id="countdown" class="countdown"></div>
+        
         <div class="creatorBadge">
             <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="handleAdminAccess()">
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
-        </div>
-        
-        <div class="headerToolbar">
-            <input id="searchInput" type="text" placeholder="연맹 또는 닉네임 검색 / Search Alliance or Nickname" oninput="renderAll()">
-            <div class="filterGroup">
-                <select id="filterStatus" onchange="renderAll()">
-                    <option value="all">전체 보기 / View All</option>
-                    <option value="mine">내 예약 확인 / My Booking</option>
-                </select>
-                <button type="button" class="btn-reset" onclick="clearSearch()">Reset</button>
-            </div>
         </div>
     </header>
 
@@ -49,92 +52,12 @@
     </div>
     
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 10px; color: #2d3748;"></div>
+
     <main><div id="slots" class="grid"></div></main>
 
-    <div id="modal" class="modal">
-        <div class="modalBox">
-            <h3>새 예약 추가 / New Booking</h3>
-            <div id="selectedSlotInfo" style="margin-bottom:10px; font-weight:800; color:#1976d2;"></div>
-            <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="연맹 / Alliance (ZTP, BUG, etc)">
-                <input id="player" type="text" placeholder="닉네임 / Nickname">
-                <input id="playerId" type="text" placeholder="ID (숫자 9자리) / Player ID (9 digits)" maxlength="9">
-                <input id="daysSaved" type="number" placeholder="가속 일수 / Speed-up Days">
-                <input id="cancelKey" type="text" class="mask-input" placeholder="비밀번호 (취소용) / Password" autocomplete="off">
-            </div>
-            <div class="buttonRow">
-                <button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정 / Confirm</button>
-            </div>
-            <button type="button" onclick="closeModal()" class="btn-close-full">닫기 / Close</button>
-        </div>
-    </div>
-
-    <div id="reservedModal" class="modal">
-        <div class="modalBox">
-            <h3>예약 현황 / Booking Status</h3>
-            <div id="reservedSlotInfo" style="margin-bottom:15px; font-weight:800;"></div>
-            <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
-            <hr>
-            <div class="cancelArea">
-                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 입력 / Password to Cancel</p>
-                <input id="editCancelKey" type="text" class="mask-input" placeholder="Password" autocomplete="off">
-                <div class="buttonRow">
-                    <button type="button" onclick="confirmCancel()" class="btn-danger">취소 / Cancel</button>
-                    <button type="button" onclick="openReserveFromStatus()" class="btn-primary">추가 예약 / Add More</button>
-                </div>
-            </div>
-            <button type="button" onclick="closeReservedModal()" class="btn-close-full">닫기 / Close</button>
-        </div>
-    </div>
-
-    <div id="adminPanel" class="modal">
-        <div class="modalBox" style="max-width: 500px;">
-            <h3>관리자 / Admin System</h3>
-            <div class="adminSection">
-                <p>SVS 기준일 설정 / Base Date</p>
-                <div class="buttonRow">
-                    <input id="adminBaseDate" type="datetime-local" style="flex:1;">
-                    <button type="button" onclick="saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장</button>
-                </div>
-            </div>
-            <div class="adminSection">
-                <p>즉시 수동 제어 / Manual Switch</p>
-                <div class="buttonRow">
-                    <button type="button" id="btn-admin-monday" onclick="toggleTabStatus('monday')">Mon</button>
-                    <button type="button" id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tue</button>
-                    <button type="button" id="btn-admin-thursday" onclick="toggleTabStatus('thursday')">Thu</button>
-                </div>
-            </div>
-            <div class="adminSection">
-                <p>자동 시간 설정 / Auto Schedule</p>
-                <div class="autoTimeGroup">
-                    <label style="color:#2b6cb0; font-size:12px; font-weight:800;">전체 오픈 시간 (Open All):</label>
-                    <input type="datetime-local" id="global-open-time" style="margin-bottom:12px;">
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                        <span style="font-size:11px; font-weight:800; width:85px;">월 마감(Mon):</span>
-                        <input type="datetime-local" id="close-monday" style="flex:1;">
-                    </div>
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                        <span style="font-size:11px; font-weight:800; width:85px;">화 마감(Tue):</span>
-                        <input type="datetime-local" id="close-tuesday" style="flex:1;">
-                    </div>
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                        <span style="font-size:11px; font-weight:800; width:85px;">목 마감(Thu):</span>
-                        <input type="datetime-local" id="close-thursday" style="flex:1;">
-                    </div>
-                </div>
-                <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save Schedule</button>
-            </div>
-            <div id="logsBox" class="logsBox"></div>
-            <div class="adminFooter" style="border-top:1px solid #eee; padding-top:15px; margin-top:10px;">
-                <div class="buttonRow">
-                    <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32; border:1px solid #c3e6cb;">엑셀 / Excel</button>
-                    <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제 / Clear</button>
-                </div>
-                <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button>
-            </div>
-        </div>
-    </div>
+    <div id="modal" class="modal"><div class="modalBox"><h3>새 예약 추가 / New Booking</h3><div id="selectedSlotInfo" style="margin-bottom:10px; font-weight:800; color:#1976d2;"></div><div class="inputGroup"><input id="alliance" type="text" placeholder="연맹 / Alliance"><input id="player" type="text" placeholder="닉네임 / Nickname"><input id="playerId" type="text" placeholder="ID (숫자 9자리)" maxlength="9"><input id="daysSaved" type="number" placeholder="가속 일수 / Speed-up Days"><input id="cancelKey" type="text" class="mask-input" placeholder="비밀번호 / Password" autocomplete="off"></div><div class="buttonRow"><button type="button" onclick="confirmBooking()" class="btn-primary">예약 확정 / Confirm</button></div><button type="button" onclick="closeModal()" class="btn-close-full">닫기 / Close</button></div></div>
+    <div id="reservedModal" class="modal"><div class="modalBox"><h3>예약 현황 / Booking Status</h3><div id="reservedSlotInfo" style="margin-bottom:15px; font-weight:800;"></div><div id="attendeeListDetail" style="margin-bottom: 20px;"></div><hr><div class="cancelArea"><p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 / Password</p><input id="editCancelKey" type="text" class="mask-input" placeholder="Password"><div class="buttonRow"><button type="button" onclick="confirmCancel()" class="btn-danger">취소 / Cancel</button><button type="button" onclick="openReserveFromStatus()" class="btn-primary">추가 예약 / Add</button></div></div><button type="button" onclick="closeReservedModal()" class="btn-close-full">닫기 / Close</button></div></div>
+    <div id="adminPanel" class="modal"><div class="modalBox" style="max-width: 500px;"><h3>관리자 / Admin</h3><div class="adminSection"><p>기준일 설정</p><div class="buttonRow"><input id="adminBaseDate" type="datetime-local" style="flex:1;"><button type="button" onclick="saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장</button></div></div><div class="adminSection"><p>수동 제어</p><div class="buttonRow"><button type="button" id="btn-admin-monday" onclick="toggleTabStatus('monday')">Mon</button><button type="button" id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tue</button><button type="button" id="btn-admin-thursday" onclick="toggleTabStatus('thursday')">Thu</button></div></div><div class="adminSection"><p>자동 시간 설정</p><div class="autoTimeGroup"><label>전체 오픈:</label><input type="datetime-local" id="global-open-time"><div class="autoRow"><span>월 마감:</span> <input type="datetime-local" id="close-monday"></div><div class="autoRow"><span>화 마감:</span> <input type="datetime-local" id="close-tuesday"></div><div class="autoRow"><span>목 마감:</span> <input type="datetime-local" id="close-thursday"></div></div><button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">저장</button></div><div id="logsBox" class="logsBox"></div><div class="adminFooter"><div class="buttonRow"><button type="button" onclick="exportAllCSV()" class="btn-primary">엑셀</button><button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button></div><button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button></div></div></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
