@@ -13,9 +13,7 @@
         <div class="headerTop">
             <div class="titleArea">
                 <h1 id="mainTitle"><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
-                <div id="countdown" class="countdown"></div>
             </div>
-            
             <div class="headerToolbar">
                 <input id="searchInput" type="text" placeholder="검색 / Search" oninput="renderAll()">
                 <div class="filterGroup">
@@ -31,6 +29,13 @@
         <div class="creatorBadge">
             <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="handleAdminAccess()">
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
+            
+            <div class="ministerNotice">
+                📢 가능한 모든 시간을 중복으로 신청해주세요.<br>
+                <span class="enNotice">Please book all available time slots you can attend.</span>
+            </div>
+
+            <div id="countdown" class="countdown"></div>
         </div>
     </header>
 
@@ -50,11 +55,6 @@
     </div>
     
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 15px; color: #2d3748;"></div>
-
-    <div class="ministerNotice">
-        📢 가능한 모든 시간을 중복으로 신청해주세요.<br>
-        <span class="enNotice">Please book all available time slots you can attend.</span>
-    </div>
 
     <main>
         <div id="slots" class="grid"></div>
@@ -85,7 +85,7 @@
             <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
             <hr>
             <div class="cancelArea">
-                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 입력 / Password</p>
+                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 / Password</p>
                 <input id="editCancelKey" type="text" class="mask-input" placeholder="Password">
                 <div class="buttonRow">
                     <button type="button" onclick="confirmCancel()" class="btn-danger">취소 / Cancel</button>
@@ -99,55 +99,33 @@
     <div id="adminPanel" class="modal">
         <div class="modalBox" style="max-width: 500px;">
             <h3>관리자 / Admin System</h3>
-            
             <div class="adminSection">
-                <p>SVS 기준일 설정</p>
+                <p>기준일 설정</p>
                 <div class="buttonRow">
                     <input id="adminBaseDate" type="datetime-local" style="flex:1;">
                     <button type="button" onclick="saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장</button>
                 </div>
             </div>
-
             <div class="adminSection">
-                <p>즉시 수동 제어</p>
+                <p>수동 제어</p>
                 <div class="buttonRow">
                     <button type="button" id="btn-admin-monday" onclick="toggleTabStatus('monday')">Mon</button>
                     <button type="button" id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tue</button>
                     <button type="button" id="btn-admin-thursday" onclick="toggleTabStatus('thursday')">Thu</button>
                 </div>
             </div>
-
             <div class="adminSection">
                 <p>자동 시간 설정</p>
                 <div class="autoTimeGroup">
-                    <label style="color:#2b6cb0; font-size:12px; font-weight:800;">전체 오픈 시간 (Open All):</label>
-                    <input type="datetime-local" id="global-open-time" style="margin-bottom:12px;">
-                    
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                        <span style="font-size:11px; font-weight:800; width:85px;">월 마감(Mon):</span>
-                        <input type="datetime-local" id="close-monday" style="flex:1;">
-                    </div>
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                        <span style="font-size:11px; font-weight:800; width:85px;">화 마감(Tue):</span>
-                        <input type="datetime-local" id="close-tuesday" style="flex:1;">
-                    </div>
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                        <span style="font-size:11px; font-weight:800; width:85px;">목 마감(Thu):</span>
-                        <input type="datetime-local" id="close-thursday" style="flex:1;">
-                    </div>
+                    <label>전체 오픈:</label><input type="datetime-local" id="global-open-time">
+                    <div class="autoRow"><span>월 마감:</span> <input type="datetime-local" id="close-monday"></div>
+                    <div class="autoRow"><span>화 마감:</span> <input type="datetime-local" id="close-tuesday"></div>
+                    <div class="autoRow"><span>목 마감:</span> <input type="datetime-local" id="close-thursday"></div>
                 </div>
-                <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장</button>
+                <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">저장</button>
             </div>
-
             <div id="logsBox" class="logsBox"></div>
-            
-            <div class="adminFooter" style="border-top:1px solid #eee; padding-top:15px; margin-top:10px;">
-                <div class="buttonRow">
-                    <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출</button>
-                    <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button>
-                </div>
-                <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button>
-            </div>
+            <div class="adminFooter"><div class="buttonRow"><button type="button" onclick="exportAllCSV()" class="btn-primary">엑셀</button><button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button></div><button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button></div>
         </div>
     </div>
 
