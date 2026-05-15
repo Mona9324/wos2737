@@ -13,7 +13,9 @@
         <div class="headerTop">
             <div class="titleArea">
                 <h1 id="mainTitle"><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
+                <div id="countdown" class="countdown"></div>
             </div>
+            
             <div class="headerToolbar">
                 <input id="searchInput" type="text" placeholder="검색 / Search" oninput="renderAll()">
                 <div class="filterGroup">
@@ -34,8 +36,6 @@
                 📢 가능한 모든 시간을 중복으로 신청해주세요.<br>
                 <span class="enNotice">Please book all available time slots you can attend.</span>
             </div>
-
-            <div id="countdown" class="countdown"></div>
         </div>
     </header>
 
@@ -85,7 +85,7 @@
             <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
             <hr>
             <div class="cancelArea">
-                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 / Password</p>
+                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 입력 / Password</p>
                 <input id="editCancelKey" type="text" class="mask-input" placeholder="Password">
                 <div class="buttonRow">
                     <button type="button" onclick="confirmCancel()" class="btn-danger">취소 / Cancel</button>
@@ -107,7 +107,7 @@
                 </div>
             </div>
             <div class="adminSection">
-                <p>수동 제어</p>
+                <p>즉시 수동 제어</p>
                 <div class="buttonRow">
                     <button type="button" id="btn-admin-monday" onclick="toggleTabStatus('monday')">Mon</button>
                     <button type="button" id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tue</button>
@@ -125,7 +125,13 @@
                 <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">저장</button>
             </div>
             <div id="logsBox" class="logsBox"></div>
-            <div class="adminFooter"><div class="buttonRow"><button type="button" onclick="exportAllCSV()" class="btn-primary">엑셀</button><button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button></div><button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button></div>
+            <div class="adminFooter">
+                <div class="buttonRow">
+                    <button type="button" onclick="exportAllCSV()" class="btn-primary">엑셀</button>
+                    <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button>
+                </div>
+                <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button>
+            </div>
         </div>
     </div>
 
