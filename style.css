@@ -1,73 +1,68 @@
-/* 1. 기본 배경 및 폰트 */
+/* 기본 설정 */
 body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f8fb; margin: 0; text-align: center; color: #1f2937; }
 #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; }
 
-/* 2. 레이아웃 정렬 */
-.headerTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; flex-wrap: wrap; }
+/* 레이아웃 정렬 */
+.headerTop { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; flex-wrap: wrap; }
 .titleArea { text-align: left; flex: 1; }
 #mainTitle { margin: 0 0 5px 0; font-size: 24px; font-weight: 800; color: #1f2937; }
 .countdown { font-size: 14px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 4px 12px; border-radius: 12px; border: 1px solid #fed7d7; }
 
-/* 3. 검색창 */
+/* 검색창 */
 .headerToolbar { display: flex; align-items: center; gap: 8px; }
 #searchInput { padding: 10px; border-radius: 10px; border: 1px solid #cfd8e3; width: 180px; outline: none; }
 #filterStatus { padding: 10px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; }
 .btn-reset { padding: 10px 15px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-weight: bold; }
 
-/* 4. 프로필 및 장관 공지 */
-.creatorBadge { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 25px; }
-.creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; box-shadow: 0 8px 20px rgba(0,0,0,0.15); object-fit: cover; cursor: pointer; transition: transform 0.3s ease; }
+/* 프로필 및 공지 */
+.creatorBadge { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 10px; }
+.creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; box-shadow: 0 8px 20px rgba(0,0,0,0.15); object-fit: cover; cursor: pointer; transition: 0.3s ease; }
 .creatorAvatar:hover { transform: scale(1.1); }
 .creatorCredit { font-size: 16px; font-weight: 800; color: #4b5563; }
 
-.ministerNotice { background: transparent; border: none; color: #2d5a8e; padding: 10px 0; font-size: 16px; font-weight: 800; margin: 5px auto 20px auto; max-width: 1000px; width: 95%; line-height: 1.4; }
-.enNotice { font-size: 13.5px; font-weight: 600; opacity: 0.8; display: block; margin-top: 4px; }
+/* [수정] 공지사항 배너 - 탭과의 간격(margin-bottom) 축소 */
+.ministerNotice { background: transparent; border: none; color: #2d5a8e; padding: 5px 0; font-size: 16px; font-weight: 800; margin: 0 auto 5px auto; max-width: 1000px; width: 95%; line-height: 1.4; }
+.enNotice { font-size: 13.5px; font-weight: 600; opacity: 0.8; display: block; margin-top: 2px; }
 
-/* 5. 요일 탭 (디자인 복구 핵심) */
-.tabs { display: flex; justify-content: center; gap: 10px; max-width: 1200px; margin: 0 auto 20px; padding: 0 10px; }
+/* [수정] 요일 탭 - 세로 높이 약 20% 축소 (85px -> 65px) */
+.tabs { display: flex; justify-content: center; gap: 10px; max-width: 1200px; margin: 0 auto 15px; padding: 0 10px; }
 .tab-item { 
     flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-    padding: 15px 5px; border-radius: 12px; background: #d8f2ff; color: #2d5468; cursor: pointer; 
-    transition: 0.2s; min-height: 85px; box-shadow: 0 4px 0px rgba(0,0,0,0.05); 
+    padding: 10px 5px; border-radius: 12px; background: #d8f2ff; color: #2d5468; cursor: pointer; 
+    transition: 0.2s; min-height: 65px; box-shadow: 0 3px 0px rgba(0,0,0,0.05); 
 }
 .tab-item.active { background: #a2d2ff !important; color: #1a365d !important; transform: translateY(2px); box-shadow: none; }
-.tabTitle { font-size: 14.5px; font-weight: 800; }
-.tabCD { font-size: 11px; font-weight: 700; margin-top: 6px; background: rgba(255,255,255,0.4); padding: 2px 8px; border-radius: 10px; }
+.tabTitle { font-size: 14px; font-weight: 800; }
 
-/* 6. 슬롯 디자인 (간격 수정) */
+/* [중요] 탭 내부 시간 텍스트 색상 및 크기 보정 */
+.tabCD { font-size: 11.5px; font-weight: 700; margin-top: 4px; color: #d34b4b; min-height: 14px; }
+
+/* 슬롯 디자인 */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; }
 .slot { background: #fffef5; border-radius: 16px; padding: 18px; text-align: left; cursor: pointer; min-height: 140px; border: 2.5px solid #f2e3b6; position: relative; transition: 0.2s; }
 .slot.pm-slot { background: #fff8f0 !important; border-color: #fcd9b8 !important; }
 .slot.locked { background: #f3f4f6; cursor: not-allowed; opacity: 0.7; border-color: #d1d5db !important; }
 .slot.myReservation { border: 3px solid #38a169 !important; background: #f0fff4 !important; }
 
-/* [복구] UTC와 명수 양 끝 정렬 */
 .timeRow { display: flex; justify-content: space-between; align-items: center; font-weight: 800; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px; margin-bottom: 8px; font-size: 14px; }
 .localTime { font-size: 14px !important; font-weight: 700 !important; color: #4a5568 !important; margin-bottom: 12px; display: block; }
 .dayBadge { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; margin-bottom: 8px; background-color: #fef3c7; color: #92400e; }
 
-/* 7. 모달 & 관리자 버튼 */
+/* 모달 및 버튼 */
 .modal { display: none; position: fixed !important; inset: 0 !important; background: rgba(0,0,0,0.6); z-index: 9999 !important; align-items: center; justify-content: center; }
 .modal.show { display: flex !important; }
-.modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 480px; text-align: left; box-sizing: border-box; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-height: 95vh; overflow-y: auto; }
-
+.modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 480px; box-sizing: border-box; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-height: 95vh; overflow-y: auto; text-align: left; }
 .inputGroup input, .cancelArea input, .adminSection input { width: 100% !important; padding: 14px !important; border-radius: 12px !important; border: 1px solid #e2e8f0 !important; box-sizing: border-box !important; outline: none; margin-bottom: 8px; font-size: 15px; }
-
-/* 버튼 공통 */
 .buttonRow { display: flex; gap: 10px; margin-top: 10px; width: 100%; align-items: center; }
 .btn-primary { flex: 1; background: #bbdefb; color: #1976d2; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 .btn-danger { flex: 1; background: #ffcdd2; color: #e53935; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 .btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 10px; }
 
-/* 관리자 패널 전용 */
 .adminSection { margin-bottom: 15px; padding: 15px; border-radius: 15px; background: #f8fafc; border: 1px solid #edf2f7; }
 .adminSection p { font-size: 13px; font-weight: 800; margin-bottom: 10px; }
 .admin-tab-btn { flex: 1; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-weight: 800; background: #e2e8f0; color: #94a3b8; }
 .admin-tab-btn.on { background: #bbdefb !important; color: #1976d2 !important; }
-
-.autoRow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.autoLabel { font-size: 11px; font-weight: 800; width: 85px; }
 .logsBox { background: #1a202c; color: #68d391; padding: 12px; border-radius: 12px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; margin: 15px 0; }
 
 @media (max-width: 600px) { 
