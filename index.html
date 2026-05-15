@@ -33,15 +33,13 @@
                     <path id="curvePath" d="M 30,100 A 90,90 0 0,1 210,100" fill="transparent" />
                     <text>
                         <textPath xlink:href="#curvePath" startOffset="50%" text-anchor="middle">
-                            "The website usage fee is Sunfire Island 💚+1 🦖"
+                            The website usage fee is Sunfire Island 💚+1 🦖
                         </textPath>
                     </text>
                 </svg>
                 <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="handleAdminAccess()">
             </div>
-            
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
-            
             <div class="ministerNotice">
                 <div class="noticeInner">
                     <span class="koNotice">📢 가능한 모든 시간을 중복으로 신청해주세요.</span>
@@ -67,10 +65,7 @@
     </div>
     
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 10px; color: #2d3748;"></div>
-    
-    <main>
-        <div id="slots" class="grid"></div>
-    </main>
+    <main><div id="slots" class="grid"></div></main>
 
     <div id="modal" class="modal">
         <div class="modalBox">
@@ -100,17 +95,17 @@
                 <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 / Password</p>
                 <input id="editCancelKey" type="text" class="mask-input" placeholder="Password">
                 <div class="buttonRow">
-                    <button type="button" onclick="confirmCancel()" class="btn-danger"> 예약 취소 / Cancel Booking</button>
+                    <button type="button" onclick="confirmCancel()" class="btn-danger">예약 취소 / Cancel Booking</button>
                     <button type="button" onclick="openReserveFromStatus()" class="btn-primary">예약 추가 / Add Booking</button>
                 </div>
             </div>
             <button type="button" onclick="closeReservedModal()" class="btn-close-full">닫기 / Close</button>
         </div>
     </div>
-    
+
     <div id="adminPanel" class="modal">
         <div class="modalBox" style="max-width: 500px;">
-            <h3>관리자 / Admin</h3>
+            <h3>관리자 / Admin System</h3>
             <div class="adminSection">
                 <p>SVS 기준일 설정</p>
                 <div class="buttonRow"><input id="adminBaseDate" type="datetime-local" style="flex:1;"><button type="button" onclick="saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장</button></div>
@@ -140,7 +135,7 @@
                     <button type="button" onclick="exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출</button>
                     <button type="button" onclick="backupAndClearAll()" class="btn-danger">전체 삭제</button>
                 </div>
-                <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기 / Close</button>
+                <button type="button" onclick="closeAdmin()" class="btn-close-full">닫기</button>
             </div>
         </div>
     </div>
