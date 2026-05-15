@@ -23,7 +23,7 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .creatorAvatar:hover { transform: scale(1.1); }
 .creatorCredit { font-size: 16px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
-/* 4. 공지사항 배너 */
+/* 4. 공지사항 카드 */
 .ministerNotice { background: #ffffff; border-left: 6px solid #ffe066; color: #2d3748; padding: 15px; border-radius: 12px; margin: 15px auto; max-width: 1200px; width: 95%; box-shadow: 0 6px 15px rgba(0,0,0,0.06); text-align: center; font-size: 16px; font-weight: 900; word-break: keep-all; }
 
 /* 5. 요일 탭 */
@@ -33,30 +33,21 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .tabTitle { font-size: 13.5px; font-weight: 800; }
 .tabCD { font-size: 11.5px; font-weight: 700; margin-top: 4px; color: #d34b4b; }
 
-/* 6. 슬롯 디자인 & 잠금 효과 (확실한 어둠) */
+/* 6. 슬롯 디자인 & 잠금 효과 */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; }
 .slot { background: #fffef5; border-radius: 16px; padding: 18px; text-align: left; cursor: pointer; min-height: 140px; border: 2.5px solid #f2e3b6; position: relative; transition: 0.2s; }
-
-/* 마감되었을 때 슬롯 배경색 */
-.slot.locked { 
-    background-color: #cbd5e0 !important; 
-    border-color: #a0aec0 !important; 
-    filter: grayscale(0.8);
-    opacity: 0.7;
-    cursor: not-allowed;
-}
+.slot.locked { background-color: #cbd5e0 !important; border-color: #a0aec0 !important; filter: grayscale(0.8); opacity: 0.7; cursor: not-allowed; }
 
 .timeRow { display: flex; justify-content: space-between; align-items: center; font-weight: 800; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px; margin-bottom: 8px; font-size: 14px; }
 .localTime { font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 12px; display: block; }
 .dayBadge { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; margin-bottom: 8px; background-color: #fef3c7; color: #92400e; }
 
-/* 7. 모달 & 세로형 입력창 */
+/* 7. 모달 & 세로 입력창 */
 .modal { display: none; position: fixed !important; inset: 0 !important; background: rgba(0,0,0,0.6); z-index: 9999 !important; align-items: center; justify-content: center; }
 .modal.show { display: flex !important; }
-.modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 500px; box-sizing: border-box; text-align: left; overflow-y: auto; max-height: 95vh; }
-
+.modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 480px; box-sizing: border-box; text-align: left; }
 .inputGroup { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-.inputGroup input, .cancelArea input { width: 100% !important; padding: 14px !important; border-radius: 12px !important; border: 1px solid #e2e8f0 !important; box-sizing: border-box !important; outline: none; font-size: 14.5px; }
+.inputGroup input, .cancelArea input, .adminSection input { width: 100% !important; padding: 14px !important; border-radius: 12px !important; border: 1px solid #e2e8f0 !important; box-sizing: border-box !important; outline: none; font-size: 14.5px; }
 
 .buttonRow { display: flex; gap: 8px; margin-top: 10px; width: 100%; align-items: center; }
 .btn-primary, .btn-danger { flex: 1; border: none; padding: 15px 5px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 12.5px; white-space: nowrap; }
@@ -69,11 +60,8 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .adminSection p { font-size: 13.3px; font-weight: 800; margin-bottom: 10px; }
 .admin-tab-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; cursor: pointer; font-weight: 800; background: #f1f5f9; color: #94a3b8; transition: 0.2s; }
 .admin-tab-btn.on { background: #bbdefb !important; color: #1976d2 !important; border-color: #90cdf4 !important; }
-.autoRow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.autoLabel { font-size: 11px; font-weight: 800; width: 70px; }
 .logsBox { background: #1a202c; color: #68d391; padding: 12px; border-radius: 12px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; margin: 15px 0; }
 
-/* 9. 미디어 쿼리 (닫는 괄호 완벽 체크) */
 @media (max-width: 600px) {
     .tabs { flex-direction: column; }
     .ministerNotice { font-size: 13px; padding: 12px; }
