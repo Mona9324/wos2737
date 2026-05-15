@@ -1,21 +1,9 @@
-/**
- * 2737 SVS Booking - app.js
- */
-
 var currentBuff = "monday";
 var selectedSlot = null;
 var allSlotsData = {};
 var db = window.db;
 var MY_BOOKING_KEY = "svs_my_booking_info";
-var bookingSettings = { 
-    baseDate: "2026-05-23T21:00:00", 
-    globalOpenTime: "", 
-    tabs: { 
-        monday: { isOpen: true, closeTime: "" }, 
-        tuesday: { isOpen: true, closeTime: "" }, 
-        thursday: { isOpen: true, closeTime: "" } 
-    } 
-};
+var bookingSettings = { baseDate: "2026-05-23T21:00:00", globalOpenTime: "", tabs: { monday: { isOpen: true, closeTime: "" }, tuesday: { isOpen: true, closeTime: "" }, thursday: { isOpen: true, closeTime: "" } } };
 var adminAuthenticated = false;
 var sc = 0;
 
@@ -30,10 +18,7 @@ function init() {
         if(doc.exists) { bookingSettings = doc.data(); if(adminAuthenticated) fillAdminInputs(); }
         updateStatusMessage(); updateAdminUI(); window.renderAll(); 
     });
-    db.collection("slots").onSnapshot(snap => { 
-        allSlotsData = {}; snap.forEach(doc => { allSlotsData[doc.id] = doc.data(); }); 
-        window.renderAll(); 
-    });
+    db.collection("slots").onSnapshot(snap => { allSlotsData = {}; snap.forEach(doc => { allSlotsData[doc.id] = doc.data(); }); window.renderAll(); });
     setInterval(() => { updateCountdown(); updateTabCountdowns(); }, 1000);
 }
 
@@ -58,64 +43,40 @@ function isTabActuallyOpen(day) {
     const s = bookingSettings.tabs[day], now = new Date();
     if (!s.isOpen) return false; 
     if (bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime)) return false;
-    if (s.closeTime && now > new Date(s.closeTime)) return false; 
-    return true;
+    if (s.closeTime && now > new Date(s.closeTime)) return false; return true;
 }
 
 window.renderAll = function() {
     const grid = document.getElementById("slots"); if (!grid) return; grid.innerHTML = "";
     const isOpen = isTabActuallyOpen(currentBuff);
     const search = normalizeText(document.getElementById("searchInput").value), filter = document.getElementById("filterStatus").value;
-    
     document.querySelectorAll(".tab-item").forEach(item => item.classList.toggle("active", item.id === "tab-" + currentBuff));
-    
     for (let h = 0; h < 24; h++) {
         for (let m = 0; m < 60; m += 30) {
             const tId = padTime(h, m), eId = padTime(h, m + 30), id = currentBuff + "_" + tId, slot = allSlotsData[id] || { attendees: [] };
             if (filter === "mine" && !slot.attendees.some(isMyReservation)) continue;
             if (search && !slot.attendees.some(a => normalizeText(a.player).includes(search) || normalizeText(a.alliance).includes(search))) continue;
-            
             const div = document.createElement("div"); 
-            // 닫혔을 때 'locked' 클래스 부여
             div.className = "slot " + (h >= 12 ? "pm-slot " : "") + (!isOpen ? " locked" : "") + (slot.attendees.some(isMyReservation) ? " myReservation" : "");
-            
             const listHtml = slot.attendees.slice(0,3).map((a,i) => `<div class='miniItem'>${i+1}. [${a.alliance}] ${a.player}</div>`).join('');
             div.innerHTML = `<div class="dayBadge">${currentBuff.toUpperCase().slice(0,3)}</div><div class="timeRow"><span>${tId}~${eId} UTC</span><span style="color:#d34b4b;">${slot.attendees.length}명 / Pers.</span></div><div class="localTime">Local: ${formatLocalTime(new Date(new Date().setUTCHours(h,m,0,0)))}</div><div class="attendeeMiniList">${listHtml || 'No Reservation / 예약 없음'}</div>`;
-            
-            div.onclick = () => { 
-                if(!isOpen && !adminAuthenticated) return alert("예약 마감되었습니다. / Reservation Closed."); 
-                selectedSlot = id; 
-                if (slot.attendees.length > 0) openReservedModal(id); else openReserveModal(); 
-            };
+            div.onclick = () => { if(!isOpen && !adminAuthenticated) return alert("예약 마감되었습니다. / Reservation Closed."); selectedSlot = id; if (slot.attendees.length > 0) openReservedModal(id); else window.openReserveModal(); };
             grid.appendChild(div);
         }
     }
 }
 
-// [수정] 수동 제어 버튼 로직 (점 표기법 사용)
 window.toggleTabStatus = function(day) {
     if (!bookingSettings.tabs || !bookingSettings.tabs[day]) return;
-    var currentStatus = bookingSettings.tabs[day].isOpen;
-    var newStatus = !currentStatus;
-    
-    var path = "tabs." + day + ".isOpen";
-    var updateObj = {};
-    updateData[path] = newStatus; // 오타 방지
-    
-    db.collection("settings").doc("booking").update({
-        [`tabs.${day}.isOpen`]: newStatus
-    }).then(() => {
-        addLog(`${day.toUpperCase()} Toggle: ${newStatus ? 'OPEN' : 'CLOSED'}`);
-    }).catch(e => {
-        console.error("Toggle Error:", e);
-        alert("업데이트 실패! / Update Failed!");
-    });
+    var newStatus = !bookingSettings.tabs[day].isOpen;
+    var updateData = {}; updateData["tabs." + day + ".isOpen"] = newStatus;
+    db.collection("settings").doc("booking").update(updateData).then(() => { addLog(`${day.toUpperCase()} Toggle: ${newStatus ? 'OPEN' : 'CLOSED'}`); });
 };
 
-window.handleAdminAccess = function() { sc++; if(sc>=3) { sc=0; var p=prompt("Admin Pass:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); addLog("Admin Login Success"); } } };
+window.handleAdminAccess = function() { sc++; if(sc>=3) { sc=0; var p=prompt("Admin Pass:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); addLog("Admin Login"); } } };
 window.saveAutoSchedule = function() { bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(d => { bookingSettings.tabs[d].closeTime = document.getElementById(`close-${d}`).value; }); db.collection("settings").doc("booking").update(bookingSettings).then(() => { alert("저장됨! / Saved!"); addLog("Schedule Updated"); }); };
 window.saveAdminBaseDate = function() { var val = document.getElementById("adminBaseDate").value; if(!val) return; db.collection("settings").doc("booking").update({baseDate: val}).then(()=> { addLog("Base Date Changed"); alert("Saved"); }); };
-window.backupAndClearAll = function() { if(!confirm("전체 삭제? / Reset All?")) return; db.collection("slots").get().then(snap => { var batch = db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit().then(()=> { alert("초기화 완료! / Done!"); addLog("Database Reset"); }); }); };
+window.backupAndClearAll = function() { if(!confirm("전체 삭제? / Reset Done!")) return; db.collection("slots").get().then(snap => { var batch = db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit().then(()=> { alert("초기화 완료!"); addLog("Database Reset"); }); }); };
 
 function updateAdminUI() { ['monday', 'tuesday', 'thursday'].forEach(day => { const btn = document.getElementById(`btn-admin-${day}`); if (btn) { btn.classList.toggle("on", bookingSettings.tabs[day].isOpen); } }); }
 function updateStatusMessage() { var el = document.getElementById("bookingStatusMsg"); if(el) el.innerText = isTabActuallyOpen(currentBuff) ? "✅ 예약 가능 / Booking Open" : "🔒 예약 마감 / Booking Closed"; }
@@ -130,7 +91,7 @@ function fillAdminInputs() { document.getElementById("adminBaseDate").value = bo
 
 window.confirmBooking = function() {
     var a = document.getElementById("alliance").value, p = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("cancelKey").value;
-    if(!a || !p || !idNum || !d || !pass) return alert("Fill all fields!");
+    if(!a || !p || !idNum || !d || !pass) return alert("항목 누락! / Fill all fields.");
     if(idNum.length !== 9) return alert("ID must be 9 digits.");
     var newEntry = { alliance: a, player: p, playerId: idNum, playerNormalized: normalizeText(p), daysSaved: d, passwordHash: simpleHash(pass), createdAt: Date.now() };
     db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(() => { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p, playerId: idNum, cancelKey: pass })); window.closeModal(); alert("Booking Success!"); addLog(`New: [${a}] ${p}`); });
@@ -147,10 +108,10 @@ window.confirmCancel = function() {
     });
 };
 
-function openReserveModal() { var m = localStorage.getItem(MY_BOOKING_KEY); if(m) { var mine = JSON.parse(m); document.getElementById("alliance").value = mine.alliance || ""; document.getElementById("player").value = mine.player || ""; document.getElementById("playerId").value = mine.playerId || ""; document.getElementById("cancelKey").value = mine.cancelKey || ""; } document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; document.getElementById("modal").classList.add("show"); }
+window.openReserveModal = function() { var m = localStorage.getItem(MY_BOOKING_KEY); if(m) { var mine = JSON.parse(m); document.getElementById("alliance").value = mine.alliance || ""; document.getElementById("player").value = mine.player || ""; document.getElementById("playerId").value = mine.playerId || ""; document.getElementById("cancelKey").value = mine.cancelKey || ""; } document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; document.getElementById("modal").classList.add("show"); };
 function openReservedModal(id) { document.getElementById("reservedSlotInfo").innerText = id.replace('_', ' ') + " UTC"; var list = document.getElementById("attendeeListDetail"); list.innerHTML = ""; allSlotsData[id]?.attendees?.forEach((a, i) => { var d = document.createElement("div"); d.className = "miniItem"; d.style.display = "flex"; d.style.justifyContent = "space-between"; d.style.alignItems = "center"; d.innerHTML = `<span>${i+1}. [${a.alliance}] ${a.player}</span>`; if (adminAuthenticated) { var delBtn = document.createElement("button"); delBtn.innerText = "삭제/Del"; delBtn.className="btn-danger"; delBtn.style.padding="2px 8px"; delBtn.style.fontSize="11px"; delBtn.onclick = () => deleteAttendee(id, i); d.appendChild(delBtn); } list.appendChild(d); }); document.getElementById("reservedModal").classList.add("show"); }
-window.openReserveFromStatus = function() { if(!isTabActuallyOpen(currentBuff) && !adminAuthenticated) return alert("Locked."); window.closeReservedModal(); openReserveModal(); };
-function deleteAttendee(slotId, index) { if(!confirm("Delete?")) return; var ref = db.collection("slots").doc(slotId); ref.get().then(doc => { var list = doc.data().attendees; list.splice(index, 1); ref.update({ attendees: list }).then(() => { addLog("Deleted Entry"); openReservedModal(slotId); }); }); }
+function deleteAttendee(slotId, index) { if(!confirm("Delete?")) return; var ref = db.collection("slots").doc(slotId); ref.get().then(doc => { var list = doc.data().attendees; list.splice(index, 1); ref.update({ attendees: list }).then(() => { addLog("Entry Deleted"); openReservedModal(slotId); }); }); }
+window.openReserveFromStatus = function() { if(!isTabActuallyOpen(currentBuff) && !adminAuthenticated) return alert("Locked."); window.closeReservedModal(); window.openReserveModal(); };
 function isMyReservation(person) { var m = localStorage.getItem(MY_BOOKING_KEY); if(!m || !person) return false; var mine = JSON.parse(m); return normalizeText(person.player) === normalizeText(mine.player); }
 
 init();
