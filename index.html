@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2737 SVS Booking</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <canvas id="snow"></canvas>
@@ -40,7 +41,6 @@
                 <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="handleAdminAccess()">
             </div>
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
-            
             <div class="ministerNotice">
                 📢 가능한 모든 시간을 중복으로 신청해주세요. / Please book all available time slots you can attend.
             </div>
@@ -124,9 +124,18 @@
                 <div class="autoTimeGroup">
                     <label style="color:#2b6cb0; font-size:11px; font-weight:800;">전체 오픈 시간 / Open All:</label>
                     <input type="datetime-local" id="global-open-time" style="margin-bottom:10px;">
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;"><span style="font-size:11px; font-weight:800; width:85px;">월 마감(Mon):</span><input type="datetime-local" id="close-monday" style="flex:1;"></div>
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;"><span style="font-size:11px; font-weight:800; width:85px;">화 마감(Tue):</span><input type="datetime-local" id="close-tuesday" style="flex:1;"></div>
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;"><span style="font-size:11px; font-weight:800; width:85px;">목 마감(Thu):</span><input type="datetime-local" id="close-thursday" style="flex:1;"></div>
+                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <span style="font-size:11px; font-weight:800; width:85px;">월 마감(Mon):</span>
+                        <input type="datetime-local" id="close-monday" style="flex:1;">
+                    </div>
+                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <span style="font-size:11px; font-weight:800; width:85px;">화 마감(Tue):</span>
+                        <input type="datetime-local" id="close-tuesday" style="flex:1;">
+                    </div>
+                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <span style="font-size:11px; font-weight:800; width:85px;">목 마감(Thu):</span>
+                        <input type="datetime-local" id="close-thursday" style="flex:1;">
+                    </div>
                 </div>
                 <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save Schedule</button>
             </div>
@@ -141,7 +150,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
