@@ -30,7 +30,7 @@
 
     <div class="tabs">
         <button type="button" id="tab-monday" onclick="switchBuff('monday')">
-            <div class="tabTitle">월요일 (건설) / Monday (Construction Buff)y</div>
+            <div class="tabTitle">월요일 (건설) / Monday (Construction Buff)</div>
             <div id="cd-monday" class="tabCD"></div>
         </button>
         <button type="button" id="tab-tuesday" onclick="switchBuff('tuesday')">
@@ -42,9 +42,12 @@
             <div id="cd-thursday" class="tabCD"></div>
         </button>
     </div>
+    
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 20px; color: #2d3748;"></div>
 
-    <main><div id="slots" class="grid"></div></main>
+    <main>
+        <div id="slots" class="grid"></div>
+    </main>
 
     <div id="modal" class="modal">
         <div class="modalBox">
@@ -87,7 +90,7 @@
             <h3>관리자 / Admin System</h3>
             
             <div class="adminSection">
-                <p>SVS 기준일(월요일 09:00 UTC) 설정 / Base Date</p>
+                <p>SVS 기준일 설정 / Base Date</p>
                 <div class="buttonRow">
                     <input id="adminBaseDate" type="datetime-local" style="flex:2; padding:10px; border-radius:8px; border:1px solid #ddd;">
                     <button type="button" onclick="saveAdminBaseDate()" class="btn-primary" style="flex:1;">저장 / Save</button>
@@ -95,24 +98,30 @@
             </div>
 
             <div class="adminSection">
-                <p>즉시 오픈/잠금 제어 / Manual Control</p>
+                <p>요일별 즉시 제어 / Manual Control</p>
                 <div class="buttonRow">
                     <button type="button" id="btn-admin-monday" onclick="toggleTabStatus('monday')">Mon</button>
                     <button type="button" id="btn-admin-tuesday" onclick="toggleTabStatus('tuesday')">Tue</button>
                     <button type="button" id="btn-admin-thursday" onclick="toggleTabStatus('thursday')">Thu</button>
                 </div>
                 <div class="buttonRow" style="margin-top:10px;">
-                    <button type="button" onclick="toggleAllTabs(true)" class="btn-primary" style="font-size:12px;">전체 열기 / Open All</button>
-                    <button type="button" onclick="toggleAllTabs(false)" class="btn-danger" style="font-size:12px;">전체 닫기 / Close All</button>
+                    <button type="button" onclick="toggleAllTabs(true)" class="btn-primary">전체 열기 / Open All</button>
+                    <button type="button" onclick="toggleAllTabs(false)" class="btn-danger">전체 잠금 / Lock All</button>
                 </div>
             </div>
 
             <div class="adminSection">
                 <p>자동 마감 시간 설정 / Auto Schedule</p>
                 <div class="autoGrid">
-                    <div class="autoRow"><span>Mon:</span> <input type="datetime-local" id="close-monday"></div>
-                    <div class="autoRow"><span>Tue:</span> <input type="datetime-local" id="close-tuesday"></div>
-                    <div class="autoRow"><span>Thu:</span> <input type="datetime-local" id="close-thursday"></div>
+                    <div class="autoRow" style="display:flex; align-items:center; gap:5px; margin-bottom:5px;">
+                        <span style="width:40px; font-size:11px;">Mon:</span> <input type="datetime-local" id="close-monday" style="flex:1; font-size:11px;">
+                    </div>
+                    <div class="autoRow" style="display:flex; align-items:center; gap:5px; margin-bottom:5px;">
+                        <span style="width:40px; font-size:11px;">Tue:</span> <input type="datetime-local" id="close-tuesday" style="flex:1; font-size:11px;">
+                    </div>
+                    <div class="autoRow" style="display:flex; align-items:center; gap:5px; margin-bottom:5px;">
+                        <span style="width:40px; font-size:11px;">Thu:</span> <input type="datetime-local" id="close-thursday" style="flex:1; font-size:11px;">
+                    </div>
                 </div>
                 <button type="button" onclick="saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save Auto Close</button>
             </div>
