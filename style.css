@@ -1,298 +1,48 @@
-/* 1. 기본 배경 및 폰트 설정 */
-body { 
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-    background: #f4f8fb; 
-    margin: 0; 
-    text-align: center; 
-    color: #1f2937; 
-}
+/* 기본 설정 */
+body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #f4f8fb; margin: 0; text-align: center; color: #1f2937; }
+#snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+header { padding: 20px; position: relative; z-index: 1; }
+.countdown { font-size: 14px; font-weight: 800; color: #d34b4b; background: rgba(255,255,255,0.7); display: inline-block; padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
 
-#snow { 
-    position: fixed; 
-    inset: 0; 
-    pointer-events: none; 
-    z-index: 0; 
-}
+/* 프로필 */
+.creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.2); object-fit: cover; margin-top: 10px; }
+.creatorCredit { font-size: 15px; font-weight: 800; color: #4b5563; margin-top: 15px; }
 
-header { 
-    padding: 20px; 
-    position: relative; 
-    z-index: 1; 
-}
+/* 툴바 */
+.headerToolbar { display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 12px; margin: 25px auto 15px auto; width: 95%; max-width: 1000px; }
+#searchInput { flex: 3; padding: 14px; border-radius: 12px; border: 1px solid #cfd8e3; outline: none; }
+.filterGroup { display: flex; flex: 2; gap: 10px; }
+#filterStatus { flex: 1; padding: 14px; border-radius: 12px; border: 1px solid #cfd8e3; background: white; cursor: pointer; }
+.btn-reset { padding: 14px 20px; border-radius: 12px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-weight: bold; }
 
-.countdown { 
-    font-size: 14px; 
-    font-weight: 800; 
-    color: #d34b4b; 
-    background: rgba(255,255,255,0.7); 
-    display: inline-block; 
-    padding: 5px 15px; 
-    border-radius: 20px; 
-    margin-bottom: 10px; 
-}
+/* 장관 공지 배너 (위치 이동 및 넓이 고정) */
+.ministerNotice { background-color: #ebf8ff; color: #2b6cb0; padding: 18px; border-radius: 16px; font-size: 15.5px; font-weight: 800; margin: 0 auto 20px auto; max-width: 1000px; width: 95%; border: 2px solid #bee3f8; line-height: 1.6; box-shadow: 0 4px 12px rgba(0,0,0,0.05); box-sizing: border-box; }
+.ministerNotice .enNotice { font-size: 13.5px; font-weight: 600; opacity: 0.9; display: block; margin-top: 4px; }
 
-/* 2. 공룡 프로필 이미지 */
-.creatorAvatar { 
-    width: 160px; 
-    height: 160px; 
-    border-radius: 50%; 
-    border: 5px solid #d6b347; 
-    cursor: pointer; 
-    transition: 0.3s; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2); 
-    object-fit: cover;
-    margin-top: 10px;
-}
-.creatorAvatar:hover { 
-    transform: scale(1.05); 
-}
-.creatorCredit { 
-    font-size: 15px; 
-    font-weight: 800; 
-    color: #4b5563; 
-    margin-top: 15px; 
-}
+/* 요일 탭 글씨 크게 */
+.tabs { display: flex; justify-content: center; gap: 10px; max-width: 1200px; margin: 0 auto 20px; padding: 0 10px; }
+.tabs button { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px 5px; border: none; border-radius: 12px; background: #d8f2ff; color: #2d5468; cursor: pointer; transition: 0.2s; min-height: 85px; }
+.tabs button.active { background: #a2d2ff !important; color: #1a365d !important; transform: translateY(2px); box-shadow: inset 0 3px 5px rgba(0,0,0,0.1); }
+.tabTitle { font-size: 15px; font-weight: 800; line-height: 1.3; }
+.tabCD { font-size: 11px; font-weight: 700; margin-top: 6px; background: rgba(255,255,255,0.4); padding: 2px 8px; border-radius: 10px; }
 
-/* 3. 툴바 레이아웃 (PC 1줄 가로 배치) */
-.headerToolbar { 
-    display: flex; 
-    flex-direction: row; 
-    justify-content: center; 
-    align-items: center; 
-    gap: 12px; 
-    margin: 25px auto 15px auto; 
-    width: 95%; 
-    max-width: 1000px; 
-}
+/* 슬롯 디자인 */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; position: relative; z-index: 1; }
+.slot { background: #fffef5; border-radius: 16px; padding: 18px; text-align: left; cursor: pointer; min-height: 140px; border: 2.5px solid #f2e3b6; transition: 0.2s; position: relative; }
+.slot.pm-slot { background: #fff8f0 !important; border-color: #fcd9b8 !important; }
+.slot.locked { background: #f3f4f6; cursor: not-allowed; opacity: 0.7; border-color: #d1d5db !important; }
+.slot.myReservation { border: 3px solid #38a169 !important; background: #f0fff4 !important; }
 
-#searchInput { 
-    flex: 3; 
-    padding: 14px; 
-    border-radius: 12px; 
-    border: 1px solid #cfd8e3; 
-    outline: none; 
-    font-size: 14px;
-}
+/* 뱃지 */
+.dayBadge { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; margin-bottom: 8px; background-color: #fef3c7; color: #92400e; }
+.slot.pm-slot .dayBadge { background-color: #ffead0; color: #c05621; }
 
-.filterGroup { 
-    display: flex; 
-    flex: 2; 
-    gap: 10px; 
-}
+/* 모달 시스템 (폭 고정 강화) */
+.modal { display: none; position: fixed !important; inset: 0 !important; background: rgba(0,0,0,0.6); z-index: 9999 !important; align-items: center; justify-content: center; }
+.modal.show { display: flex !important; }
+.modalBox { background: white; padding: 25px; border-radius: 24px; width: 95%; max-width: 500px; text-align: left; box-sizing: border-box; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-height: 95vh; overflow-y: auto; }
 
-#filterStatus { 
-    flex: 1; 
-    padding: 14px; 
-    border-radius: 12px; 
-    border: 1px solid #cfd8e3; 
-    background: white; 
-    cursor: pointer; 
-    font-size: 14px;
-}
-
-.btn-reset { 
-    padding: 14px 20px; 
-    border-radius: 12px; 
-    border: 1px solid #cfd8e3; 
-    background: white; 
-    cursor: pointer; 
-    font-weight: bold; 
-    white-space: nowrap; 
-}
-
-/* 4. [신규] 장관 공지 배너 - 검색창과 넓이 맞춤 */
-.ministerNotice { 
-    background-color: #ebf8ff; 
-    color: #2b6cb0; 
-    padding: 18px; 
-    border-radius: 16px; 
-    font-size: 15.5px; 
-    font-weight: 800; 
-    margin: 0 auto 20px auto; 
-    max-width: 1000px; /* 검색창 넓이와 동일 */
-    width: 95%; 
-    border: 2px solid #bee3f8; 
-    line-height: 1.6; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-    box-sizing: border-box; 
-    position: relative;
-    z-index: 1;
-}
-
-.ministerNotice .enNotice { 
-    font-size: 13.5px; 
-    font-weight: 600; 
-    opacity: 0.9; 
-    display: block; 
-    margin-top: 4px; 
-}
-
-/* 5. 요일 탭 디자인 (글씨 확대 및 강조) */
-.tabs { 
-    display: flex; 
-    justify-content: center; 
-    gap: 10px; 
-    max-width: 1200px; 
-    margin: 0 auto 20px; 
-    padding: 0 10px; 
-    position: relative;
-    z-index: 1;
-}
-
-.tabs button { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 15px 5px; 
-    border: none; 
-    border-radius: 12px; 
-    background: #d8f2ff; 
-    color: #2d5468; 
-    cursor: pointer; 
-    transition: 0.2s; 
-    min-height: 85px; 
-}
-
-.tabs button.active { 
-    background: #a2d2ff !important; 
-    color: #1a365d !important; 
-    transform: translateY(2px); 
-    box-shadow: inset 0 3px 5px rgba(0,0,0,0.1); 
-}
-
-.tabTitle { 
-    font-size: 15px; /* 글씨 더 확대 */
-    font-weight: 800; 
-    line-height: 1.3;
-}
-
-.tabCD { 
-    font-size: 11px; 
-    font-weight: 700; 
-    margin-top: 6px; 
-    background: rgba(255,255,255,0.4); 
-    padding: 2px 8px; 
-    border-radius: 10px; 
-}
-
-/* 6. 그리드 및 슬롯 디자인 */
-.grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-    gap: 18px; 
-    padding: 20px; 
-    max-width: 1300px; 
-    margin: 0 auto; 
-    position: relative; 
-    z-index: 1; 
-}
-
-/* 오전 슬롯 (산뜻한 연노랑) */
-.slot { 
-    background: #fffef5; 
-    border-radius: 16px; 
-    padding: 18px; 
-    text-align: left; 
-    cursor: pointer; 
-    min-height: 140px; 
-    border: 2.5px solid #f2e3b6; 
-    box-shadow: 4px 4px 0px rgba(0,0,0,0.03); 
-    position: relative; 
-    transition: 0.2s; 
-}
-
-/* 오후 슬롯 (산뜻한 연살구) */
-.slot.pm-slot { 
-    background: #fff8f0 !important; 
-    border-color: #fcd9b8 !important; 
-}
-
-.dayBadge { 
-    display: inline-block; 
-    padding: 3px 10px; 
-    border-radius: 8px; 
-    font-size: 11px; 
-    font-weight: 800; 
-    margin-bottom: 8px; 
-    background-color: #fef3c7; 
-    color: #92400e; 
-}
-.slot.pm-slot .dayBadge { 
-    background-color: #ffead0; 
-    color: #c05621; 
-}
-
-.slot.locked { 
-    background: #f3f4f6; 
-    cursor: not-allowed; 
-    opacity: 0.7; 
-    border-color: #d1d5db !important; 
-}
-
-.slot.myReservation { 
-    border: 3px solid #38a169 !important; 
-    background: #f0fff4 !important; 
-}
-
-.timeRow { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    font-weight: 800; 
-    border-bottom: 1px solid rgba(0,0,0,0.05); 
-    padding-bottom: 5px; 
-    margin-bottom: 8px; 
-}
-.localTime { 
-    font-size: 14px !important; 
-    font-weight: 700 !important; 
-    color: #4a5568 !important; 
-    margin-bottom: 12px; 
-    display: block; 
-}
-.miniItem { 
-    padding: 4px 0; 
-    font-size: 13px; 
-    color: #4a5568; 
-}
-
-/* 7. 모달 시스템 (입력창 폭 100% 강제 고정) */
-.modal { 
-    display: none; 
-    position: fixed !important; 
-    inset: 0 !important; 
-    background: rgba(0,0,0,0.6); 
-    z-index: 9999 !important; 
-    align-items: center; 
-    justify-content: center; 
-}
-.modal.show { 
-    display: flex !important; 
-}
-.modalBox { 
-    background: white; 
-    padding: 30px; 
-    border-radius: 24px; 
-    width: 95%; 
-    max-width: 500px; 
-    text-align: left; 
-    box-sizing: border-box; 
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3); 
-    max-height: 95vh; 
-    overflow-y: auto; 
-}
-
-.inputGroup, .cancelArea { 
-    display: flex !important; 
-    flex-direction: column !important; 
-    gap: 12px !important; 
-    margin: 15px 0 !important; 
-    width: 100% !important; 
-}
-
-/* [중요] 모든 입력창 가로폭 100% 강제 적용 */
+.inputGroup, .cancelArea { display: flex !important; flex-direction: column !important; gap: 12px !important; margin: 15px 0 !important; width: 100% !important; }
 .inputGroup input, .cancelArea input, .adminSection input { 
     width: 100% !important; 
     padding: 14px !important; 
@@ -304,145 +54,17 @@ header {
     display: block !important;
 }
 
-.mask-input { 
-    -webkit-text-security: disc !important; 
-    text-security: disc !important; 
-}
+/* 버튼 */
+.buttonRow { display: flex; gap: 10px; margin-top: 10px; width: 100%; align-items: center; }
+.btn-primary { flex: 1; background: #bbdefb; color: #1976d2; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+.btn-danger { flex: 1; background: #ffcdd2; color: #e53935; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+.btn-close-full { width: 100%; background: #f3f4f6; color: #4a5568; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 10px; }
 
-/* 8. 버튼 스타일 */
-.buttonRow { 
-    display: flex; 
-    gap: 10px; 
-    margin-top: 10px; 
-    width: 100%; 
-    align-items: center; 
-}
-.btn-primary { 
-    flex: 1; 
-    background: #bbdefb; 
-    color: #1976d2; 
-    border: none; 
-    padding: 15px; 
-    border-radius: 12px; 
-    font-weight: 800; 
-    cursor: pointer; 
-}
-.btn-danger { 
-    flex: 1; 
-    background: #ffcdd2; 
-    color: #e53935; 
-    border: none; 
-    padding: 15px; 
-    border-radius: 12px; 
-    font-weight: 800; 
-    cursor: pointer; 
-}
-.btn-close-full { 
-    width: 100%; 
-    background: #f3f4f6; 
-    color: #4a5568; 
-    border: none; 
-    padding: 15px; 
-    border-radius: 12px; 
-    font-weight: 800; 
-    cursor: pointer; 
-    margin-top: 10px; 
-}
+/* 관리자 전용 */
+.adminSection { margin-bottom: 15px; padding: 15px; border-radius: 15px; background: #f8fafc; border: 1px solid #edf2f7; }
+.adminSection p { font-size: 13px; font-weight: 800; margin: 0 0 10px 0; color: #4a5568; }
+.admin-btn-on { flex: 1; background: #bbdefb !important; color: #1976d2 !important; border: none; padding: 14px 0; border-radius: 10px; cursor: pointer; font-weight: 800; }
+.admin-btn-off { flex: 1; background: #e2e8f0 !important; color: #94a3b8 !important; border: none; padding: 14px 0; border-radius: 10px; cursor: pointer; font-weight: 800; }
+.logsBox { background: #1a202c; color: #68d391; padding: 10px; border-radius: 12px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; margin: 15px 0; line-height: 1.5; }
 
-/* 9. 관리자 패널 전용 UI 보정 */
-.adminSection { 
-    margin-bottom: 15px; 
-    padding: 15px; 
-    border-radius: 15px; 
-    background: #f8fafc; 
-    border: 1px solid #edf2f7; 
-    text-align: left;
-}
-.adminSection p { 
-    font-size: 13px; 
-    font-weight: 800; 
-    margin: 0 0 10px 0; 
-    color: #4a5568; 
-}
-
-.admin-btn-on { 
-    flex: 1; 
-    background: #bbdefb !important; 
-    color: #1976d2 !important; 
-    border: none; 
-    padding: 14px 0; 
-    border-radius: 10px; 
-    cursor: pointer; 
-    font-weight: 800; 
-}
-.admin-btn-off { 
-    flex: 1; 
-    background: #e2e8f0 !important; 
-    color: #94a3b8 !important; 
-    border: none; 
-    padding: 14px 0; 
-    border-radius: 10px; 
-    cursor: pointer; 
-    font-weight: 800; 
-}
-
-.autoTimeGroup label { 
-    font-size: 12px; 
-    font-weight: 800; 
-    color: #2b6cb0; 
-    display: block; 
-    margin-bottom: 5px; 
-}
-.autoRow { 
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
-    margin-bottom: 8px; 
-}
-.autoRow span { 
-    font-size: 11px; 
-    font-weight: 800; 
-    min-width: 85px; 
-}
-
-.logsBox { 
-    background: #1a202c; 
-    color: #68d391; 
-    padding: 12px; 
-    border-radius: 12px; 
-    height: 100px; 
-    overflow-y: auto; 
-    font-family: monospace; 
-    font-size: 11px; 
-    margin: 15px 0; 
-    line-height: 1.5; 
-}
-.adminFooter { 
-    border-top: 1px solid #eee; 
-    padding-top: 15px; 
-    margin-top: 10px; 
-}
-
-/* 10. 모바일 반응형 조절 */
-@media (max-width: 600px) { 
-    .headerToolbar { 
-        flex-direction: column; 
-    } 
-    #searchInput, .filterGroup { 
-        width: 100%; 
-    } 
-    .ministerNotice {
-        font-size: 14px;
-        padding: 15px;
-    }
-    .tabs { 
-        flex-direction: column; 
-    } 
-    .tabs button { 
-        min-height: 70px; 
-    } 
-    .autoRow { 
-        flex-direction: column; 
-        align-items: flex-start; 
-    }
-}
+@media (max-width: 600px) { .headerToolbar { flex-direction: column; } #searchInput, .filterGroup { width: 100%; } .tabs { flex-direction: column; } }
