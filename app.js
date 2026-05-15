@@ -3,15 +3,7 @@ var selectedSlot = null;
 var allSlotsData = {};
 var db = window.db;
 var MY_BOOKING_KEY = "svs_my_booking_info";
-var bookingSettings = { 
-    baseDate: "2026-05-23T21:00:00", 
-    globalOpenTime: "", 
-    tabs: { 
-        monday: { isOpen: true, closeTime: "" }, 
-        tuesday: { isOpen: true, closeTime: "" }, 
-        thursday: { isOpen: true, closeTime: "" } 
-    } 
-};
+var bookingSettings = { baseDate: "2026-05-23T21:00:00", globalOpenTime: "", tabs: { monday: { isOpen: true, closeTime: "" }, tuesday: { isOpen: true, closeTime: "" }, thursday: { isOpen: true, closeTime: "" } } };
 var adminAuthenticated = false;
 var sc = 0;
 
@@ -21,7 +13,7 @@ function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
 function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return "h_" + Math.abs(hash); }
 
 function init() {
-    if (!db) return;
+    if(!db) return;
     db.collection("settings").doc("booking").onSnapshot(doc => { 
         if(doc.exists) { bookingSettings = doc.data(); if(adminAuthenticated) fillAdminInputs(); }
         updateStatusMessage(); updateAdminUI(); renderAll(); 
@@ -30,20 +22,21 @@ function init() {
     setInterval(() => { updateCountdown(); updateTabCountdowns(); }, 1000);
 }
 
+function addLog(msg) {
+    const box = document.getElementById('logsBox'); if (!box) return;
+    const log = document.createElement('div');
+    log.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`; box.prepend(log);
+}
+
 function updateTabCountdowns() {
     const now = new Date();
-    const gOpenStr = bookingSettings.globalOpenTime;
-    const gOpen = gOpenStr ? new Date(gOpenStr) : null;
+    const gOpen = bookingSettings.globalOpenTime ? new Date(bookingSettings.globalOpenTime) : null;
     ['monday', 'tuesday', 'thursday'].forEach(day => {
-        const s = bookingSettings.tabs[day];
-        const cdEl = document.getElementById(`cd-${day}`);
+        const s = bookingSettings.tabs[day], cdEl = document.getElementById(`cd-${day}`);
         if (!cdEl) return;
-        if (gOpen && !isNaN(gOpen) && now < gOpen) cdEl.innerText = `Open in: ${formatDiff(gOpen-now)}`;
-        else if (s.closeTime && !isNaN(new Date(s.closeTime))) {
-            const cDate = new Date(s.closeTime);
-            if (now <= cDate) cdEl.innerText = `Close in: ${formatDiff(cDate-now)}`;
-            else cdEl.innerText = "Closed";
-        } else cdEl.innerText = s.isOpen ? "Ready" : "Locked";
+        if (gOpen && now < gOpen) cdEl.innerText = `Open in: ${formatDiff(gOpen-now)}`;
+        else if (s.closeTime && now <= new Date(s.closeTime)) cdEl.innerText = `Close in: ${formatDiff(new Date(s.closeTime)-now)}`;
+        else cdEl.innerText = s.isOpen ? "Ready" : "Closed";
     });
 }
 
@@ -53,9 +46,8 @@ function formatDiff(ms) {
 }
 
 function isTabActuallyOpen(day) {
-    const s = bookingSettings.tabs[day];
+    const s = bookingSettings.tabs[day], now = new Date();
     if (!s.isOpen) return false; 
-    const now = new Date();
     if (bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime)) return false;
     if (s.closeTime && now > new Date(s.closeTime)) return false;
     return true;
@@ -66,6 +58,7 @@ function renderAll() {
     const isOpen = isTabActuallyOpen(currentBuff);
     const search = normalizeText(document.getElementById("searchInput").value);
     const filter = document.getElementById("filterStatus").value;
+    const dayLabel = currentBuff.toUpperCase().slice(0,3);
 
     document.querySelectorAll(".tabs button").forEach(btn => btn.classList.toggle("active", btn.id === "tab-" + currentBuff));
 
@@ -79,50 +72,48 @@ function renderAll() {
             const div = document.createElement("div");
             div.className = "slot " + (h >= 12 ? "pm-slot " : "") + (!isOpen ? " locked" : "") + (slot.attendees.some(isMyReservation) ? " myReservation" : "");
             const listHtml = slot.attendees.slice(0,3).map((a,i) => `<div class='miniItem'>${i+1}. ${a.player}</div>`).join('');
-            div.innerHTML = `<div class="dayBadge">${currentBuff.toUpperCase().slice(0,3)}</div><div class="timeRow"><span>${tId}~${eId} UTC</span><span>${slot.attendees.length}명</span></div><div class="localTime">Local: ${formatLocalTime(new Date(new Date().setUTCHours(h,m,0,0)))}</div><div class="attendeeMiniList">${listHtml || 'No Reservation'}</div>`;
             
-            div.onclick = () => { 
-                if(!isOpen && !adminAuthenticated) return alert("마감되었습니다. / Locked."); 
-                selectedSlot = id; 
-                if (slot.attendees.length > 0) openReservedModal(id); 
-                else openReserveModal(); 
-            };
+            // [복구] 요일 배지 포함된 HTML
+            div.innerHTML = `<div class="dayBadge">${dayLabel}</div><div class="timeRow"><span>${tId}~${eId} UTC</span><span>${slot.attendees.length}명</span></div><div class="localTime">Local: ${formatLocalTime(new Date(new Date().setUTCHours(h,m,0,0)))}</div><div class="attendeeMiniList">${listHtml || 'No Reservation'}</div>`;
+            div.onclick = () => { if(!isOpen && !adminAuthenticated) return alert("마감되었습니다. / Reservation Closed."); selectedSlot = id; if (slot.attendees.length > 0) openReservedModal(id); else openReserveModal(); };
             grid.appendChild(div);
         }
     }
 }
 
-function handleAdminAccess() { sc++; if(sc>=3) { sc=0; var p=prompt("Password:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); } } }
-function saveAutoSchedule() {
-    bookingSettings.globalOpenTime = document.getElementById("global-open-time").value;
-    ['monday', 'tuesday', 'thursday'].forEach(d => { bookingSettings.tabs[d].closeTime = document.getElementById(`close-${d}`).value; });
-    db.collection("settings").doc("booking").update(bookingSettings).then(() => alert("Saved!"));
-}
-
+// [핵심 수정] ID 9자리 검증 및 한/영 병기 알림
 function confirmBooking() {
     var a = document.getElementById("alliance").value, p = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("cancelKey").value;
-    if(!a || !p || !idNum || !d || !pass) return alert("항목 누락!");
+    if(!a || !p || !idNum || !d || !pass) return alert("항목 누락! / Please fill all fields.");
+    if(idNum.length !== 9 || isNaN(idNum)) return alert("ID는 숫자 9자리여야 합니다! / ID must be 9 digits.");
+    
     var newEntry = { alliance: a, player: p, playerId: idNum, playerNormalized: normalizeText(p), daysSaved: d, passwordHash: simpleHash(pass), createdAt: Date.now() };
-    db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(() => { closeModal(); alert("성공!"); });
+    db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(() => { 
+        localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p, playerId: idNum, cancelKey: pass })); 
+        closeModal(); alert("예약 성공! / Success!"); 
+    });
 }
 
 function confirmCancel() {
     var pass = document.getElementById("editCancelKey").value, m = localStorage.getItem(MY_BOOKING_KEY);
-    if(!m || !pass) return alert("비번 입력!");
+    if(!m || !pass) return alert("비밀번호를 입력하세요! / Please enter password.");
     var mine = JSON.parse(m), ref = db.collection("slots").doc(selectedSlot);
     ref.get().then(doc => {
         var list = doc.data().attendees.filter(a => !(normalizeText(a.player) === normalizeText(mine.player) && a.passwordHash === simpleHash(pass)));
-        if(list.length === doc.data().attendees.length) return alert("비번 오류!");
-        ref.update({ attendees: list }).then(() => { closeReservedModal(); alert("취소됨!"); });
+        if(list.length === doc.data().attendees.length) return alert("비밀번호가 틀렸습니다! / Wrong password.");
+        ref.update({ attendees: list }).then(() => { closeReservedModal(); alert("취소 완료! / Cancelled."); });
     });
 }
 
-function toggleTabStatus(day) { var c = bookingSettings.tabs[day].isOpen; bookingSettings.tabs[day].isOpen = !c; db.collection("settings").doc("booking").update(bookingSettings); }
+function handleAdminAccess() { sc++; if(sc>=3) { sc=0; var p=prompt("Password:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); } } }
+function saveAutoSchedule() { bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(d => { bookingSettings.tabs[d].closeTime = document.getElementById(`close-${d}`).value; }); db.collection("settings").doc("booking").update(bookingSettings).then(() => alert("Saved!")); }
 function saveAdminBaseDate() { var val = document.getElementById("adminBaseDate").value; if(!val) return; db.collection("settings").doc("booking").update({baseDate: val}).then(()=> alert("Saved")); }
-function backupAndClearAll() { if(!confirm("전체 삭제?")) return; db.collection("slots").get().then(snap => { var batch = db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit(); }); }
-function exportAllCSV() { try { const wb = XLSX.utils.book_new(); let hasData = false; ["monday", "tuesday", "thursday"].forEach(day => { const rows = []; Object.keys(allSlotsData).filter(k => k.startsWith(day)).forEach(id => { allSlotsData[id].attendees.forEach(a => { rows.push({ "Day": day, "Time": id.split('_')[1], "Alliance": a.alliance, "Nickname": a.player, "ID": a.playerId, "Days": a.daysSaved }); }); }); if (rows.length > 0) { XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day); hasData = true; } }); if (!hasData) return alert("No data."); XLSX.writeFile(wb, `SVS_Booking.xlsx`); } catch (e) { alert("Fail."); } }
+function toggleTabStatus(day) { var c = bookingSettings.tabs[day].isOpen; bookingSettings.tabs[day].isOpen = !c; db.collection("settings").doc("booking").update(bookingSettings); }
+function toggleAllTabs(status) { Object.keys(bookingSettings.tabs).forEach(k => bookingSettings.tabs[k].isOpen = status); db.collection("settings").doc("booking").update(bookingSettings); }
+function backupAndClearAll() { if(!confirm("전체 삭제? / Clear all?")) return; db.collection("slots").get().then(snap => { var batch = db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit(); }); }
+function exportAllCSV() { try { const wb = XLSX.utils.book_new(); let hasData = false; ["monday", "tuesday", "thursday"].forEach(day => { const rows = []; Object.keys(allSlotsData).filter(k => k.startsWith(day)).forEach(id => { allSlotsData[id].attendees.forEach(a => { rows.push({ "Day": day, "Time": id.split('_')[1], "Alliance": a.alliance, "Nickname": a.player, "ID": a.playerId, "Speed-up Days": a.daysSaved }); }); }); if (rows.length > 0) { XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day); hasData = true; } }); if (!hasData) return alert("No data."); XLSX.writeFile(wb, `SVS_Booking.xlsx`); } catch (e) { alert("Fail."); } }
 function updateAdminUI() { ['monday', 'tuesday', 'thursday'].forEach(day => { const btn = document.getElementById(`btn-admin-${day}`); if (btn) btn.className = bookingSettings.tabs[day].isOpen ? "admin-btn-on" : "admin-btn-off"; }); }
-function updateStatusMessage() { var el = document.getElementById("bookingStatusMsg"); if(el) el.innerText = isTabActuallyOpen(currentBuff) ? "✅ 예약 가능 / Booking Open" : "🔒 예약 잠금 / Booking Locked"; }
+function updateStatusMessage() { var el = document.getElementById("bookingStatusMsg"); if(el) el.innerText = isTabActuallyOpen(currentBuff) ? "✅ 예약 가능 / Booking Open" : "🔒 예약 마감 / Booking Closed"; }
 function updateCountdown() { var diff = new Date(bookingSettings.baseDate) - new Date(); while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000; var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000); if(document.getElementById("countdown")) document.getElementById("countdown").innerText = `Next SVS in ${d}d ${h}h ${m}m ${s}s`; }
 function switchBuff(b) { currentBuff = b; updateStatusMessage(); renderAll(); }
 function clearSearch() { document.getElementById("searchInput").value = ""; renderAll(); }
