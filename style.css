@@ -20,7 +20,10 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .creatorAvatar:hover { transform: scale(1.1); }
 .creatorCredit { font-size: 16px; font-weight: 800; color: #4b5563; margin-top: 10px; }
 
-.ministerNotice { background: #ffffff; border-left: 6px solid #ffe066; color: #2d3748; padding: 15px; border-radius: 12px; margin: 15px auto; max-width: 1200px; width: 95%; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06); text-align: center; font-size: 16px; font-weight: 900; word-break: keep-all; }
+/* 공지사항 메인 카드 구조 */
+.ministerNotice { background: #ffffff; border-left: 6px solid #ffe066; padding: 15px; border-radius: 12px; margin: 15px auto; max-width: 1200px; width: 95%; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06); text-align: center; word-break: keep-all; }
+.notice-ko { font-size: 16px; font-weight: 900; color: #2d3748; margin-bottom: 4px; }
+.notice-en { font-size: 14px; font-weight: 700; color: #718096; }
 
 .tabs { display: flex; justify-content: center; gap: 10px; max-width: 1200px; margin: 0 auto 15px; padding: 0 10px; }
 .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 5px; border-radius: 12px; background: #d8f2ff; color: #2d5468; cursor: pointer; transition: 0.2s; min-height: 65px; box-shadow: 0 3px 0px rgba(0, 0, 0, 0.05); }
@@ -64,12 +67,15 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
     #filterStatus { flex: 1; min-width: 100px; }
     .btn-reset { flex: 0 0 auto; }
     
-    /* [모바일 전용 최적화] 입력창 가림 현상 완벽 수정 */
     .creatorBadge { margin-top: 45px; } 
     .profile-wrapper { width: 320px; height: 160px; }
     .curved-text-svg { width: 320px; height: 130px; top: -35px; }
     .creatorAvatar { width: 130px; height: 130px; }
     
+    /* 모바일 전용 두 줄 공지사항 폰트 최적화 */
+    .ministerNotice { padding: 12px; width: 90%; }
+    .notice-ko { font-size: 14px; }
+    .notice-en { font-size: 12px; }
+    
     .tabs { flex-direction: column; }
-    .ministerNotice { font-size: 13px; padding: 12px; }
 }
