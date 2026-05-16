@@ -59,10 +59,17 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 @media (max-width: 600px) {
     .headerTop { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
     .titleArea { text-align: center; width: 100%; }
-    .headerToolbar { width: 100%; justify-content: center; flex-wrap: wrap; gap: 6px; }
+    .headerToolbar { width: 100%; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
     #searchInput { flex: 1; min-width: 120px; width: auto; }
     #filterStatus { flex: 1; min-width: 100px; }
     .btn-reset { flex: 0 0 auto; }
+    
+    /* [모바일 전용 최적화] 입력창 가림 현상 완벽 수정 */
+    .creatorBadge { margin-top: 45px; } 
+    .profile-wrapper { width: 320px; height: 160px; }
+    .curved-text-svg { width: 320px; height: 130px; top: -35px; }
+    .creatorAvatar { width: 130px; height: 130px; }
+    
     .tabs { flex-direction: column; }
     .ministerNotice { font-size: 13px; padding: 12px; }
 }
