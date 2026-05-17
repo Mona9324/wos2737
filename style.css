@@ -35,9 +35,18 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 
 .slot.pm-slot { background-color: #fff0e6 !important; border-color: #ffd8b1 !important; }
 .slot.locked { background-color: #cbd5e0 !important; border-color: #a0aec0 !important; filter: grayscale(0.8); opacity: 0.7; cursor: not-allowed; }
-
-/* [복구] 내가 예약한 시간 파스텔 연두색으로 대확정 (오후 살구색도 뚫고 최우선 표출) */
 .slot.myReservation { background-color: #e8f5e9 !important; border-color: #a5d6a7 !important; }
+
+/* [신규 고급 기능] 장관 지정 유저 전용 프리미엄 파스텔 보라색 스타일 */
+.miniItem.is-designated { 
+    color: #6a1b9a !important; 
+    font-weight: 900 !important; 
+    background-color: #f3e5f5 !important; 
+    border: 1.5px solid #ce93d8 !important;
+    border-radius: 8px; 
+    padding: 4px 8px;
+    margin-bottom: 2px;
+}
 
 .timeRow { display: flex; justify-content: space-between; align-items: center; font-weight: 800; border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding-bottom: 5px; margin-bottom: 8px; font-size: 14px; }
 .localTime { font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 12px; display: block; }
@@ -59,6 +68,10 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .adminSection p { font-size: 13.3px; font-weight: 800; margin-bottom: 10px; }
 .admin-tab-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; cursor: pointer; font-weight: 800; background: #f1f5f9; color: #94a3b8; transition: 0.2s; }
 .admin-tab-btn.on { background: #bbdefb !important; color: #1976d2 !important; border-color: #90cdf4 !important; }
+
+/* 가속 공개용 전용 그린 테마 버튼 상태 */
+.admin-tab-btn.on-speed { background: #c8e6c9 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
+
 .logsBox { background: #1a202c; color: #68d391; padding: 12px; border-radius: 12px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; margin: 15px 0; }
 
 @media (max-width: 600px) {
