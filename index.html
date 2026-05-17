@@ -34,14 +34,13 @@
                     <path id="finalCurve" d="M 40,120 A 160,120 0 0,1 360,120" fill="transparent"></path>
                     <text>
                         <textPath href="#finalCurve" startOffset="50%" text-anchor="middle">
-                            The website usage fee is Mona's Island 💚+1
+                            The website usage fee is Sunfire Island 💚+1
                         </textPath>
                     </text>
                 </svg>
                 <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="window.handleAdminAccess()">
             </div>
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
-            
             <div class="ministerNotice">
                 <div class="notice-ko">📢 가능한 모든 시간을 중복으로 신청해주세요.</div>
                 <div class="notice-en">Please book all available time slots you can attend.</div>
@@ -79,7 +78,7 @@
                 <input id="player" type="text" placeholder="닉네임 / Nickname">
                 <input id="playerId" type="text" placeholder="ID (숫자 9자리) / Player ID (9 digits)" maxlength="9">
                 <input id="daysSaved" type="number" placeholder="가속 일수 / Speed-up Days">
-                <input id="cancelKey" type="text" class="mask-input" placeholder="예약 취소용 비밀번호 / Password for Booking Cancel(any password)" autocomplete="off">
+                <input id="cancelKey" type="text" class="mask-input" placeholder="예약 취소용 비밀번호 / Password for Deletion/Cancel" autocomplete="off">
             </div>
             <div class="buttonRow">
                 <button type="button" onclick="window.confirmBooking()" class="btn-primary">확정 / Confirm</button>
@@ -95,7 +94,7 @@
             <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
             <hr>
             <div class="cancelArea">
-                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">예약 취소 비밀번호 / My Booking Cancel password</p>
+                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 / Password</p>
                 <input id="editCancelKey" type="text" class="mask-input" placeholder="Password">
                 <div class="buttonRow">
                     <button type="button" onclick="window.confirmCancel()" class="btn-danger">예약 취소 / Cancel Booking</button>
@@ -124,6 +123,16 @@
                     <button type="button" id="btn-admin-thursday" class="admin-tab-btn" onclick="window.toggleTabStatus('thursday')">Thu</button>
                 </div>
             </div>
+            
+            <div class="adminSection">
+                <p>가속 일수 공개 제어 / Speed-up Visibility</p>
+                <div class="buttonRow">
+                    <button type="button" id="btn-speed-monday" class="admin-tab-btn" onclick="window.toggleSpeedVisibility('monday')">Mon</button>
+                    <button type="button" id="btn-speed-tuesday" class="admin-tab-btn" onclick="window.toggleSpeedVisibility('tuesday')">Tue</button>
+                    <button type="button" id="btn-speed-thursday" class="admin-tab-btn" onclick="window.toggleSpeedVisibility('thursday')">Thu</button>
+                </div>
+            </div>
+            
             <div class="adminSection">
                 <p>자동 시간 설정 / Auto Schedule</p>
                 <div class="autoTimeGroup">
