@@ -17,13 +17,20 @@
                 <div id="countdown" class="countdown"></div>
             </div>
             <div class="headerToolbar">
-                <input id="searchInput" type="text" placeholder="검색 / Search" oninput="window.renderAll()">
+                <select id="langSelect" onchange="window.changeLanguage(this.value)">
+                    <option value="ko">🇰🇷 한국어</option>
+                    <option value="en">🇺🇸 English</option>
+                    <option value="zh">🇨🇳 中文(简体)</option>
+                    <option value="fr">🇫🇷 Français</option>
+                    <option value="ja">🇯🇵 日本語</option>
+                    <option value="id">🇮🇩 Indonesia</option>
+                </select>
                 <div class="filterGroup">
                     <select id="filterStatus" onchange="window.renderAll()">
-                        <option value="all">전체 / All</option>
-                        <option value="mine">내 예약 / My Booking</option>
+                        <option value="all" id="opt-all">All</option>
+                        <option value="mine" id="opt-mine">My Booking</option>
                     </select>
-                    <button type="button" class="btn-reset" onclick="window.clearSearch()">Reset</button>
+                    <button type="button" class="btn-reset" id="btn-reset-txt" onclick="window.clearSearch()">Reset</button>
                 </div>
             </div>
         </div>
@@ -31,7 +38,7 @@
         <div class="creatorBadge">
             <div class="profile-wrapper">
                 <svg viewBox="0 0 400 140" class="curved-text-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <path id="finalCurve" d="M 40,120 A 160,120 0 0,1 360,120" fill="transparent" />
+                    <path id="finalCurve" d="M 40,120 A 160,120 0 0,1 360,120" fill="transparent"></path>
                     <text>
                         <textPath xlink:href="#finalCurve" href="#finalCurve" startOffset="50%" text-anchor="middle">
                             The website usage fee is Sunfire Island 💚+1
@@ -43,28 +50,27 @@
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
             
             <div id="myConfirmedSection" class="confirmedSection" style="display: none;">
-                <div class="confirmedHeader">👑 My Confirmed Buffs</div>
+                <div class="confirmedHeader" id="confirmed-header-txt">👑 My Confirmed Buffs</div>
                 <div id="confirmedList" class="confirmedList"></div>
             </div>
 
             <div class="ministerNotice">
-                <div class="notice-ko">📢 가능한 모든 시간을 중복으로 신청해주세요.</div>
-                <div class="notice-en">Please book all available time slots you can attend.</div>
+                <div id="notice-dynamic-txt" class="notice-ko">Please book all available time slots you can attend.</div>
             </div>
         </div>
     </header>
 
     <div class="tabs">
         <div id="tab-monday" class="tab-item" onclick="window.switchBuff('monday')">
-            <div class="tabTitle">월요일 (건설) / Monday (Construction)</div>
+            <div class="tabTitle" id="tab-mon-txt">Monday</div>
             <div id="cd-monday" class="tabCD"></div>
         </div>
         <div id="tab-tuesday" class="tab-item" onclick="window.switchBuff('tuesday')">
-            <div class="tabTitle">화요일 (연구) / Tuesday (Research)</div>
+            <div class="tabTitle" id="tab-tue-txt">Tuesday</div>
             <div id="cd-tuesday" class="tabCD"></div>
         </div>
         <div id="tab-thursday" class="tab-item" onclick="window.switchBuff('thursday')">
-            <div class="tabTitle">목요일 (훈련) / Thursday (Troops Training)</div>
+            <div class="tabTitle" id="tab-thu-txt">Thursday</div>
             <div id="cd-thursday" class="tabCD"></div>
         </div>
     </div>
@@ -77,37 +83,37 @@
 
     <div id="modal" class="modal">
         <div class="modalBox">
-            <h3>새 예약 추가 / New Booking</h3>
+            <h3 id="modal-title-txt">New Booking</h3>
             <div id="selectedSlotInfo" style="margin-bottom:10px; font-weight:800; color:#1976d2;"></div>
             <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="연맹 / Alliance (ZTP, BUG, ZYZ etc)">
-                <input id="player" type="text" placeholder="닉네임 / Nickname">
-                <input id="playerId" type="text" placeholder="ID (숫자 9자리) / Player ID (9 digits)" maxlength="9">
-                <input id="daysSaved" type="number" placeholder="가속 일수 / Speed-up Days">
-                <input id="cancelKey" type="text" class="mask-input" placeholder="예약 취소용 비밀번호 / Password for booking cancel (any password)" autocomplete="off">
+                <input id="alliance" type="text" placeholder="Alliance">
+                <input id="player" type="text" placeholder="Nickname">
+                <input id="playerId" type="text" placeholder="Player ID (9 digits)" maxlength="9">
+                <input id="daysSaved" type="number" placeholder="Speed-up Days">
+                <input id="cancelKey" type="text" class="mask-input" placeholder="Password for cancel" autocomplete="off">
             </div>
             <div class="buttonRow">
-                <button type="button" onclick="window.confirmBooking()" class="btn-primary">확정 / Confirm</button>
+                <button type="button" onclick="window.confirmBooking()" class="btn-primary" id="btn-confirm-txt">Confirm</button>
             </div>
-            <button type="button" onclick="window.closeModal()" class="btn-close-full">닫기 / Close</button>
+            <button type="button" onclick="window.closeModal()" class="btn-close-full" id="btn-close-txt">Close</button>
         </div>
     </div>
 
     <div id="reservedModal" class="modal">
         <div class="modalBox">
-            <h3>예약 현황 / Booking Status</h3>
+            <h3 id="res-title-txt">Booking Status</h3>
             <div id="reservedSlotInfo" style="margin-bottom:15px; font-weight:800;"></div>
             <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
             <hr>
             <div class="cancelArea">
-                <p style="font-size:13px; font-weight:800; margin-bottom:8px;">취소 비밀번호 / My Booking Cancel Password</p>
+                <p style="font-size:13px; font-weight:800; margin-bottom:8px;" id="cancel-label-txt">Password</p>
                 <input id="editCancelKey" type="text" class="mask-input" placeholder="Password">
                 <div class="buttonRow">
-                    <button type="button" onclick="window.confirmCancel()" class="btn-danger">예약 취소 / Cancel Booking</button>
-                    <button type="button" onclick="window.openReserveFromStatus()" class="btn-primary">예약 추가 / Add Booking</button>
+                    <button type="button" onclick="window.confirmCancel()" class="btn-danger" id="btn-cancel-txt">Cancel Booking</button>
+                    <button type="button" onclick="window.openReserveFromStatus()" class="btn-primary" id="btn-add-txt">Add Booking</button>
                 </div>
             </div>
-            <button type="button" onclick="window.closeReservedModal()" class="btn-close-full">닫기 / Close</button>
+            <button type="button" onclick="window.closeReservedModal()" class="btn-close-full" id="btn-res-close-txt">Close</button>
         </div>
     </div>
 
