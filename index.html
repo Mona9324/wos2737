@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2737 SVS Booking</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -45,7 +45,7 @@
                         </textPath>
                     </text>
                 </svg>
-                <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="window.handleAdminAccess()">
+                <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="window.handleAdminAccess()" />
             </div>
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
             
@@ -86,11 +86,11 @@
             <h3 id="modal-title-txt">New Booking</h3>
             <div id="selectedSlotInfo" style="margin-bottom:10px; font-weight:800; color:#1976d2;"></div>
             <div class="inputGroup">
-                <input id="alliance" type="text" placeholder="Alliance">
-                <input id="player" type="text" placeholder="Nickname">
-                <input id="playerId" type="text" placeholder="Player ID (9 digits)" maxlength="9">
-                <input id="daysSaved" type="number" placeholder="Speed-up Days">
-                <input id="cancelKey" type="text" class="mask-input" placeholder="Password for cancel" autocomplete="off">
+                <input id="alliance" type="text" placeholder="Alliance" />
+                <input id="player" type="text" placeholder="Nickname" />
+                <input id="playerId" type="text" placeholder="Player ID (9 digits)" maxlength="9" />
+                <input id="daysSaved" type="number" placeholder="Speed-up Days" />
+                <input id="cancelKey" type="text" class="mask-input" placeholder="Password for cancel" autocomplete="off" />
             </div>
             <div class="buttonRow">
                 <button type="button" onclick="window.confirmBooking()" class="btn-primary" id="btn-confirm-txt">Confirm</button>
@@ -104,10 +104,10 @@
             <h3 id="res-title-txt">Booking Status</h3>
             <div id="reservedSlotInfo" style="margin-bottom:15px; font-weight:800;"></div>
             <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
-            <hr>
+            <hr />
             <div class="cancelArea">
                 <p style="font-size:13px; font-weight:800; margin-bottom:8px;" id="cancel-label-txt">Password</p>
-                <input id="editCancelKey" type="text" class="mask-input" placeholder="Password">
+                <input id="editCancelKey" type="text" class="mask-input" placeholder="Password" />
                 <div class="buttonRow">
                     <button type="button" onclick="window.confirmCancel()" class="btn-danger" id="btn-cancel-txt">Cancel Booking</button>
                     <button type="button" onclick="window.openReserveFromStatus()" class="btn-primary" id="btn-add-txt">Add Booking</button>
@@ -123,7 +123,7 @@
             <div class="adminSection">
                 <p>SVS 기준일 설정 / Set Base Date</p>
                 <div class="buttonRow">
-                    <input id="adminBaseDate" type="datetime-local" style="flex:1;">
+                    <input id="adminBaseDate" type="datetime-local" style="flex:1;" />
                     <button type="button" onclick="window.saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장 / Save</button>
                 </div>
             </div>
@@ -150,19 +150,19 @@
                 <div class="autoTimeGroup">
                     <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
                         <span style="font-size:11px; font-weight:800; width:120px;">전체 오픈 / Open All:</span>
-                        <input type="datetime-local" id="global-open-time" style="flex:1;">
+                        <input type="datetime-local" id="global-open-time" style="flex:1;" />
                     </div>
                     <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
                         <span style="font-size:11px; font-weight:800; width:120px;">월 마감 / Mon Close:</span>
-                        <input type="datetime-local" id="close-monday" style="flex:1;">
+                        <input type="datetime-local" id="close-monday" style="flex:1;" />
                     </div>
                     <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
                         <span style="font-size:11px; font-weight:800; width:120px;">화 마감 / Tue Close:</span>
-                        <input type="datetime-local" id="close-tuesday" style="flex:1;">
+                        <input type="datetime-local" id="close-tuesday" style="flex:1;" />
                     </div>
                     <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
                         <span style="font-size:11px; font-weight:800; width:120px;">목 마감 / Thu Close:</span>
-                        <input type="datetime-local" id="close-thursday" style="flex:1;">
+                        <input type="datetime-local" id="close-thursday" style="flex:1;" />
                     </div>
                 </div>
                 <button type="button" onclick="window.saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save Schedule</button>
