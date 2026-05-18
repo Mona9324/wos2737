@@ -26,7 +26,6 @@ function isMyReservation(person) {
     return normalizeText(person.player) === normalizeText(mine.player); 
 }
 
-/* [신설] 장관 확정 요약 구역의 캘린더 연동 알람 링크 자동 가공 함수 */
 function getGoogleCalendarUrl(dayName, timeStr) {
     var parts = timeStr.split(":");
     var hour = parseInt(parts[0], 10);
@@ -55,7 +54,6 @@ function getGoogleCalendarUrl(dayName, timeStr) {
     return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + title + "&dates=" + dates + "&details=" + details;
 }
 
-/* [신설] 실시간 데이터 기반 내 확정 요약 배너 자동 드로잉 함수 */
 function updateMyConfirmedSummary() {
     var el = document.getElementById("myConfirmedSection");
     var listEl = document.getElementById("confirmedList");
@@ -189,7 +187,6 @@ window.renderAll = function() {
             grid.appendChild(div);
         }
     }
-    /* 렌더링 주기에 맞춰 확정 목록 상시 실시간 업데이트 연동 */
     updateMyConfirmedSummary();
 };
 
