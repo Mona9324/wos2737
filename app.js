@@ -16,7 +16,6 @@ var bookingSettings = {
 var adminAuthenticated = false;
 var sc = 0;
 
-/* [다국어 신설] 6개 국어 원어민 번역 딕셔너리 데이터 대형 패키지 */
 var langPack = {
     ko: {
         notice: "📢 가능한 모든 시간을 중복으로 신청해주세요.",
@@ -24,7 +23,7 @@ var langPack = {
         addAlarm: "🔔 알람 등록",
         mon: "월요일 (건설)", tue: "화요일 (연구)", thu: "목요일 (훈련)",
         monShort: "월요일", tueShort: "화요일", thuShort: "목요일",
-        searchPlace: "검색 / Search", optAll: "전체 / All", optMine: "내 예약 / Mine",
+        optAll: "전체 / All", optMine: "내 예약 / Mine",
         openAvailable: "✅ 예약 가능", openClosed: "🔒 예약 마감",
         pers: "명", noRes: "No Reservation / 예약 없음",
         addTitle: "새 예약 추가", confirmBtn: "확정", closeBtn: "닫기",
@@ -38,7 +37,7 @@ var langPack = {
         addAlarm: "🔔 Add Alarm",
         mon: "Monday (Construction)", tue: "Tuesday (Research)", thu: "Thursday (Troops Training)",
         monShort: "Monday", tueShort: "Tuesday", thuShort: "Thursday",
-        searchPlace: "Search", optAll: "All", optMine: "My Booking",
+        optAll: "All", optMine: "My Booking",
         openAvailable: "✅ Booking Open", openClosed: "🔒 Booking Closed",
         pers: "Pers.", noRes: "No Reservation",
         addTitle: "New Booking", confirmBtn: "Confirm", closeBtn: "Close",
@@ -52,7 +51,7 @@ var langPack = {
         addAlarm: "🔔 添加提醒",
         mon: "星期一 (建筑)", tue: "星期二 (研究)", thu: "星期四 (训练)",
         monShort: "星期一", tueShort: "星期二", thuShort: "星期四",
-        searchPlace: "搜索", optAll: "全部", optMine: "我的预约",
+        optAll: "全部", optMine: "我的预约",
         openAvailable: "✅ 开放预约", openClosed: "🔒 预约截止",
         pers: "人", noRes: "暂无预约",
         addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭",
@@ -66,7 +65,7 @@ var langPack = {
         addAlarm: "🔔 Alarme",
         mon: "Lundi (Construction)", tue: "Mardi (Recherche)", thu: "Jeudi (Entraînement)",
         monShort: "Lundi", tueShort: "Mardi", thuShort: "Jeudi",
-        searchPlace: "Recherche", optAll: "Tout", optMine: "Mes Réservations",
+        optAll: "Tout", optMine: "Mes Réservations",
         openAvailable: "✅ Réservation Ouverte", openClosed: "🔒 Réservation Fermée",
         pers: "Pers.", noRes: "Aucune Réservation",
         addTitle: "Nouvelle Réservation", confirmBtn: "Confirmer", closeBtn: "Fermer",
@@ -80,7 +79,7 @@ var langPack = {
         addAlarm: "🔔 アラーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
         monShort: "月曜日", tueShort: "火曜日", thuShort: "木曜日",
-        searchPlace: "検索", optAll: "すべて", optMine: "自分の予約",
+        optAll: "すべて", optMine: "自分の予約",
         openAvailable: "✅ 予約受付中", openClosed: "🔒 予約終了",
         pers: "人", noRes: "予約なし",
         addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる",
@@ -94,7 +93,7 @@ var langPack = {
         addAlarm: "🔔 Pasang Alarm",
         mon: "Senin (Konstruksi)", tue: "Selasa (Riset)", thu: "Kamis (Pelatihan)",
         monShort: "Senin", tueShort: "Selasa", thuShort: "Kamis",
-        searchPlace: "Cari", optAll: "Semua", optMine: "Pesanan Saya",
+        optAll: "Semua", optMine: "Pesanan Saya",
         openAvailable: "✅ Pendaftaran Buka", openClosed: "🔒 Pendaftaran Tutup",
         pers: "Orang", noRes: "Belum Ada Pesanan",
         addTitle: "Tambah Pesanan Baru", confirmBtn: "Konfirmasi", closeBtn: "Tutup",
@@ -119,7 +118,7 @@ function applyLanguagePack() {
     document.getElementById("tab-mon-txt").innerText = p.mon;
     document.getElementById("tab-tue-txt").innerText = p.tue;
     document.getElementById("tab-thu-txt").innerText = p.thu;
-    document.getElementById("searchInput").placeholder = p.searchPlace;
+    
     document.getElementById("opt-all").innerText = p.optAll;
     document.getElementById("opt-mine").innerText = p.optMine;
     
@@ -274,7 +273,7 @@ function isTabActuallyOpen(day) {
 
 window.renderAll = function() {
     var grid = document.getElementById("slots"); if (!grid) return; grid.innerHTML = "";
-    var isOpen = isTabActuallyOpen(currentBuff), search = normalizeText(document.getElementById("searchInput").value), filter = document.getElementById("filterStatus").value;
+    var isOpen = isTabActuallyOpen(currentBuff), filter = document.getElementById("filterStatus").value;
     document.querySelectorAll(".tab-item").forEach(function(item) { item.classList.toggle("active", item.id === "tab-" + currentBuff); });
     
     var showSpeeds = (bookingSettings.tabs[currentBuff] && bookingSettings.tabs[currentBuff].showSpeeds) || adminAuthenticated;
@@ -285,7 +284,6 @@ window.renderAll = function() {
         for (var m = 0; m < 60; m += 30) {
             var tId = padTime(h, m), eId = padTime(h, m + 30), id = currentBuff + "_" + tId, slot = allSlotsData[id] || { attendees: [] };
             if (filter === "mine" && !slot.attendees.some(isMyReservation)) continue;
-            if (search && !slot.attendees.some(function(a) { return normalizeText(a.player).includes(search) || normalizeText(a.alliance).includes(search); })) continue;
             
             var div = document.createElement("div"); 
             div.className = "slot " + (h >= 12 ? "pm-slot " : "") + (!isOpen ? " locked" : "") + (slot.attendees.some(isMyReservation) ? " myReservation" : "");
@@ -416,7 +414,7 @@ function updateStatusMessage() { var el = document.getElementById("bookingStatus
 function addLog(msg) { var box = document.getElementById('logsBox'); if (box) { var log = document.createElement('div'); log.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg; box.prepend(log); } }
 function updateCountdown() { var diff = new Date(bookingSettings.baseDate) - new Date(); while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000; var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000); if(document.getElementById("countdown")) document.getElementById("countdown").innerText = "Next SVS in " + d + "d " + h + "h " + m + "m " + s + "s"; }
 window.switchBuff = function(b) { currentBuff = b; updateStatusMessage(); window.renderAll(); };
-window.clearSearch = function() { document.getElementById("searchInput").value = ""; window.renderAll(); };
+window.clearSearch = function() { window.renderAll(); };
 window.closeModal = function() { document.getElementById("modal").classList.remove("show"); };
 window.closeReservedModal = function() { document.getElementById("reservedModal").classList.remove("show"); };
 window.closeAdmin = function() { document.getElementById("adminPanel").classList.remove("show"); };
