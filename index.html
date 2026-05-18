@@ -38,7 +38,7 @@
         <div class="creatorBadge">
             <div class="profile-wrapper">
                 <svg viewBox="0 0 400 140" class="curved-text-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <path id="finalCurve" d="M 40,120 A 160,120 0 0,1 360,120" fill="transparent"></path>
+                    <path id="finalCurve" d="M 50,135 A 150,90 0 0,1 350,135" fill="transparent"></path>
                     <text>
                         <textPath xlink:href="#finalCurve" href="#finalCurve" startOffset="50%" text-anchor="middle" id="curved-profile-txt">
                             The website usage fee is Mona's Island 💚+1
@@ -106,4 +106,82 @@
             <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
             <hr>
             <div class="cancelArea">
-                <p style="font-size:13px; font-weight:800; margin
+                <p style="font-size:13px; font-weight:800; margin-bottom:8px;" id="cancel-label-txt">Password</p>
+                <input id="editCancelKey" type="text" class="mask-input" placeholder="Password">
+                <div class="buttonRow">
+                    <button type="button" onclick="window.confirmCancel()" class="btn-danger" id="btn-cancel-txt">Cancel Booking</button>
+                    <button type="button" onclick="window.openReserveFromStatus()" class="btn-primary" id="btn-add-txt">Add Booking</button>
+                </div>
+            </div>
+            <button type="button" onclick="window.closeReservedModal()" class="btn-close-full" id="btn-res-close-txt">Close</button>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="modal">
+        <div class="modalBox" style="max-width: 500px;">
+            <h3>관리자 시스템 / Admin System</h3>
+            <div class="adminSection">
+                <p>SVS 기준일 설정 / Set Base Date</p>
+                <div class="buttonRow">
+                    <input id="adminBaseDate" type="datetime-local" style="flex:1;">
+                    <button type="button" onclick="window.saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">저장 / Save</button>
+                </div>
+            </div>
+            <div class="adminSection">
+                <p>즉시 수동 제어 / Manual Control</p>
+                <div class="buttonRow">
+                    <button type="button" id="btn-admin-monday" class="admin-tab-btn" onclick="window.toggleTabStatus('monday')">Mon</button>
+                    <button type="button" id="btn-admin-tuesday" class="admin-tab-btn" onclick="window.toggleTabStatus('tuesday')">Tue</button>
+                    <button type="button" id="btn-admin-thursday" class="admin-tab-btn" onclick="window.toggleTabStatus('thursday')">Thu</button>
+                </div>
+            </div>
+            
+            <div class="adminSection">
+                <p>가속 일수 공개 제어 / Speed-up Visibility</p>
+                <div class="buttonRow">
+                    <button type="button" id="btn-speed-monday" class="admin-tab-btn" onclick="window.toggleSpeedVisibility('monday')">Mon</button>
+                    <button type="button" id="btn-speed-tuesday" class="admin-tab-btn" onclick="window.toggleSpeedVisibility('tuesday')">Tue</button>
+                    <button type="button" id="btn-speed-thursday" class="admin-tab-btn" onclick="window.toggleSpeedVisibility('thursday')">Thu</button>
+                </div>
+            </div>
+            
+            <div class="adminSection">
+                <p>자동 시간 설정 / Auto Schedule</p>
+                <div class="autoTimeGroup">
+                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <span style="font-size:11px; font-weight:800; width:120px;">전체 오픈 / Open All:</span>
+                        <input type="datetime-local" id="global-open-time" style="flex:1;">
+                    </div>
+                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <span style="font-size:11px; font-weight:800; width:120px;">월 마감 / Mon Close:</span>
+                        <input type="datetime-local" id="close-monday" style="flex:1;">
+                    </div>
+                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <span style="font-size:11px; font-weight:800; width:120px;">화 마감 / Tue Close:</span>
+                        <input type="datetime-local" id="close-tuesday" style="flex:1;">
+                    </div>
+                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                        <span style="font-size:11px; font-weight:800; width:120px;">목 마감 / Thu Close:</span>
+                        <input type="datetime-local" id="close-thursday" style="flex:1;">
+                    </div>
+                </div>
+                <button type="button" onclick="window.saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">스케줄 저장 / Save Schedule</button>
+            </div>
+            <div id="logsBox" class="logsBox"><div>[System] Ready...</div></div>
+            <div class="adminFooter" style="border-top:1px solid #eee; padding-top:10px;">
+                <div class="buttonRow">
+                    <button type="button" onclick="window.exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출 / Excel</button>
+                    <button type="button" onclick="window.backupAndClearAll()" class="btn-danger">전체 삭제 / Reset</button>
+                </div>
+                <button type="button" onclick="window.closeAdmin()" class="btn-close-full" style="margin-top:10px;">닫기 / Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
