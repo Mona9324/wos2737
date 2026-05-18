@@ -60,10 +60,10 @@ var langPack = {
         addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭",
         statusTitle: "预约状态", cancelLabel: "取消密码", cancelBtn: "取消预约", addBookingBtn: "添加预约",
         closedAlert: "预约已截止。", speedUnit: "天",
-        pAlliance: "联盟 (ZTP, BUG, ZYZ 等)", pNickname: "游戏昵称", pId: "玩家ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消의 密码 (任意)"
+        pAlliance: "联盟 (ZTP, BUG, ZYZ 等)", pNickname: "游戏昵称", pId: "玩家ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消密码 (任意)"
     },
     fr: {
-        notice: "📢 Veuillez réserver tous les créneaux horaires disponibles auxquels vous pouvez participer.",
+        notice: "📢 Veuillez réserver tous les créнеaux horaires disponibles auxquels vous pouvez participer.",
         curvedTxt: "Frais d'utilisation du site : L'île de Mona 💚+1",
         confirmedHeader: "👑 Mes Buffs Confirmés",
         addAlarm: "🔔 Alarme",
@@ -79,7 +79,7 @@ var langPack = {
     },
     ja: {
         notice: "📢 参加可能なすべての時間帯を重複して申請してください。",
-        curvedTxt: "予約サイトの利用料는 Mona의 👑+1",
+        curvedTxt: "予約サイトの利用料는 Monaの島 💚+1",
         confirmedHeader: "👑 確定した大統領バフ時間",
         addAlarm: "🔔 アラーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
@@ -377,14 +377,14 @@ window.toggleSpeedVisibility = function(day) {
     window.db.collection("settings").doc("booking").update(obj).then(function() { addLog(day.toUpperCase() + " Speed Show: " + newStatus); });
 };
 
-/* [완벽 수선 전격 도킹] 매개변수를 고유 id 모델로 완전하게 교정 완료 */
+/* [완벽 수선 전격 도킹] 매개변수 이름을 기존 playerId에서 실제 고유 id로 정확하게 교정 완료 */
 window.toggleDesignateById = function(slotId, uniqueId) {
     if (!window.db) return;
     var ref = window.db.collection("slots").doc(slotId);
     ref.get().then(function(doc) {
         if (!doc.exists) return;
         var list = doc.data().attendees || [];
-        /*playerId 비교 연산자를 완벽하게 고유 일련번호(a.id) 매칭으로 교정했습니다!*/
+        /* [핵심 코드 수정] String(uniqueId)와 a.id를 칼같이 비교하여 딱 한 명만 조준 지정 */
         var target = list.find(function(a) { return String(a.id) === String(uniqueId); });
         if (!target) return;
         
@@ -552,7 +552,7 @@ function openReservedModal(id) {
             var desBtn = document.createElement("button"); 
             desBtn.innerText = a.isDesignated ? "해제" : "지정";
             desBtn.className = "btn-primary"; desBtn.style.padding = "4px 8px"; desBtn.style.fontSize = "11px"; desBtn.style.flex = "none"; desBtn.style.width = "auto";
-            /* 이름이나 인덱스가 아닌 고유 모델 ID를 정확히 실어 나르도록 수정 완료 */
+            /* 이름 기준이 아닌 고유 개별 모델 ID를 정확히 실어 나르도록 수정 완료 */
             desBtn.onclick = function() { window.toggleDesignateById(id, a.id); };
             
             var delBtn = document.createElement("button"); 
