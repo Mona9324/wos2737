@@ -56,7 +56,7 @@ var langPack = {
         mondayShort: "星期一", tuesdayShort: "星期二", thursdayShort: "星期四",
         optAll: "全部", optMine: "我的预约",
         openAvailable: "✅ 开放预约", openClosed: "🔒 预约截止",
-        pers: "人", noRes: "暂无预约",
+        pers: "放人", noRes: "暂无预约",
         addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭",
         statusTitle: "预约状态", cancelLabel: "取消密码", cancelBtn: "取消预约", addBookingBtn: "添加预约",
         closedAlert: "预约已截止。", speedUnit: "天",
@@ -120,7 +120,10 @@ function applyLanguagePack() {
     var p = langPack[currentLang];
     document.getElementById("langSelect").value = currentLang;
     document.getElementById("notice-dynamic-txt").innerText = p.notice;
-    document.getElementById("curved-profile-txt").innerText = p.curvedTxt;
+    
+    /* [완벽 세팅] 일반 텍스트가 아닌 SVG 전용 명형어 textContent 사양으로 교환 완료 */
+    document.getElementById("curved-profile-txt").textContent = p.curvedTxt;
+    
     document.getElementById("confirmed-header-txt").innerText = p.confirmedHeader;
     document.getElementById("tab-mon-txt").innerText = p.mon;
     document.getElementById("tab-tue-txt").innerText = p.tue;
@@ -220,7 +223,6 @@ function updateMyConfirmedSummary() {
         var card = document.createElement("div");
         card.className = "confirmedCard";
         
-        /* [버프 완벽 처리] 풀 네임 요일 키로 보정하여 undefined 노출 버그 완벽 차단 */
         var dayTxt = p[track.day + "Short"];
         var displayTime = dayTxt + " " + track.time + " UTC";
         
