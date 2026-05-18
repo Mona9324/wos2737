@@ -47,8 +47,8 @@ function getGoogleCalendarUrl(dayName, timeStr) {
         return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
     };
     
-    var title = encodeURIComponent("👑 [2737 SVS] 장관 버프 타임 / SVS Buff");
-    var details = encodeURIComponent("장관 버프 시간입니다! 늦지 않게 접속하셔서 가속을 사용해 주세요! / Minister Buff Time");
+    var title = encodeURIComponent("👑 [2737 SVS] Minister Buff Time");
+    var details = encodeURIComponent("It's your minister buff time! Please log in to Whiteout Survival and use your speed-ups!");
     var dates = formatTime(targetDate) + "/" + formatTime(endDate);
     
     return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + title + "&dates=" + dates + "&details=" + details;
@@ -87,8 +87,9 @@ function updateMyConfirmedSummary() {
         var card = document.createElement("div");
         card.className = "confirmedCard";
         
-        var dayKo = { monday: "월요일(건설)", tuesday: "화요일(연구)", thursday: "목요일(훈련)" }[track.day];
-        var displayTime = dayKo + " " + track.time + " UTC";
+        /* [글로벌 최적화 변경] 외국인 연맹원들을 위해 텍스트 사양을 세련된 영어 표기로 고정 */
+        var dayEn = { monday: "Monday (Const)", tuesday: "Tuesday (Res)", thursday: "Thursday (Troops)" }[track.day];
+        var displayTime = dayEn + " " + track.time + " UTC";
         
         var timeSpan = document.createElement("span");
         timeSpan.className = "confirmedTime";
@@ -97,7 +98,7 @@ function updateMyConfirmedSummary() {
         var calBtn = document.createElement("button");
         calBtn.type = "button";
         calBtn.className = "btn-cal";
-        calBtn.innerText = "🔔 알람 등록";
+        calBtn.innerText = "🔔 Add Alarm";
         calBtn.onclick = function() {
             var url = getGoogleCalendarUrl(track.day, track.time);
             window.open(url, "_blank");
