@@ -64,7 +64,6 @@ window.renderAll = function() {
     var isOpen = isTabActuallyOpen(currentBuff), search = normalizeText(document.getElementById("searchInput").value), filter = document.getElementById("filterStatus").value;
     document.querySelectorAll(".tab-item").forEach(function(item) { item.classList.toggle("active", item.id === "tab-" + currentBuff); });
     
-    // 현재 탭의 가속 노출 여부 확인
     var showSpeeds = (bookingSettings.tabs[currentBuff] && bookingSettings.tabs[currentBuff].showSpeeds) || adminAuthenticated;
     
     for (var h = 0; h < 24; h++) {
@@ -76,16 +75,17 @@ window.renderAll = function() {
             var div = document.createElement("div"); 
             div.className = "slot " + (h >= 12 ? "pm-slot " : "") + (!isOpen ? " locked" : "") + (slot.attendees.some(isMyReservation) ? " myReservation" : "");
             
-            // [정렬 로직] 지정인(isDesignated)이 있으면 무조건 1등 배열석으로 전진 배치
-            var displayList = (slot.attendees || []).slice().sort(function(a, b) {
+            var displayList = ((allSlotsData[id] || {}).attendees || []).slice().sort(function(a, b) {
                 return (b.isDesignated ? 1 : 0) - (a.isDesignated ? 1 : 0);
             });
             
             var listHtml = displayList.slice(0,3).map(function(a, i) { 
-                var speedText = showSpeeds ? " (" + a.daysSaved + "일/d)" : "";
+                var speedText = showSpeeds ? "(" + a.daysSaved + "일/d)" : "";
                 var crownText = a.isDesignated ? "👑 " : (i+1) + ". ";
                 var itemClass = a.isDesignated ? "miniItem is-designated" : "miniItem";
-                return "<div class='" + itemClass + "'>" + crownText + "[" + a.alliance + "] " + a.player + speedText + "</div>"; 
+                
+                /* [핵심 교체 포인트] 이름을 담는 span과 가속일수를 담는 span을 분리하여 레이아웃 무너짐을 완전 차단 */
+                return "<div class='" + itemClass + "'><span>" + crownText + "[" + a.alliance + "] " + a.player + "</span><span>" + speedText + "</span></div>"; 
             }).join('');
             
             div.innerHTML = "<div class=\"dayBadge\">" + currentBuff.toUpperCase().slice(0,3) + "</div><div class=\"timeRow\"><span>" + tId + "~" + eId + " UTC</span><span style=\"color:#d34b4b;\">" + slot.attendees.length + "명 / Pers.</span></div><div class=\"localTime\">Local: " + formatLocalTime(new Date(new Date().setUTCHours(h,m,0,0))) + "</div><div class=\"attendeeMiniList\">" + (listHtml || 'No Reservation / 예약 없음') + "</div>";
@@ -101,20 +101,20 @@ window.renderAll = function() {
 window.toggleTabStatus = function(day) {
     if (!window.db || !bookingSettings.tabs || !bookingSettings.tabs[day]) return;
     var newStatus = !bookingSettings.tabs[day].isOpen;
-    var obj = {}; obj["tabs." + day + ".isOpen"] = newStatus;
+    var path = "tabs." + day + ".isOpen";
+    var obj = {}; obj[path] = newStatus;
     window.db.collection("settings").doc("booking").update(obj).then(function() { addLog(day.toUpperCase() + " Toggle Success"); });
 };
 
-// [가속 공개 토글 함수 정의]
 window.toggleSpeedVisibility = function(day) {
     if (!window.db || !bookingSettings.tabs || !bookingSettings.tabs[day]) return;
     var currentStatus = bookingSettings.tabs[day].showSpeeds || false;
     var newStatus = !currentStatus;
-    var obj = {}; obj["tabs." + day + ".showSpeeds"] = newStatus;
+    var path = "tabs." + day + ".showSpeeds";
+    var obj = {}; obj[path] = newStatus;
     window.db.collection("settings").doc("booking").update(obj).then(function() { addLog(day.toUpperCase() + " Speed Show: " + newStatus); });
 };
 
-// [장관 지정자 토글 처리 기능 - 고유 ID 매칭으로 정렬 꼬임 완벽 방지]
 window.toggleDesignateById = function(slotId, playerId) {
     if (!window.db) return;
     var ref = window.db.collection("slots").doc(slotId);
@@ -129,7 +129,7 @@ window.toggleDesignateById = function(slotId, playerId) {
             if (String(a.playerId) === String(playerId)) {
                 a.isDesignated = nextState;
             } else {
-                a.isDesignated = false; // 한 시간대에 단 한 명만 독점 임명 가능
+                a.isDesignated = false;
             }
         });
         
@@ -224,12 +224,21 @@ function openReservedModal(id) {
         d.className = a.isDesignated ? "miniItem is-designated" : "miniItem"; 
         d.style.display = "flex"; d.style.justifyContent = "space-between"; d.style.alignItems = "center"; d.style.margin = "4px 0";
         
-        var speedText = showSpeeds ? " (" + a.daysSaved + "일/d)" : "";
+        var speedText = showSpeeds ? "(" + a.daysSaved + "일/d)" : "";
         var crownPrefix = a.isDesignated ? "👑 " : "";
         
         var textSpan = document.createElement("span");
-        textSpan.innerHTML = crownPrefix + "[" + a.alliance + "] " + a.player + speedText;
+        textSpan.innerHTML = crownPrefix + "[" + a.alliance + "] " + a.player;
         d.appendChild(textSpan);
+        
+        var speedSpan = document.createElement("span");
+        speedSpan.innerHTML = speedText;
+        
+        var mainWrapper = document.createElement("div");
+        mainWrapper.style.display = "flex"; mainWrapper.style.justifyContent = "space-between"; mainWrapper.style.width = "100%"; mainWrapper.style.alignItems = "center";
+        mainWrapper.appendChild(textSpan); mainWrapper.appendChild(speedSpan);
+        
+        d.appendChild(mainWrapper);
         
         if (adminAuthenticated) { 
             var btnGroup = document.createElement("div");
@@ -244,12 +253,11 @@ function openReservedModal(id) {
             delBtn.innerText = "삭제"; delBtn.className = "btn-danger"; delBtn.style.padding = "4px 8px"; delBtn.style.fontSize = "11px"; delBtn.style.flex = "none"; delBtn.style.width = "auto";
             delBtn.onclick = function() { window.deleteAttendeeById(id, a.playerId); };
             
-            btnGroup.appendChild(desBtn); btnGroup.appendChild(delBtn); d.appendChild(btnGroup); 
+            btnGroup.appendChild(desBtn); btnGroup.appendChild(delBtn); d.innerHTML = ""; d.appendChild(mainWrapper); d.appendChild(btnGroup); 
         } 
         list.appendChild(d); 
     }); 
     document.getElementById("reservedModal").classList.add("show"); 
 }
 
-function isMyReservation(person) { var m = localStorage.getItem(MY_BOOKING_KEY); if(!m || !person) return false; var mine = JSON.parse(m); return normalizeText(person.player) === normalizeText(mine.player); }
 init();
