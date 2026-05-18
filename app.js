@@ -75,7 +75,7 @@ var langPack = {
     },
     ja: {
         notice: "📢 参加可能なすべての時間帯を重複して申請してください。",
-        confirmedHeader: "👑 確定した大統領バフ時間",
+        confirmedHeader: "👑 確定した大統領バフ时间",
         addAlarm: "🔔 アラーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
         monShort: "月曜日", tueShort: "火曜日", thuShort: "木曜日",
@@ -143,6 +143,14 @@ function padTime(h, m) { if (m >= 60) { h += Math.floor(m / 60); m = m % 60; } h
 function formatLocalTime(date) { return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
 function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
 function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return "h_" + Math.abs(hash); }
+
+/* [긴급 구조 완벽 안착] 누락되어 레퍼런스 에러를 내던 주범 함수를 원위치에 복원 완료 */
+function isMyReservation(person) { 
+    var m = localStorage.getItem(MY_BOOKING_KEY); 
+    if(!m || !person) return false; 
+    var mine = JSON.parse(m); 
+    return normalizeText(person.player) === normalizeText(mine.player); 
+}
 
 function getGoogleCalendarUrl(dayName, timeStr) {
     var parts = timeStr.split(":");
