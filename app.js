@@ -60,7 +60,7 @@ var langPack = {
         addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭",
         statusTitle: "预约状态", cancelLabel: "取消密码", cancelBtn: "取消预约", addBookingBtn: "添加预约",
         closedAlert: "预约已截止。", speedUnit: "天",
-        pAlliance: "联盟 (ZTP, BUG, ZYZ 等)", pNickname: "游戏昵称", pId: "玩家ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消的密码 (任意)"
+        pAlliance: "联盟 (ZTP, BUG, ZYZ 等)", pNickname: "游戏昵称", pId: "玩家ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消의 密码 (任意)"
     },
     fr: {
         notice: "📢 Veuillez réserver tous les créneaux horaires disponibles auxquels vous pouvez participer.",
@@ -337,7 +337,6 @@ window.renderAll = function() {
             var div = document.createElement("div"); 
             div.className = "slot " + (h >= 12 ? "pm-slot " : "") + (!isOpen ? " locked" : "") + (slot.attendees.some(isMyReservation) ? " myReservation" : "");
             
-            /* 정렬 구조 유지 */
             var displayList = ((allSlotsData[id] || {}).attendees || []).slice().sort(function(a, b) {
                 return (b.isDesignated ? 1 : 0) - (a.isDesignated ? 1 : 0);
             });
@@ -378,13 +377,14 @@ window.toggleSpeedVisibility = function(day) {
     window.db.collection("settings").doc("booking").update(obj).then(function() { addLog(day.toUpperCase() + " Speed Show: " + newStatus); });
 };
 
-/* [관리자 기능 정밀화] 이름 대신 고유 엔트리 ID를 기준으로 타겟 리스트 토글 */
+/* [완벽 수선 전격 도킹] 매개변수를 고유 id 모델로 완전하게 교정 완료 */
 window.toggleDesignateById = function(slotId, uniqueId) {
     if (!window.db) return;
     var ref = window.db.collection("slots").doc(slotId);
     ref.get().then(function(doc) {
         if (!doc.exists) return;
         var list = doc.data().attendees || [];
+        /*playerId 비교 연산자를 완벽하게 고유 일련번호(a.id) 매칭으로 교정했습니다!*/
         var target = list.find(function(a) { return String(a.id) === String(uniqueId); });
         if (!target) return;
         
@@ -404,7 +404,6 @@ window.toggleDesignateById = function(slotId, uniqueId) {
     });
 };
 
-/* [관리자 기능 정밀화] 동일인이 2번 이상 중복 예약했을 때 타겟 목록 '딱 1개만 고유 ID로 조준 삭제' */
 window.deleteAttendeeById = function(slotId, uniqueId) {
     if (!confirm("Delete?")) return;
     var ref = window.db.collection("slots").doc(slotId);
@@ -437,7 +436,6 @@ window.confirmBooking = function() {
     if(!a || !p || !idNum || !d || !pass) return alert("Fill all fields.");
     if(idNum.length !== 9) return alert("ID must be 9 digits.");
     
-    /* [구조 개편] 개별 독립 목록을 식별하기 위해 밀리초 단위 시간 타임스탬프와 플레이어 이름을 융합한 고유 고정 ID 모델 내장 */
     var entryId = "uid_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
     
     var newEntry = { 
@@ -454,7 +452,6 @@ window.confirmBooking = function() {
     window.db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(function() { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p, playerId: idNum, cancelKey: pass })); window.closeModal(); window.renderAll(); });
 };
 
-/* [일반 취소 기능 정밀화] 팝업 목록 내에서 '특정 클릭한 목록 1개'의 일련 고유 번호(id)를 추적하여 분리 삭제 연동 */
 window.confirmCancelSpecific = function(uniqueId) {
     var pass = document.getElementById("editCancelKey").value, m = localStorage.getItem(MY_BOOKING_KEY);
     if(!pass) return alert("Enter password.");
@@ -465,7 +462,6 @@ window.confirmCancelSpecific = function(uniqueId) {
         var target = list.find(function(a) { return String(a.id) === String(uniqueId); });
         
         if(!target) return alert("Reservation not found.");
-        /* 비밀번호 해시 검사 */
         if (target.passwordHash !== simpleHash(pass)) return alert("Wrong password.");
         
         var updatedList = list.filter(function(a) { return String(a.id) !== String(uniqueId); });
@@ -473,7 +469,6 @@ window.confirmCancelSpecific = function(uniqueId) {
     });
 };
 
-/* 하위 호환성 유지용 빈 껍데기 함수 우회 처리 */
 window.confirmCancel = function() { alert("Please click the specific Cancel button next to your registration."); };
 
 window.handleAdminAccess = function() { sc++; if(sc>=3) { sc=0; var p=prompt("Admin Pass:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); addLog("Admin Login"); } } };
@@ -522,7 +517,7 @@ function openReservedModal(id) {
     displayList.forEach(function(a) { 
         var d = document.createElement("div"); 
         d.className = a.isDesignated ? "miniItem is-designated" : "miniItem"; 
-        d.style.display = "flex"; d.style.justifyContent = "space-between"; d.style.alignItems = "center"; d.style.margin = "8px 0";
+        d.style.display = "flex"; d.style.justifyContent = "space-between"; d.style.alignItems = "center"; d.style.margin = "4px 0";
         
         var speedText = showSpeeds ? " (" + a.daysSaved + p.speedUnit + ")" : "";
         var crownPrefix = a.isDesignated ? "👑 " : "";
@@ -542,7 +537,6 @@ function openReservedModal(id) {
         var btnGroup = document.createElement("div");
         btnGroup.style.display = "flex"; btnGroup.style.gap = "4px"; btnGroup.style.marginLeft = "10px";
         
-        /* [일반 유저 취소 버튼 모델 개조] 예약 현황 목록 중 '본인의 이름과 매칭되는 열마다 개별 취소 단독 버튼' 생성 */
         if (!adminAuthenticated && normalizeText(a.player) === mineName) {
             var userDelBtn = document.createElement("button");
             userDelBtn.type = "button";
@@ -558,12 +552,11 @@ function openReservedModal(id) {
             var desBtn = document.createElement("button"); 
             desBtn.innerText = a.isDesignated ? "해제" : "지정";
             desBtn.className = "btn-primary"; desBtn.style.padding = "4px 8px"; desBtn.style.fontSize = "11px"; desBtn.style.flex = "none"; desBtn.style.width = "auto";
-            /* 이름 기준이 아닌 고유 개별 id 추적형 함수 호출 */
+            /* 이름이나 인덱스가 아닌 고유 모델 ID를 정확히 실어 나르도록 수정 완료 */
             desBtn.onclick = function() { window.toggleDesignateById(id, a.id); };
             
             var delBtn = document.createElement("button"); 
             delBtn.innerText = "삭제"; delBtn.className = "btn-danger"; delBtn.style.padding = "4px 8px"; delBtn.style.fontSize = "11px"; delBtn.style.flex = "none"; delBtn.style.width = "auto";
-            /* 이름 기준이 아닌 고유 개별 id 추적형 함수 호출 */
             delBtn.onclick = function() { window.deleteAttendeeById(id, a.id); };
             
             btnGroup.appendChild(desBtn); btnGroup.appendChild(delBtn); d.innerHTML = ""; d.appendChild(mainWrapper); d.appendChild(btnGroup); 
