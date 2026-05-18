@@ -16,9 +16,14 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 
 .profile-wrapper { position: relative; width: 400px; height: 190px; display: flex; justify-content: center; align-items: flex-end; }
 .curved-text-svg { position: absolute; top: -45px; width: 400px; height: 160px; pointer-events: none; }
-/* [데스크톱 수정] top 값을 -45px에서 -25px로 변경하여 텍스트를 그림에 더 가깝게 붙이고 윗부분 잘림 현상 해결 */
-.curved-text-svg { position: absolute; top: -25px; width: 400px; height: 160px; pointer-events: none; }
-.curved-text-svg text { font-size: 14.5px; font-weight: 900; fill: #d6b347; letter-spacing: 0.1px; }
+.curved-text-svg text { 
+    font-size: 14.5px; 
+    font-weight: 900; 
+    fill: #d6b347; 
+    letter-spacing: 0.1px; 
+    /* [데스크톱 수정] dy 속성을 사용하여 텍스트를 곡선에서 위로 5px 띄워 잘림 현상 완벽 해결 */
+    dy: -5px; 
+}
 .creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); object-fit: cover; cursor: pointer; transition: transform 0.3s ease; z-index: 2; }
 .creatorAvatar:hover { transform: scale(1.1); }
 .creatorCredit { font-size: 16px; font-weight: 800; color: #4b5563; margin-top: 10px; }
@@ -139,12 +144,10 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
     .btn-reset { padding: 8px 12px; font-size: 12px; flex: 0.8; white-space: nowrap; }
     
     .confirmedSection { position: static !important; width: 95% !important; margin: 15px auto !important; }
-    /* [모바일 수정] 전체 컨테이너를 도구 모음(언어/필터) 아래로 더 밀어내기 위해 margin-top 늘림 */
-    .creatorBadge { margin-top: 45px; } 
+    .creatorBadge { margin-top: 25px; } 
     .profile-wrapper { width: 320px; height: 160px; }
-    .curved-text-svg { width: 320px; height: 130px; top: -35px; }
-    /* [모바일 수정] curved-text-svg의 top 값을 -35px에서 -15px로 변경하여 텍스트를 그림에 더 가깝게 붙이고 가독성 확보 */
-    .curved-text-svg { width: 320px; height: 130px; top: -15px; }
+    /* [모바일 수선 완료] top 값을 -35px에서 -20px로 변경하여 데스크톱과 동일하게 잘림 현상 해결 */
+    .curved-text-svg { width: 320px; height: 130px; top: -20px; }
     .creatorAvatar { width: 130px; height: 130px; }
     .tabs { flex-direction: column; }
 }
