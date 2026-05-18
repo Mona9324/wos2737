@@ -23,7 +23,7 @@ var langPack = {
         confirmedHeader: "👑 내 확정 버프 시간",
         addAlarm: "🔔 알람 등록",
         mon: "월요일 (건설)", tue: "화요일 (연구)", thu: "목요일 (훈련)",
-        monShort: "월요일", tueShort: "화요일", thuShort: "목요일",
+        mondayShort: "월요일", tuesdayShort: "화요일", thursdayShort: "목요일",
         optAll: "전체 / All", optMine: "내 예약 / Mine",
         openAvailable: "✅ 예약 가능", openClosed: "🔒 예약 마감",
         pers: "명", noRes: "No Reservation / 예약 없음",
@@ -38,7 +38,7 @@ var langPack = {
         confirmedHeader: "👑 My Confirmed Buffs",
         addAlarm: "🔔 Add Alarm",
         mon: "Monday (Construction)", tue: "Tuesday (Research)", thu: "Thursday (Troops Training)",
-        monShort: "Monday", tueShort: "Tuesday", thuShort: "Thursday",
+        mondayShort: "Monday", tuesdayShort: "Tuesday", thursdayShort: "Thursday",
         optAll: "All", optMine: "My Booking",
         openAvailable: "✅ Booking Open", openClosed: "🔒 Booking Closed",
         pers: "Pers.", noRes: "No Reservation",
@@ -53,7 +53,7 @@ var langPack = {
         confirmedHeader: "👑 我的确定的增益时间",
         addAlarm: "🔔 添加提醒",
         mon: "星期一 (建筑)", tue: "星期二 (研究)", thu: "星期四 (训练)",
-        monShort: "星期一", tueShort: "星期二", thuShort: "星期四",
+        mondayShort: "星期一", tuesdayShort: "星期二", thursdayShort: "星期四",
         optAll: "全部", optMine: "我的预约",
         openAvailable: "✅ 开放预约", openClosed: "🔒 预约截止",
         pers: "人", noRes: "暂无预约",
@@ -68,7 +68,7 @@ var langPack = {
         confirmedHeader: "👑 Mes Buffs Confirmés",
         addAlarm: "🔔 Alarme",
         mon: "Lundi (Construction)", tue: "Mardi (Recherche)", thu: "Jeudi (Entraînement)",
-        monShort: "Lundi", tueShort: "Mardi", thuShort: "Jeudi",
+        mondayShort: "Lundi", tuesdayShort: "Mardi", thursdayShort: "Jeudi",
         optAll: "Tout", optMine: "Mes Réservations",
         openAvailable: "✅ Réservation Ouverte", openClosed: "🔒 Réservation Fermée",
         pers: "Pers.", noRes: "Aucune Réservation",
@@ -83,7 +83,7 @@ var langPack = {
         confirmedHeader: "👑 確定した大統領バフ時間",
         addAlarm: "🔔 アラーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
-        monShort: "月曜日", tueShort: "火曜日", thuShort: "木曜日",
+        mondayShort: "月曜日", tuesdayShort: "火曜日", thursdayShort: "木曜日",
         optAll: "すべて", optMine: "自分の予約",
         openAvailable: "✅ 予約受付中", openClosed: "🔒 予約終了",
         pers: "人", noRes: "予約なし",
@@ -98,7 +98,7 @@ var langPack = {
         confirmedHeader: "👑 Buff Saya yang Dikonfirmasi",
         addAlarm: "🔔 Pasang Alarm",
         mon: "Senin (Konstruksi)", tue: "Selasa (Riset)", thu: "Kamis (Pelatihan)",
-        monShort: "Senin", tueShort: "Selasa", thuShort: "Kamis",
+        mondayShort: "Senin", tuesdayShort: "Selasa", thursdayShort: "Kamis",
         optAll: "Semua", optMine: "Pesanan Saya",
         openAvailable: "✅ Pendaftaran Buka", openClosed: "🔒 Pendaftaran Tutup",
         pers: "Orang", noRes: "Belum Ada Pesanan",
@@ -220,6 +220,7 @@ function updateMyConfirmedSummary() {
         var card = document.createElement("div");
         card.className = "confirmedCard";
         
+        /* [버프 완벽 처리] 풀 네임 요일 키로 보정하여 undefined 노출 버그 완벽 차단 */
         var dayTxt = p[track.day + "Short"];
         var displayTime = dayTxt + " " + track.time + " UTC";
         
