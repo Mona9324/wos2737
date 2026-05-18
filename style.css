@@ -8,7 +8,9 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .countdown { font-size: 14px; font-weight: 800; color: #d34b4b; background: rgba(255, 255, 255, 0.7); display: inline-block; padding: 4px 12px; border-radius: 12px; border: 1px solid #fed7d7; }
 
 .headerToolbar { display: flex; align-items: center; gap: 8px; }
-#langSelect { padding: 10px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; font-weight: bold; outline: none; cursor: pointer; color: #4b5563; }
+
+/* [크기 완전 박제] 프랑스어 최적 기준인 115px로 고정하여 언어 변경 시 밀림 현상 완벽 차단 */
+#langSelect { width: 115px !important; max-width: 115px !important; min-width: 115px !important; padding: 10px 5px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; font-weight: bold; outline: none; cursor: pointer; color: #4b5563; box-sizing: border-box; }
 #filterStatus { padding: 10px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; }
 .btn-reset { padding: 10px 15px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-weight: bold; }
 
@@ -16,8 +18,8 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 
 .profile-wrapper { position: relative; width: 400px; height: 190px; display: flex; justify-content: center; align-items: flex-end; }
 
-/* [데스크톱 패치] top 좌표를 기존 -35px에서 -60px로 과감하게 당겨 올려 공룡 테두리와 완전히 분리성 확보 */
-.curved-text-svg { position: absolute; top: -60px; width: 400px; height: 160px; pointer-events: none; overflow: visible !important; }
+/* [고공 공중부양 완료] top 좌표를 -55px로 끌어올려 공룡 골드 테두리 위 허공에 완벽하게 안착 */
+.curved-text-svg { position: absolute; top: -55px; width: 400px; height: 160px; pointer-events: none; overflow: visible !important; }
 .curved-text-svg text { font-size: 14.5px; font-weight: 900; fill: #d6b347; letter-spacing: 0.1px; }
 .creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); object-fit: cover; cursor: pointer; transition: transform 0.3s ease; z-index: 2; }
 .creatorAvatar:hover { transform: scale(1.1); }
@@ -50,10 +52,12 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .btn-cal:hover { background: #c5cae9; }
 
 .tabs { display: flex; justify-content: center; gap: 10px; max-width: 1200px; margin: 0 auto 15px; padding: 0 10px; }
-.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 5px; border-radius: 12px; background: #d8f2ff; color: #2d5468; cursor: pointer; transition: 0.2s; min-height: 65px; box-shadow: 0 3px 0px rgba(0, 0, 0, 0.05); }
+
+/* [볼륨 다이어트] min-height를 46px로 획기적으로 낮추고 내부 세로 마진을 깎아 컴팩트화 연동 */
+.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 5px; border-radius: 12px; background: #d8f2ff; color: #2d5468; cursor: pointer; transition: 0.2s; min-height: 46px; box-shadow: 0 3px 0px rgba(0, 0, 0, 0.05); }
 .tab-item.active { background: #a2d2ff !important; color: #1a365d !important; transform: translateY(2px); box-shadow: none; }
-.tabTitle { font-size: 13.5px; font-weight: 800; }
-.tabCD { font-size: 11.5px; font-weight: 700; margin-top: 4px; color: #d34b4b; }
+.tabTitle { font-size: 13px; font-weight: 800; }
+.tabCD { font-size: 11px; font-weight: 700; margin-top: 2px; color: #d34b4b; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; padding: 20px; max-width: 1300px; margin: 0 auto; }
 .slot { background: #fffef5; border-radius: 16px; padding: 18px; text-align: left; cursor: pointer; min-height: 140px; border: 2.5px solid #f2e3b6; position: relative; transition: 0.2s; }
@@ -134,14 +138,15 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
     .headerToolbar { width: 100%; display: flex !important; flex-direction: row !important; justify-content: center; align-items: center; gap: 6px; margin-bottom: 5px; box-sizing: border-box; }
     .filterGroup { display: flex !important; flex-direction: row !important; gap: 6px; flex: 2; }
     
-    #langSelect { flex: 1.1; width: auto; padding: 8px 4px; font-size: 12px; min-width: 0; }
+    /* 모바일에서도 고정 비율 유지하되 유연하게 분할 */
+    #langSelect { flex: 1.1; width: auto !important; max-width: none !important; min-width: 0 !important; padding: 8px 4px; font-size: 12px; }
     #filterStatus { flex: 1.1; width: auto; padding: 8px 4px; font-size: 12px; min-width: 0; }
     .btn-reset { padding: 8px 12px; font-size: 12px; flex: 0.8; white-space: nowrap; }
     
     .confirmedSection { position: static !important; width: 95% !important; margin: 15px auto !important; }
     .creatorBadge { margin-top: 25px; } 
     .profile-wrapper { width: 320px; height: 160px; }
-    /* [모바일 패치] top 마진을 -45px로 깔끔하게 당겨 올려 모바일에서도 공룡 선 위에 한 치의 겹침도 없이 공중 배치 */
+    /* 모바일 환경에서도 비례해서 공중 위로 정밀 분리 정렬 */
     .curved-text-svg { width: 320px; height: 130px; top: -45px; overflow: visible !important; }
     .creatorAvatar { width: 130px; height: 130px; }
     .tabs { flex-direction: column; }
