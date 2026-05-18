@@ -19,8 +19,8 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1300px; marg
 .creatorBadge { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 10px; width: 100%; position: relative !important; }
 .profile-wrapper { position: relative; width: 400px; height: 190px; display: flex; justify-content: center; align-items: flex-end; }
 
-/* [고공 공중부양] top 수치를 -65px로 확실하게 당겨 올려 공룡 골드 링 테두리와 완벽하게 격리 노출 */
-.curved-text-svg { position: absolute; top: -65px; width: 400px; height: 160px; pointer-events: none; overflow: visible !important; }
+/* [고공 공중부양] top 수치를 -55px로 확실하게 당겨 올려 공룡 골드 링 테두리와 완벽하게 격리 노출 */
+.curved-text-svg { position: absolute; top: -55px; width: 400px; height: 160px; pointer-events: none; overflow: visible !important; }
 .curved-text-svg text { font-size: 14.5px; font-weight: 900; fill: #d6b347; letter-spacing: 0.1px; }
 .creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); object-fit: cover; cursor: pointer; transition: transform 0.3s ease; z-index: 2; }
 .creatorAvatar:hover { transform: scale(1.1); }
