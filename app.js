@@ -26,6 +26,93 @@ function isMyReservation(person) {
     return normalizeText(person.player) === normalizeText(mine.player); 
 }
 
+/* [신설] 장관 확정 요약 구역의 캘린더 연동 알람 링크 자동 가공 함수 */
+function getGoogleCalendarUrl(dayName, timeStr) {
+    var parts = timeStr.split(":");
+    var hour = parseInt(parts[0], 10);
+    var min = parseInt(parts[1], 10);
+    var daysMap = { monday: 1, tuesday: 2, thursday: 4 };
+    var targetDay = daysMap[dayName];
+    
+    var now = new Date();
+    var targetDate = new Date();
+    var currentDay = now.getDay();
+    var distance = targetDay - currentDay;
+    if (distance <= 0) distance += 7;
+    
+    targetDate.setDate(now.getDate() + distance);
+    targetDate.setUTCHours(hour, min, 0, 0);
+    var endDate = new Date(targetDate.getTime() + 30 * 60 * 1000);
+    
+    var formatTime = function(d) {
+        return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    };
+    
+    var title = encodeURIComponent("👑 [2737 SVS] 장관 버프 타임 / SVS Buff");
+    var details = encodeURIComponent("장관 버프 시간입니다! 늦지 않게 접속하셔서 가속을 사용해 주세요! / Minister Buff Time");
+    var dates = formatTime(targetDate) + "/" + formatTime(endDate);
+    
+    return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + title + "&dates=" + dates + "&details=" + details;
+}
+
+/* [신설] 실시간 데이터 기반 내 확정 요약 배너 자동 드로잉 함수 */
+function updateMyConfirmedSummary() {
+    var el = document.getElementById("myConfirmedSection");
+    var listEl = document.getElementById("confirmedList");
+    if (!el || !listEl) return;
+    
+    var m = localStorage.getItem(MY_BOOKING_KEY);
+    if (!m) { el.style.display = "none"; return; }
+    var mine = JSON.parse(m);
+    var myName = normalizeText(mine.player);
+    
+    var confirmedTracks = [];
+    Object.keys(allSlotsData).forEach(function(slotId) {
+        var slot = allSlotsData[slotId];
+        if (slot && slot.attendees) {
+            slot.attendees.forEach(function(a) {
+                if (normalizeText(a.player) === myName && a.isDesignated) {
+                    var parts = slotId.split("_");
+                    confirmedTracks.push({ day: parts[0], time: parts[1], slotId: slotId });
+                }
+            });
+        }
+    });
+    
+    if (confirmedTracks.length === 0) {
+        el.style.display = "none";
+        return;
+    }
+    
+    listEl.innerHTML = "";
+    confirmedTracks.forEach(function(track) {
+        var card = document.createElement("div");
+        card.className = "confirmedCard";
+        
+        var dayKo = { monday: "월요일(건설)", tuesday: "화요일(연구)", thursday: "목요일(훈련)" }[track.day];
+        var displayTime = dayKo + " " + track.time + " UTC";
+        
+        var timeSpan = document.createElement("span");
+        timeSpan.className = "confirmedTime";
+        timeSpan.innerText = displayTime;
+        
+        var calBtn = document.createElement("button");
+        calBtn.type = "button";
+        calBtn.className = "btn-cal";
+        calBtn.innerText = "🔔 알람 등록";
+        calBtn.onclick = function() {
+            var url = getGoogleCalendarUrl(track.day, track.time);
+            window.open(url, "_blank");
+        };
+        
+        card.appendChild(timeSpan);
+        card.appendChild(calBtn);
+        listEl.appendChild(card);
+    });
+    
+    el.style.display = "block";
+}
+
 function init() {
     window.renderAll();
     if(!window.db) { setTimeout(init, 200); return; }
@@ -102,6 +189,8 @@ window.renderAll = function() {
             grid.appendChild(div);
         }
     }
+    /* 렌더링 주기에 맞춰 확정 목록 상시 실시간 업데이트 연동 */
+    updateMyConfirmedSummary();
 };
 
 window.toggleTabStatus = function(day) {
