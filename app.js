@@ -18,7 +18,8 @@ var sc = 0;
 
 var langPack = {
     ko: {
-        notice: "📢 가능한 모든 시간을 중복으로 신청해주세요.",
+        /* [공지 업그레이드] 한국어 모드일 때만 외국인을 위한 안내가 2줄로 나오도록 세팅 완료 */
+        notice: "📢 가능한 모든 시간을 중복으로 신청해주세요.\nYou can change the language using the blue menu at the top.",
         curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1",
         confirmedHeader: "👑 내 확정 버프 시간",
         addAlarm: "🔔 알람 등록",
@@ -63,7 +64,7 @@ var langPack = {
         pAlliance: "联盟 (ZTP, BUG, ZYZ 等)", pNickname: "游戏昵称", pId: "玩家ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消的密码 (任意)"
     },
     fr: {
-        notice: "📢 Veuillez réserver tous les créneaux horaires disponibles auxquels vous pouvez participer.",
+        notice: "📢 Veuillez réserver tous les créनेaux horaires disponibles auxquels vous pouvez participer.",
         curvedTxt: "Frais d'utilisation du site : L'île de Mona 💚+1",
         confirmedHeader: "👑 Mes Buffs Confirmés",
         addAlarm: "🔔 Alarme",
@@ -79,7 +80,7 @@ var langPack = {
     },
     ja: {
         notice: "📢 参加可能なすべての時間帯を重複して申請してください。",
-        curvedTxt: "予約サイトの利用料は Monaの島 💚+1",
+        curvedTxt: "予約サイトの利用料는 Monaの島 💚+1",
         confirmedHeader: "👑 確定した大統領バフ時間",
         addAlarm: "🔔 アラーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
@@ -122,7 +123,10 @@ function applyLanguagePack() {
     if (langSelectEl) langSelectEl.value = currentLang;
     
     var noticeEl = document.getElementById("notice-dynamic-txt");
-    if (noticeEl) noticeEl.innerText = p.notice;
+    if (noticeEl) {
+        /* white-space: pre-line 스타일을 따르도록 줄바꿈 연동 우회 */
+        noticeEl.innerText = p.notice;
+    }
     
     var curvedEl = document.getElementById("curved-profile-txt");
     if (curvedEl) curvedEl.textContent = p.curvedTxt;
@@ -320,7 +324,6 @@ window.renderAll = function() {
     var tabItemEl = document.getElementById("tab-" + currentBuff);
     document.querySelectorAll(".tab-item").forEach(function(item) { item.classList.toggle("active", item.id === "tab-" + currentBuff); });
     
-    /* [긴급 예외 수선] 서버 지연으로 비동기 데이터 꼬여서 Null 크래시 나던 구간 완벽 방어 처리 */
     var showSpeeds = false;
     if (bookingSettings && bookingSettings.tabs && bookingSettings.tabs[currentBuff]) {
         showSpeeds = bookingSettings.tabs[currentBuff].showSpeeds || false;
