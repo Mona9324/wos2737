@@ -125,15 +125,20 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .admin-tab-btn.on-speed { background: #c8e6c9 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
 .logsBox { background: #1a202c; color: #68d391; padding: 12px; border-radius: 12px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; margin: 15px 0; }
 
+/* [스마트폰 대통합 가로배치] 국적 셀렉터와 필터 드롭다운 및 리셋버튼을 깔끔하게 단 한 줄로 강제 결합 */
 @media (max-width: 600px) {
-    .headerTop { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+    .headerTop { flex-direction: column; align-items: center; gap: 12px; text-align: center; }
     .titleArea { text-align: center; width: 100%; }
-    .headerToolbar { width: 100%; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-    #langSelect { width: 100%; }
-    #filterStatus { flex: 1; min-width: 100px; }
-    .btn-reset { flex: 0 0 auto; }
+    
+    .headerToolbar { width: 100%; display: flex !important; flex-direction: row !important; justify-content: center; align-items: center; gap: 6px; margin-bottom: 5px; box-sizing: border-box; }
+    .filterGroup { display: flex !important; flex-direction: row !important; gap: 6px; flex: 2; }
+    
+    #langSelect { flex: 1.1; width: auto; padding: 8px 4px; font-size: 12px; min-width: 0; }
+    #filterStatus { flex: 1.1; width: auto; padding: 8px 4px; font-size: 12px; min-width: 0; }
+    .btn-reset { padding: 8px 12px; font-size: 12px; flex: 0.8; white-space: nowrap; }
+    
     .confirmedSection { position: static !important; width: 95% !important; margin: 15px auto !important; }
-    .creatorBadge { margin-top: 45px; } 
+    .creatorBadge { margin-top: 25px; } 
     .profile-wrapper { width: 320px; height: 160px; }
     .curved-text-svg { width: 320px; height: 130px; top: -35px; }
     .creatorAvatar { width: 130px; height: 130px; }
