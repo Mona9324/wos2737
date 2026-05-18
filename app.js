@@ -56,7 +56,7 @@ var langPack = {
         mondayShort: "星期一", tuesdayShort: "星期二", thursdayShort: "星期四",
         optAll: "全部", optMine: "我的预约",
         openAvailable: "✅ 开放预约", openClosed: "🔒 预约截止",
-        pers: "放人", noRes: "暂无预约",
+        pers: "人", noRes: "暂无预约",
         addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭",
         statusTitle: "预约状态", cancelLabel: "取消密码", cancelBtn: "取消预约", addBookingBtn: "添加预约",
         closedAlert: "预约已截止。", speedUnit: "天",
@@ -118,35 +118,58 @@ window.changeLanguage = function(lang) {
 
 function applyLanguagePack() {
     var p = langPack[currentLang];
-    document.getElementById("langSelect").value = currentLang;
-    document.getElementById("notice-dynamic-txt").innerText = p.notice;
+    var langSelectEl = document.getElementById("langSelect");
+    if (langSelectEl) langSelectEl.value = currentLang;
     
-    /* [완벽 세팅] 일반 텍스트가 아닌 SVG 전용 명형어 textContent 사양으로 교환 완료 */
-    document.getElementById("curved-profile-txt").textContent = p.curvedTxt;
+    var noticeEl = document.getElementById("notice-dynamic-txt");
+    if (noticeEl) noticeEl.innerText = p.notice;
     
-    document.getElementById("confirmed-header-txt").innerText = p.confirmedHeader;
-    document.getElementById("tab-mon-txt").innerText = p.mon;
-    document.getElementById("tab-tue-txt").innerText = p.tue;
-    document.getElementById("tab-thu-txt").innerText = p.thu;
+    var curvedEl = document.getElementById("curved-profile-txt");
+    if (curvedEl) curvedEl.textContent = p.curvedTxt;
     
-    document.getElementById("opt-all").innerText = p.optAll;
-    document.getElementById("opt-mine").innerText = p.optMine;
+    var confHeaderEl = document.getElementById("confirmed-header-txt");
+    if (confHeaderEl) confHeaderEl.innerText = p.confirmedHeader;
     
-    document.getElementById("modal-title-txt").innerText = p.addTitle;
-    document.getElementById("btn-confirm-txt").innerText = p.confirmBtn;
-    document.getElementById("btn-close-txt").innerText = p.closeBtn;
+    var tabMonEl = document.getElementById("tab-mon-txt");
+    if (tabMonEl) tabMonEl.innerText = p.mon;
+    var tabTueEl = document.getElementById("tab-tue-txt");
+    if (tabTueEl) tabTueEl.innerText = p.tue;
+    var tabThuEl = document.getElementById("tab-thu-txt");
+    if (tabThuEl) tabThuEl.innerText = p.thu;
     
-    document.getElementById("alliance").placeholder = p.pAlliance;
-    document.getElementById("player").placeholder = p.pNickname;
-    document.getElementById("playerId").placeholder = p.pId;
-    document.getElementById("daysSaved").placeholder = p.pSpeed;
-    document.getElementById("cancelKey").placeholder = p.pPass;
+    var optAllEl = document.getElementById("opt-all");
+    if (optAllEl) optAllEl.innerText = p.optAll;
+    var optMineEl = document.getElementById("opt-mine");
+    if (optMineEl) optMineEl.innerText = p.optMine;
+    
+    var modalTitleEl = document.getElementById("modal-title-txt");
+    if (modalTitleEl) modalTitleEl.innerText = p.addTitle;
+    var btnConfirmEl = document.getElementById("btn-confirm-txt");
+    if (btnConfirmEl) btnConfirmEl.innerText = p.confirmBtn;
+    var btnCloseEl = document.getElementById("btn-close-txt");
+    if (btnCloseEl) btnCloseEl.innerText = p.closeBtn;
+    
+    var allianceEl = document.getElementById("alliance");
+    if (allianceEl) allianceEl.placeholder = p.pAlliance;
+    var playerEl = document.getElementById("player");
+    if (playerEl) playerEl.placeholder = p.pNickname;
+    var playerIdEl = document.getElementById("playerId");
+    if (playerIdEl) playerIdEl.placeholder = p.pId;
+    var daysSavedEl = document.getElementById("daysSaved");
+    if (daysSavedEl) daysSavedEl.placeholder = p.pSpeed;
+    var cancelKeyEl = document.getElementById("cancelKey");
+    if (cancelKeyEl) cancelKeyEl.placeholder = p.pPass;
 
-    document.getElementById("res-title-txt").innerText = p.statusTitle;
-    document.getElementById("cancel-label-txt").innerText = p.cancelLabel;
-    document.getElementById("btn-cancel-txt").innerText = p.cancelBtn;
-    document.getElementById("btn-add-txt").innerText = p.addBookingBtn;
-    document.getElementById("btn-res-close-txt").innerText = p.closeBtn;
+    var resTitleEl = document.getElementById("res-title-txt");
+    if (resTitleEl) resTitleEl.innerText = p.statusTitle;
+    var cancelLabelEl = document.getElementById("cancel-label-txt");
+    if (cancelLabelEl) cancelLabelEl.innerText = p.cancelLabel;
+    var btnCancelEl = document.getElementById("btn-cancel-txt");
+    if (btnCancelEl) btnCancelEl.innerText = p.cancelBtn;
+    var btnAddEl = document.getElementById("btn-add-txt");
+    if (btnAddEl) btnAddEl.innerText = p.addBookingBtn;
+    var btnResCloseEl = document.getElementById("btn-res-close-txt");
+    if (btnResCloseEl) btnResCloseEl.innerText = p.closeBtn;
 }
 
 function padTime(h, m) { if (m >= 60) { h += Math.floor(m / 60); m = m % 60; } h = h % 24; return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0"); }
@@ -270,9 +293,11 @@ function formatDiff(ms) {
 }
 
 function updateTabCountdowns() {
+    if (!bookingSettings || !bookingSettings.tabs) return;
     var now = new Date(), gOpenStr = bookingSettings.globalOpenTime, gOpen = gOpenStr ? new Date(gOpenStr) : null;
     ['monday', 'tuesday', 'thursday'].forEach(function(day) {
         var s = bookingSettings.tabs[day], cdEl = document.getElementById("cd-" + day); if (!cdEl) return;
+        if (!s) return;
         if (gOpen && !isNaN(gOpen) && now < gOpen) cdEl.innerText = "Open in: " + formatDiff(gOpen - now);
         else if (s.closeTime && !isNaN(new Date(s.closeTime))) {
             var cDate = new Date(s.closeTime); if (now <= cDate) cdEl.innerText = "Close in: " + formatDiff(cDate - now); else cdEl.innerText = "Closed";
@@ -281,7 +306,7 @@ function updateTabCountdowns() {
 }
 
 function isTabActuallyOpen(day) {
-    if (!bookingSettings.tabs || !bookingSettings.tabs[day]) return false;
+    if (!bookingSettings || !bookingSettings.tabs || !bookingSettings.tabs[day]) return false;
     var s = bookingSettings.tabs[day], now = new Date();
     if (!s.isOpen) return false; 
     if (bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime)) return false;
@@ -290,10 +315,18 @@ function isTabActuallyOpen(day) {
 
 window.renderAll = function() {
     var grid = document.getElementById("slots"); if (!grid) return; grid.innerHTML = "";
-    var isOpen = isTabActuallyOpen(currentBuff), filter = document.getElementById("filterStatus").value;
+    var isOpen = isTabActuallyOpen(currentBuff), filter = document.getElementById("filterStatus") ? document.getElementById("filterStatus").value : "all";
+    
+    var tabItemEl = document.getElementById("tab-" + currentBuff);
     document.querySelectorAll(".tab-item").forEach(function(item) { item.classList.toggle("active", item.id === "tab-" + currentBuff); });
     
-    var showSpeeds = (bookingSettings.tabs[currentBuff] && bookingSettings.tabs[currentBuff].showSpeeds) || adminAuthenticated;
+    /* [긴급 예외 수선] 서버 지연으로 비동기 데이터 꼬여서 Null 크래시 나던 구간 완벽 방어 처리 */
+    var showSpeeds = false;
+    if (bookingSettings && bookingSettings.tabs && bookingSettings.tabs[currentBuff]) {
+        showSpeeds = bookingSettings.tabs[currentBuff].showSpeeds || false;
+    }
+    if (adminAuthenticated) showSpeeds = true;
+    
     var p = langPack[currentLang];
     var badgeDay = currentBuff.toUpperCase().slice(0,3);
 
@@ -422,20 +455,21 @@ window.saveAdminBaseDate = function() { if(!window.db) return; var val = documen
 window.backupAndClearAll = function() { if(!window.db || !confirm("Clear all data?")) return; window.db.collection("slots").get().then(snap => { var batch = window.db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit().then(() => { window.closeAdmin(); }); }); };
 
 function updateAdminUI() { 
+    if (!bookingSettings || !bookingSettings.tabs) return;
     ['monday', 'tuesday', 'thursday'].forEach(function(day) { 
-        var btn = document.getElementById("btn-admin-" + day); if (btn) { btn.classList.toggle("on", !!bookingSettings.tabs[day].isOpen); } 
-        var sBtn = document.getElementById("btn-speed-" + day); if (sBtn) { sBtn.classList.toggle("on-speed", !!bookingSettings.tabs[day].showSpeeds); }
+        var btn = document.getElementById("btn-admin-" + day); if (btn && bookingSettings.tabs[day]) { btn.classList.toggle("on", !!bookingSettings.tabs[day].isOpen); } 
+        var sBtn = document.getElementById("btn-speed-" + day); if (sBtn && bookingSettings.tabs[day]) { sBtn.classList.toggle("on-speed", !!bookingSettings.tabs[day].showSpeeds); }
     }); 
 }
 function updateStatusMessage() { var el = document.getElementById("bookingStatusMsg"); var p = langPack[currentLang]; if(el) el.innerText = isTabActuallyOpen(currentBuff) ? p.openAvailable : p.openClosed; }
 function addLog(msg) { var box = document.getElementById('logsBox'); if (box) { var log = document.createElement('div'); log.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg; box.prepend(log); } }
-function updateCountdown() { var diff = new Date(bookingSettings.baseDate) - new Date(); while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000; var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000); if(document.getElementById("countdown")) document.getElementById("countdown").innerText = "Next SVS in " + d + "d " + h + "h " + m + "m " + s + "s"; }
+function updateCountdown() { if (!bookingSettings || !bookingSettings.baseDate) return; var diff = new Date(bookingSettings.baseDate) - new Date(); while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000; var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000); if(document.getElementById("countdown")) document.getElementById("countdown").innerText = "Next SVS in " + d + "d " + h + "h " + m + "m " + s + "s"; }
 window.switchBuff = function(b) { currentBuff = b; updateStatusMessage(); window.renderAll(); };
 window.clearSearch = function() { window.renderAll(); };
 window.closeModal = function() { document.getElementById("modal").classList.remove("show"); };
 window.closeReservedModal = function() { document.getElementById("reservedModal").classList.remove("show"); };
 window.closeAdmin = function() { document.getElementById("adminPanel").classList.remove("show"); };
-function fillAdminInputs() { document.getElementById("adminBaseDate").value = bookingSettings.baseDate.slice(0, 16); document.getElementById("global-open-time").value = bookingSettings.globalOpenTime || ""; ['monday', 'tuesday', 'thursday'].forEach(function(day) { if(bookingSettings.tabs[day].closeTime) document.getElementById("close-" + day).value = bookingSettings.tabs[day].closeTime; }); }
+function fillAdminInputs() { if (!bookingSettings || !bookingSettings.baseDate) return; document.getElementById("adminBaseDate").value = bookingSettings.baseDate.slice(0, 16); document.getElementById("global-open-time").value = bookingSettings.globalOpenTime || ""; ['monday', 'tuesday', 'thursday'].forEach(function(day) { if(bookingSettings.tabs && bookingSettings.tabs[day] && bookingSettings.tabs[day].closeTime) document.getElementById("close-" + day).value = bookingSettings.tabs[day].closeTime; }); }
 window.openReserveFromStatus = function() { if(!isTabActuallyOpen(currentBuff) && !adminAuthenticated) return; window.closeReservedModal(); window.openReserveModal(); };
 
 window.openReserveModal = function() { var m = localStorage.getItem(MY_BOOKING_KEY); if(m) { var mine = JSON.parse(m); document.getElementById("alliance").value = mine.alliance || ""; document.getElementById("player").value = mine.player || ""; document.getElementById("playerId").value = mine.playerId || ""; document.getElementById("cancelKey").value = mine.cancelKey || ""; } document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; document.getElementById("modal").classList.add("show"); };
@@ -443,7 +477,13 @@ window.openReserveModal = function() { var m = localStorage.getItem(MY_BOOKING_K
 function openReservedModal(id) { 
     document.getElementById("reservedSlotInfo").innerText = id.replace('_', ' ') + " UTC"; 
     var list = document.getElementById("attendeeListDetail"); list.innerHTML = ""; 
-    var showSpeeds = (bookingSettings.tabs[currentBuff] && bookingSettings.tabs[currentBuff].showSpeeds) || adminAuthenticated;
+    
+    var showSpeeds = false;
+    if (bookingSettings && bookingSettings.tabs && bookingSettings.tabs[currentBuff]) {
+        showSpeeds = bookingSettings.tabs[currentBuff].showSpeeds || false;
+    }
+    if (adminAuthenticated) showSpeeds = true;
+    
     var p = langPack[currentLang];
     
     var displayList = ((allSlotsData[id] || {}).attendees || []).slice().sort(function(a, b) {
