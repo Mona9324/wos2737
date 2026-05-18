@@ -24,7 +24,6 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .ministerNotice { background: #ffffff; border-left: 6px solid #ffe066; padding: 15px; border-radius: 12px; margin: 15px auto; max-width: 1200px; width: 95%; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06); text-align: center; word-break: keep-all; }
 .notice-ko { font-size: 14px; font-weight: 900; color: #2d3748; margin-bottom: 4px; }
 
-/* [디자인 극대화] 우측 끝선이 상단 다국어/Reset 그룹 끝 모서리와 한치의 틀어짐도 없이 완벽 도킹 수직 정렬 고정 */
 .confirmedSection { 
     background: #fefcbf; 
     border: 2px solid #fbd38d; 
@@ -138,6 +137,5 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
     .profile-wrapper { width: 320px; height: 160px; }
     .curved-text-svg { width: 320px; height: 130px; top: -35px; }
     .creatorAvatar { width: 130px; height: 130px; }
-    .ministerNotice { padding: 12px; width: 90%; }
     .tabs { flex-direction: column; }
 }
