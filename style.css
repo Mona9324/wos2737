@@ -12,7 +12,6 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 #filterStatus { padding: 10px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; }
 .btn-reset { padding: 10px 15px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-weight: bold; }
 
-/* 프로필이 무조건 화면 정중앙에 고정되도록 기준을 잡아주는 상대 좌표 부모 정의 */
 .creatorBadge { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 10px; width: 100%; position: relative !important; }
 
 .profile-wrapper { position: relative; width: 400px; height: 190px; display: flex; justify-content: center; align-items: flex-end; }
@@ -26,7 +25,6 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .notice-ko { font-size: 14px; font-weight: 900; color: #2d3748; margin-bottom: 4px; }
 .notice-en { font-size: 12px; font-weight: 700; color: #718096; }
 
-/* [대조 스크린샷 최적화] 프로필 정중앙 배열을 방해하지 않고 우측 노란색 여백 영역으로 강제 배치 */
 .confirmedSection { 
     background: #f3e5f5; 
     border: 2px solid #ce93d8; 
@@ -37,7 +35,7 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
     box-sizing: border-box; 
     width: 350px; 
     position: absolute !important;
-    right: 20px !important;
+    right: 0 !important;
     top: 5px !important;
     z-index: 50;
 }
@@ -131,10 +129,7 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
     #searchInput { flex: 1; min-width: 120px; width: auto; }
     #filterStatus { flex: 1; min-width: 100px; }
     .btn-reset { flex: 0 0 auto; }
-    
-    /* 모바일에서는 원래대로 아래쪽으로 흐르도록 처리 */
     .confirmedSection { position: static !important; width: 95% !important; margin: 15px auto !important; }
-    
     .creatorBadge { margin-top: 45px; } 
     .profile-wrapper { width: 320px; height: 160px; }
     .curved-text-svg { width: 320px; height: 130px; top: -35px; }
