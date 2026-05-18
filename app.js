@@ -19,6 +19,13 @@ function formatLocalTime(date) { return date.toLocaleTimeString([], { hour: '2-d
 function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
 function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return "h_" + Math.abs(hash); }
 
+function isMyReservation(person) { 
+    var m = localStorage.getItem(MY_BOOKING_KEY); 
+    if(!m || !person) return false; 
+    var mine = JSON.parse(m); 
+    return normalizeText(person.player) === normalizeText(mine.player); 
+}
+
 function init() {
     window.renderAll();
     if(!window.db) { setTimeout(init, 200); return; }
@@ -186,14 +193,14 @@ window.confirmCancel = function() {
 };
 
 window.handleAdminAccess = function() { sc++; if(sc>=3) { sc=0; var p=prompt("Admin Pass:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); addLog("Admin Login"); } } };
-window.saveAutoSchedule = function() { if(!window.db) return; bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(function(d) { bookingSettings.tabs[d].closeTime = document.getElementById("close-" + d).value; }); window.db.collection("settings").doc("booking").update(bookingSettings).then('booking').then(function() { alert("설정이 저장되었습니다! / Settings Saved!"); }); };
+window.saveAutoSchedule = function() { if(!window.db) return; bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(function(d) { bookingSettings.tabs[d].closeTime = document.getElementById("close-" + d).value; }); window.db.collection("settings").doc("booking").update(bookingSettings).then(function() { alert("설정이 저장되었습니다! / Settings Saved!"); }); };
 window.saveAdminBaseDate = function() { if(!window.db) return; var val = document.getElementById("adminBaseDate").value; if(!val) return; window.db.collection("settings").doc("booking").update({baseDate: val}).then(function() { alert("설정이 저장되었습니다! / Settings Saved!"); }); };
 window.backupAndClearAll = function() { if(!window.db || !confirm("정말 전체 삭제하시겠습니까? 복구할 수 없습니다. / Are you sure you want to clear all data? This cannot be undone.")) return; window.db.collection("slots").get().then(snap => { var batch = window.db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit().then(() => { alert("전체 삭제 완료! / All data cleared!"); }); }); };
 
 function updateAdminUI() { 
     ['monday', 'tuesday', 'thursday'].forEach(function(day) { 
-        var btn = document.getElementById("btn-admin-day"); if (btn) { btn.classList.toggle("on", !!bookingSettings.tabs[day].isOpen); } 
-        var sBtn = document.getElementById("btn-speed-day"); if (sBtn) { sBtn.classList.toggle("on-speed", !!bookingSettings.tabs[day].showSpeeds); }
+        var btn = document.getElementById("btn-admin-" + day); if (btn) { btn.classList.toggle("on", !!bookingSettings.tabs[day].isOpen); } 
+        var sBtn = document.getElementById("btn-speed-" + day); if (sBtn) { sBtn.classList.toggle("on-speed", !!bookingSettings.tabs[day].showSpeeds); }
     }); 
 }
 function updateStatusMessage() { var el = document.getElementById("bookingStatusMsg"); if(el) el.innerText = isTabActuallyOpen(currentBuff) ? "✅ 예약 가능 / Booking Open" : "🔒 예약 마감 / Booking Closed"; }
@@ -251,8 +258,7 @@ function openReservedModal(id) {
             delBtn.innerText = "삭제"; delBtn.className = "btn-danger"; delBtn.style.padding = "4px 8px"; delBtn.style.fontSize = "11px"; delBtn.style.flex = "none"; delBtn.style.width = "auto";
             delBtn.onclick = function() { window.deleteAttendeeById(id, a.playerId); };
             
-            btnGroup.appendChild(desBtn); btnGroup.appendChild(delBtn);
-            d.appendChild(btnGroup); 
+            btnGroup.appendChild(desBtn); btnGroup.appendChild(delBtn); d.innerHTML = ""; d.appendChild(mainWrapper); d.appendChild(btnGroup); 
         } 
         list.appendChild(d); 
     }); 
