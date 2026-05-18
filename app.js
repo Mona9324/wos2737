@@ -19,6 +19,7 @@ var sc = 0;
 var langPack = {
     ko: {
         notice: "📢 가능한 모든 시간을 중복으로 신청해주세요.",
+        curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1",
         confirmedHeader: "👑 내 확정 버프 시간",
         addAlarm: "🔔 알람 등록",
         mon: "월요일 (건설)", tue: "화요일 (연구)", thu: "목요일 (훈련)",
@@ -33,6 +34,7 @@ var langPack = {
     },
     en: {
         notice: "📢 Please book all available time slots you can attend.",
+        curvedTxt: "The website usage fee is Mona's Island 💚+1",
         confirmedHeader: "👑 My Confirmed Buffs",
         addAlarm: "🔔 Add Alarm",
         mon: "Monday (Construction)", tue: "Tuesday (Research)", thu: "Thursday (Troops Training)",
@@ -47,6 +49,7 @@ var langPack = {
     },
     zh: {
         notice: "📢 请尽可能重叠申请所有您可以参加的时间段。",
+        curvedTxt: "预约网站使用费是 Mona的岛 💚+1",
         confirmedHeader: "👑 我的确定的增益时间",
         addAlarm: "🔔 添加提醒",
         mon: "星期一 (建筑)", tue: "星期二 (研究)", thu: "星期四 (训练)",
@@ -61,6 +64,7 @@ var langPack = {
     },
     fr: {
         notice: "📢 Veuillez réserver tous les créneaux horaires disponibles auxquels vous pouvez participer.",
+        curvedTxt: "Frais d'utilisation du site : L'île de Mona 💚+1",
         confirmedHeader: "👑 Mes Buffs Confirmés",
         addAlarm: "🔔 Alarme",
         mon: "Lundi (Construction)", tue: "Mardi (Recherche)", thu: "Jeudi (Entraînement)",
@@ -75,7 +79,8 @@ var langPack = {
     },
     ja: {
         notice: "📢 参加可能なすべての時間帯を重複して申請してください。",
-        confirmedHeader: "👑 確定した大統領バフ时间",
+        curvedTxt: "予約サイトの利用料は Monaの島 💚+1",
+        confirmedHeader: "👑 確定した大統領バフ時間",
         addAlarm: "🔔 アラーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
         monShort: "月曜日", tueShort: "火曜日", thuShort: "木曜日",
@@ -89,6 +94,7 @@ var langPack = {
     },
     id: {
         notice: "📢 Silakan pesan semua slot waktu tersedia yang bisa Anda ikuti.",
+        curvedTxt: "Biaya penggunaan situs adalah Pulau Mona 💚+1",
         confirmedHeader: "👑 Buff Saya yang Dikonfirmasi",
         addAlarm: "🔔 Pasang Alarm",
         mon: "Senin (Konstruksi)", tue: "Selasa (Riset)", thu: "Kamis (Pelatihan)",
@@ -114,6 +120,7 @@ function applyLanguagePack() {
     var p = langPack[currentLang];
     document.getElementById("langSelect").value = currentLang;
     document.getElementById("notice-dynamic-txt").innerText = p.notice;
+    document.getElementById("curved-profile-txt").innerText = p.curvedTxt;
     document.getElementById("confirmed-header-txt").innerText = p.confirmedHeader;
     document.getElementById("tab-mon-txt").innerText = p.mon;
     document.getElementById("tab-tue-txt").innerText = p.tue;
@@ -144,7 +151,6 @@ function formatLocalTime(date) { return date.toLocaleTimeString([], { hour: '2-d
 function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
 function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return "h_" + Math.abs(hash); }
 
-/* [긴급 구조 완벽 안착] 누락되어 레퍼런스 에러를 내던 주범 함수를 원위치에 복원 완료 */
 function isMyReservation(person) { 
     var m = localStorage.getItem(MY_BOOKING_KEY); 
     if(!m || !person) return false; 
