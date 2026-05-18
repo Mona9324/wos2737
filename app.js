@@ -84,7 +84,6 @@ window.renderAll = function() {
                 var crownText = a.isDesignated ? "👑 " : (i+1) + ". ";
                 var itemClass = a.isDesignated ? "miniItem is-designated" : "miniItem";
                 
-                /* [핵심 교체 포인트] 이름을 담는 span과 가속일수를 담는 span을 분리하여 레이아웃 무너짐을 완전 차단 */
                 return "<div class='" + itemClass + "'><span>" + crownText + "[" + a.alliance + "] " + a.player + "</span><span>" + speedText + "</span></div>"; 
             }).join('');
             
@@ -187,14 +186,14 @@ window.confirmCancel = function() {
 };
 
 window.handleAdminAccess = function() { sc++; if(sc>=3) { sc=0; var p=prompt("Admin Pass:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); addLog("Admin Login"); } } };
-window.saveAutoSchedule = function() { if(!window.db) return; bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(function(d) { bookingSettings.tabs[d].closeTime = document.getElementById("close-" + d).value; }); window.db.collection("settings").doc("booking").update(bookingSettings).then(function() { alert("설정이 저장되었습니다! / Settings Saved!"); }); };
+window.saveAutoSchedule = function() { if(!window.db) return; bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(function(d) { bookingSettings.tabs[d].closeTime = document.getElementById("close-" + d).value; }); window.db.collection("settings").doc("booking").update(bookingSettings).then('booking').then(function() { alert("설정이 저장되었습니다! / Settings Saved!"); }); };
 window.saveAdminBaseDate = function() { if(!window.db) return; var val = document.getElementById("adminBaseDate").value; if(!val) return; window.db.collection("settings").doc("booking").update({baseDate: val}).then(function() { alert("설정이 저장되었습니다! / Settings Saved!"); }); };
-window.backupAndClearAll = function() { if(!window.db || !confirm("정말 전체 삭제하시겠습니까? 복구할 수 없습니다. / Are you sure you want to clear all data? This cannot be undone.")) return; window.db.collection("slots").get().then(function(snap) { var batch = window.db.batch(); snap.forEach(function(doc) { batch.delete(doc.ref); }); batch.commit().then(function() { alert("전체 삭제 완료! / All data cleared!"); }); }); };
+window.backupAndClearAll = function() { if(!window.db || !confirm("정말 전체 삭제하시겠습니까? 복구할 수 없습니다. / Are you sure you want to clear all data? This cannot be undone.")) return; window.db.collection("slots").get().then(snap => { var batch = window.db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit().then(() => { alert("전체 삭제 완료! / All data cleared!"); }); }); };
 
 function updateAdminUI() { 
     ['monday', 'tuesday', 'thursday'].forEach(function(day) { 
-        var btn = document.getElementById("btn-admin-" + day); if (btn) { btn.classList.toggle("on", !!bookingSettings.tabs[day].isOpen); } 
-        var sBtn = document.getElementById("btn-speed-" + day); if (sBtn) { sBtn.classList.toggle("on-speed", !!bookingSettings.tabs[day].showSpeeds); }
+        var btn = document.getElementById("btn-admin-day"); if (btn) { btn.classList.toggle("on", !!bookingSettings.tabs[day].isOpen); } 
+        var sBtn = document.getElementById("btn-speed-day"); if (sBtn) { sBtn.classList.toggle("on-speed", !!bookingSettings.tabs[day].showSpeeds); }
     }); 
 }
 function updateStatusMessage() { var el = document.getElementById("bookingStatusMsg"); if(el) el.innerText = isTabActuallyOpen(currentBuff) ? "✅ 예약 가능 / Booking Open" : "🔒 예약 마감 / Booking Closed"; }
@@ -227,22 +226,21 @@ function openReservedModal(id) {
         var speedText = showSpeeds ? "(" + a.daysSaved + "일/d)" : "";
         var crownPrefix = a.isDesignated ? "👑 " : "";
         
+        var mainWrapper = document.createElement("div");
+        mainWrapper.style.display = "flex"; mainWrapper.style.justifyContent = "space-between"; mainWrapper.style.width = "100%"; mainWrapper.style.alignItems = "center";
+        
         var textSpan = document.createElement("span");
         textSpan.innerHTML = crownPrefix + "[" + a.alliance + "] " + a.player;
-        d.appendChild(textSpan);
         
         var speedSpan = document.createElement("span");
         speedSpan.innerHTML = speedText;
         
-        var mainWrapper = document.createElement("div");
-        mainWrapper.style.display = "flex"; mainWrapper.style.justifyContent = "space-between"; mainWrapper.style.width = "100%"; mainWrapper.style.alignItems = "center";
         mainWrapper.appendChild(textSpan); mainWrapper.appendChild(speedSpan);
-        
         d.appendChild(mainWrapper);
         
         if (adminAuthenticated) { 
             var btnGroup = document.createElement("div");
-            btnGroup.style.display = "flex"; btnGroup.style.gap = "4px";
+            btnGroup.style.display = "flex"; btnGroup.style.gap = "4px"; btnGroup.style.marginLeft = "10px";
             
             var desBtn = document.createElement("button"); 
             desBtn.innerText = a.isDesignated ? "해제/Unpick" : "지정/Pick";
@@ -253,7 +251,8 @@ function openReservedModal(id) {
             delBtn.innerText = "삭제"; delBtn.className = "btn-danger"; delBtn.style.padding = "4px 8px"; delBtn.style.fontSize = "11px"; delBtn.style.flex = "none"; delBtn.style.width = "auto";
             delBtn.onclick = function() { window.deleteAttendeeById(id, a.playerId); };
             
-            btnGroup.appendChild(desBtn); btnGroup.appendChild(delBtn); d.innerHTML = ""; d.appendChild(mainWrapper); d.appendChild(btnGroup); 
+            btnGroup.appendChild(desBtn); btnGroup.appendChild(delBtn);
+            d.appendChild(btnGroup); 
         } 
         list.appendChild(d); 
     }); 
