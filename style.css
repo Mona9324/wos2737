@@ -16,6 +16,8 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 
 .profile-wrapper { position: relative; width: 400px; height: 190px; display: flex; justify-content: center; align-items: flex-end; }
 .curved-text-svg { position: absolute; top: -45px; width: 400px; height: 160px; pointer-events: none; }
+/* [데스크톱 수정] top 값을 -45px에서 -25px로 변경하여 텍스트를 그림에 더 가깝게 붙이고 윗부분 잘림 현상 해결 */
+.curved-text-svg { position: absolute; top: -25px; width: 400px; height: 160px; pointer-events: none; }
 .curved-text-svg text { font-size: 14.5px; font-weight: 900; fill: #d6b347; letter-spacing: 0.1px; }
 .creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); object-fit: cover; cursor: pointer; transition: transform 0.3s ease; z-index: 2; }
 .creatorAvatar:hover { transform: scale(1.1); }
@@ -125,9 +127,8 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
 .admin-tab-btn.on-speed { background: #c8e6c9 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
 .logsBox { background: #1a202c; color: #68d391; padding: 12px; border-radius: 12px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; margin: 15px 0; }
 
-/* [스마트폰 대통합 가로배치] 국적 셀렉터와 필터 드롭다운 및 리셋버튼을 깔끔하게 단 한 줄로 강제 결합 */
 @media (max-width: 600px) {
-    .headerTop { flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+    .headerTop { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
     .titleArea { text-align: center; width: 100%; }
     
     .headerToolbar { width: 100%; display: flex !important; flex-direction: row !important; justify-content: center; align-items: center; gap: 6px; margin-bottom: 5px; box-sizing: border-box; }
@@ -138,9 +139,12 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1200px; marg
     .btn-reset { padding: 8px 12px; font-size: 12px; flex: 0.8; white-space: nowrap; }
     
     .confirmedSection { position: static !important; width: 95% !important; margin: 15px auto !important; }
-    .creatorBadge { margin-top: 25px; } 
+    /* [모바일 수정] 전체 컨테이너를 도구 모음(언어/필터) 아래로 더 밀어내기 위해 margin-top 늘림 */
+    .creatorBadge { margin-top: 45px; } 
     .profile-wrapper { width: 320px; height: 160px; }
     .curved-text-svg { width: 320px; height: 130px; top: -35px; }
+    /* [모바일 수정] curved-text-svg의 top 값을 -35px에서 -15px로 변경하여 텍스트를 그림에 더 가깝게 붙이고 가독성 확보 */
+    .curved-text-svg { width: 320px; height: 130px; top: -15px; }
     .creatorAvatar { width: 130px; height: 130px; }
     .tabs { flex-direction: column; }
 }
