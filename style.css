@@ -10,8 +10,28 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1300px; marg
 /* [대칭 고정] 툴바 전체 가로 폭을 하단 황금 박스와 오차 없이 일치하도록 355px로 영구 고정 */
 .headerToolbar { display: flex; align-items: center; gap: 8px; width: 355px !important; max-width: 355px !important; min-width: 355px !important; justify-content: space-between; box-sizing: border-box; }
 
-/* [크기 박제] 가장 긴 문자열(인도네시아어) 기준으로 135px 강제 박제하여 언어 스위칭 시 밀림 100% 차단 */
-#langSelect { width: 135px !important; max-width: 135px !important; min-width: 135px !important; padding: 10px 4px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; font-weight: bold; outline: none; cursor: pointer; color: #4b5563; box-sizing: border-box; text-align: center; }
+/* [언어 선택창 특별 인테리어 패치] 눈에 확 띄도록 연한 파스텔 하늘색 배경과 블루 테두리로 고급스럽게 코팅 */
+#langSelect { 
+    width: 135px !important; 
+    max-width: 135px !important; 
+    min-width: 135px !important; 
+    padding: 10px 4px; 
+    border-radius: 10px; 
+    border: 1.5px solid #90caf9; 
+    background: #e3f2fd; 
+    font-weight: 800; 
+    outline: none; 
+    cursor: pointer; 
+    color: #1565c0; 
+    box-sizing: border-box; 
+    text-align: center;
+    transition: all 0.2s ease;
+}
+#langSelect:hover {
+    background: #ebbdefb;
+    border-color: #1976d2;
+}
+
 .filterGroup { display: flex; gap: 6px; width: 212px !important; max-width: 212px !important; min-width: 212px !important; box-sizing: border-box; justify-content: flex-end; }
 #filterStatus { padding: 10px; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; width: 130px !important; box-sizing: border-box; }
 .btn-reset { padding: 10px 0; border-radius: 10px; border: 1px solid #cfd8e3; background: white; cursor: pointer; font-weight: bold; width: 76px !important; box-sizing: border-box; text-align: center; }
@@ -19,8 +39,8 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1300px; marg
 .creatorBadge { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 10px; width: 100%; position: relative !important; }
 .profile-wrapper { position: relative; width: 400px; height: 190px; display: flex; justify-content: center; align-items: flex-end; }
 
-/* [고공 공중부양] top 수치를 -55px로 확실하게 당겨 올려 공룡 골드 링 테두리와 완벽하게 격리 노출 */
-.curved-text-svg { position: absolute; top: -55px; width: 400px; height: 160px; pointer-events: none; overflow: visible !important; }
+/* [고공 공중 부양] 호의 궤적 정렬에 맞춰 공룡 링 테두리와 완벽 격리 노출 유지 */
+.curved-text-svg { position: absolute; top: -85px; width: 400px; height: 160px; pointer-events: none; overflow: visible !important; }
 .curved-text-svg text { font-size: 14.5px; font-weight: 900; fill: #d6b347; letter-spacing: 0.1px; }
 .creatorAvatar { width: 160px; height: 160px; border-radius: 50%; border: 5px solid #d6b347; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); object-fit: cover; cursor: pointer; transition: transform 0.3s ease; z-index: 2; }
 .creatorAvatar:hover { transform: scale(1.1); }
@@ -107,14 +127,9 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1300px; marg
     #filterStatus { flex: 1.1; width: auto; padding: 8px 4px; font-size: 12px; min-width: 0; }
     .btn-reset { padding: 8px 12px; font-size: 12px; flex: 0.8; white-space: nowrap; }
     .confirmedSection { position: static !important; width: 95% !important; margin: 15px auto !important; }
-    
-    /* [모바일 긴급 진압] margin-top을 45px에서 65px로 대폭 늘려 상단 툴바와의 수직 안전거리 20px 추가 확보 */
-    .creatorBadge { margin-top: 65px; } 
-    
+    .creatorBadge { margin-top: 25px; } 
     .profile-wrapper { width: 320px; height: 160px; }
-    
-    /* [모바일 아치 정렬] 툴바 밑바닥에 포개지지 않고 공중부양 엔젤링 룩을 유지하도록 오버플로우와 top 궤적 고정 */
-    .curved-text-svg { width: 320px; height: 130px; top: -65px; overflow: visible !important; }
+    .curved-text-svg { width: 320px; height: 130px; top: -45px; overflow: visible !important; }
     .creatorAvatar { width: 130px; height: 130px; }
     .tabs { flex-direction: column; padding: 0 10px; gap: 10px; }
 }
