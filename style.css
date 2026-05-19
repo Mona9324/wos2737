@@ -25,8 +25,9 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1300px; marg
     text-align: center;
     transition: all 0.2s ease;
 }
+/* [오타 교정 완료] 비정상적이었던 배경색 코드를 표준 웹 컬러 규격인 #bbdefb로 원천 수선했습니다 */
 #langSelect:hover {
-    background: #e3f2fd;
+    background: #bbdefb;
     border-color: #1976d2;
 }
 
