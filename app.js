@@ -65,7 +65,7 @@ var langPack = {
         errNan: "Please enter a valid number."
     },
     zh: {
-        notice: "📢 请尽可能重叠申请所有您可以参加的时间段。\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로稳步变更时间。)",
+        notice: "📢 请尽可能重叠申请所有您可以参加的时间段。\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)",
         curvedTxt: "预约网站使用费是 Mona的岛 💚+1",
         confirmedHeader: "👑 我的确定的增益时间",
         addAlarm: "🔔 添加提醒",
