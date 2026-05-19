@@ -19,7 +19,7 @@ var sc = 0;
 
 var langPack = {
     ko: {
-        /* [공지 다이어트] 한국어 모드일 때는 불필요한 번역 가이드를 삭제하고 깔끔하게 1줄로 출력합니다 */
+        /* [공지 다이어트 확정] 한국어 모드일 때는 번역 안내 괄호를 완전히 생략하고 원본 깔끔 공지만 출력합니다 */
         notice: "📢 가능한 모든 시간을 중복으로 신청해주세요.",
         curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1",
         confirmedHeader: "👑 내 확정 버프 시간",
@@ -113,7 +113,7 @@ var langPack = {
     },
     ja: {
         notice: "📢 参加可能なすべての時間帯を重複して申請してください。\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)",
-        curvedTxt: "予約サイトの利用料は Monaの島 💚+1",
+        curvedTxt: "予約サイト의 이용료는 Mona의 👑+1",
         confirmedHeader: "👑 確定した大統領バフ時間",
         addAlarm: "🔔 アラーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
@@ -130,7 +130,7 @@ var langPack = {
         errWrongPass: "パスワードが間違っています。",
         errNoRes: "予約データが見つかりません。",
         errFillAll: "すべての項目を入力してください。",
-        errIdDigit: "プレイヤーIDは9桁の数字でなければなりません。",
+        errIdDigit: "プレイヤーIDは9桁의 数字でなければなりません。",
         promptEdit: "新しい加速日数（数字のみ）を入力してください:",
         errNan: "数字形式のみ入力可能です。"
     },
@@ -502,4 +502,226 @@ window.exportAllCSV = function() {
         var wb = XLSX.utils.book_new(); var hasData = false;
         ["monday", "tuesday", "thursday"].forEach(function(day) {
             var rows = [];
-            Object.keys(allSlotsData).filter(function(k) { return k.startsWith(day); }).forEach(
+            Object.keys(allSlotsData).filter(function(k) { return k.startsWith(day); }).forEach(function(slotId) {
+                var timeStr = slotId.split('_')[1];
+                allSlotsData[slotId].attendees.forEach(function(a) {
+                    rows.push({ "Day": day, "Time(UTC)": timeStr, "Alliance": a.alliance, "Nickname": a.player, "Player ID": a.playerId, "SpeedDays": a.daysSaved, "Designated": a.isDesignated ? "Y" : "N" });
+                });
+            });
+            if (rows.length > 0) { XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day); hasData = true; }
+        });
+        if (!hasData) return openCustomAlert("No data."); XLSX.writeFile(wb, "2737_SVS_Booking.xlsx"); addLog("Excel Download Success");
+    } catch (e) { openCustomAlert("Failed."); }
+};
+
+window.confirmBooking = function() {
+    var p = langPack[currentLang];
+    var a = document.getElementById("alliance").value, nickname = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("cancelKey").value;
+    if(!a || !nickname || !idNum || !d || !pass) return openCustomAlert(p.errFillAll);
+    if(idNum.length !== 9) return openCustomAlert(p.errIdDigit);
+    
+    var entryId = "uid_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+    
+    var newEntry = { 
+        id: entryId,
+        alliance: a, 
+        player: nickname, 
+        playerId: idNum, 
+        playerNormalized: normalizeText(nickname), 
+        daysSaved: Number(d), 
+        passwordHash: simpleHash(pass), 
+        isDesignated: false, 
+        createdAt: Date.now() 
+    };
+    window.db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(function() { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: nickname, playerId: idNum, cancelKey: pass })); window.closeModal(); window.renderAll(); });
+};
+
+window.editSpecificBooking = function(slotId, uniqueId) {
+    var p = langPack[currentLang];
+    var pass = document.getElementById("editCancelKey").value;
+    if(!pass) return openCustomAlert(p.errFill);
+    var ref = window.db.collection("slots").doc(slotId);
+    
+    ref.get().then(function(doc) {
+        var list = doc.data().attendees || [];
+        var target = list.find(function(a) { return String(a.id) === String(uniqueId); });
+        
+        if(!target) return openCustomAlert(p.errNoRes);
+        if (target.passwordHash !== simpleHash(pass)) return openCustomAlert(p.errWrongPass);
+        
+        var newDays = prompt(p.promptEdit, target.daysSaved);
+        if(newDays === null || newDays.trim() === "") return;
+        if(isNaN(newDays)) return openCustomAlert(p.errNan);
+        
+        target.daysSaved = Number(newDays);
+        ref.update({ attendees: list }).then(function() { openReservedModal(slotId); window.renderAll(); });
+    });
+};
+
+window.confirmCancelSpecific = function(uniqueId) {
+    var p = langPack[currentLang];
+    var pass = document.getElementById("editCancelKey").value;
+    if(!pass) return openCustomAlert(p.errFill);
+    var ref = window.db.collection("slots").doc(selectedSlot);
+    
+    ref.get().then(function(doc) {
+        var list = doc.data().attendees || [];
+        var target = list.find(function(a) { return String(a.id) === String(uniqueId); });
+        
+        if(!target) return openCustomAlert(p.errNoRes);
+        if (target.passwordHash !== simpleHash(pass)) return openCustomAlert(p.errWrongPass);
+        
+        var updatedList = list.filter(function(a) { return String(a.id) !== String(uniqueId); });
+        ref.update({ attendees: updatedList }).then(function() { window.closeReservedModal(); window.renderAll(); });
+    });
+};
+
+window.confirmCancelAll = function() {
+    var p = langPack[currentLang];
+    var pass = document.getElementById("editCancelKey").value, m = localStorage.getItem(MY_BOOKING_KEY);
+    if(!pass) return openCustomAlert(p.errFill);
+    if(!m) return openCustomAlert(p.errNoRes);
+    
+    var mine = JSON.parse(m);
+    var myName = normalizeText(mine.player);
+    var ref = window.db.collection("slots").doc(selectedSlot);
+    
+    ref.get().then(function(doc) {
+        if (!doc.exists) return;
+        var list = doc.data().attendees || [];
+        
+        var myEntries = list.filter(function(a) { return normalizeText(a.player) === myName; });
+        if (myEntries.length === 0) return openCustomAlert(p.errNoRes);
+        
+        var isPassCorrect = myEntries.some(function(a) { return a.passwordHash === simpleHash(pass); });
+        if (!isPassCorrect) return openCustomAlert(p.errWrongPass);
+        
+        var updatedList = list.filter(function(a) {
+            return !(normalizeText(a.player) === myName && a.passwordHash === simpleHash(pass));
+        });
+        
+        ref.update({ attendees: updatedList }).then(function() { window.closeReservedModal(); window.renderAll(); });
+    });
+};
+
+window.confirmCancel = function() { window.confirmCancelAll(); };
+
+window.handleAdminAccess = function() { sc++; if(sc>=3) { sc=0; var p=prompt("Admin Pass:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); addLog("Admin Login"); } } };
+window.saveAutoSchedule = function() { if(!window.db) return; bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(function(d) { bookingSettings.tabs[d].closeTime = document.getElementById("close-" + d).value; }); window.db.collection("settings").doc("booking").update(bookingSettings).then(function() { alert("Saved!"); }); };
+window.saveAdminBaseDate = function() { if(!window.db) return; var val = document.getElementById("adminBaseDate").value; if(!val) return; window.db.collection("settings").doc("booking").update({baseDate: val}).then(function() { alert("Saved!"); }); };
+window.backupAndClearAll = function() { if(!window.db || !confirm("Clear all data?")) return; window.db.collection("slots").get().then(snap => { var batch = window.db.batch(); snap.forEach(doc => batch.delete(doc.ref)); batch.commit().then(() => { window.closeAdmin(); }); }); };
+
+function updateAdminUI() { 
+    if (!bookingSettings || !bookingSettings.tabs) return;
+    ['monday', 'tuesday', 'thursday'].forEach(function(day) { 
+        var btn = document.getElementById("btn-admin-" + day); if (btn && bookingSettings.tabs[day]) { btn.classList.toggle("on", !!bookingSettings.tabs[day].isOpen); } 
+        var sBtn = document.getElementById("btn-speed-" + day); if (sBtn && bookingSettings.tabs[day]) { sBtn.classList.toggle("on-speed", !!bookingSettings.tabs[day].showSpeeds); }
+    }); 
+}
+function updateStatusMessage() { var el = document.getElementById("bookingStatusMsg"); var p = langPack[currentLang]; if(el) el.innerText = isTabActuallyOpen(currentBuff) ? p.openAvailable : p.openClosed; }
+function addLog(msg) { var box = document.getElementById('logsBox'); if (box) { var log = document.createElement('div'); log.textContent = "[" + new Date().toLocaleTimeString() + "] " + msg; box.prepend(log); } }
+function updateCountdown() { if (!bookingSettings || !bookingSettings.baseDate) return; var diff = new Date(bookingSettings.baseDate) - new Date(); while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000; var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000); if(document.getElementById("countdown")) document.getElementById("countdown").innerText = "Next SVS in " + d + "d " + h + "h " + m + "m " + s + "s"; }
+window.switchBuff = function(b) { currentBuff = b; updateStatusMessage(); window.renderAll(); };
+window.clearSearch = function() { window.renderAll(); };
+window.closeModal = function() { document.getElementById("modal").classList.remove("show"); };
+window.closeReservedModal = function() { document.getElementById("reservedModal").classList.remove("show"); };
+window.closeAdmin = function() { document.getElementById("adminPanel").classList.remove("show"); };
+function fillAdminInputs() { if (!bookingSettings || !bookingSettings.baseDate) return; document.getElementById("adminBaseDate").value = bookingSettings.baseDate.slice(0, 16); document.getElementById("global-open-time").value = bookingSettings.globalOpenTime || ""; ['monday', 'tuesday', 'thursday'].forEach(function(day) { if(bookingSettings.tabs && bookingSettings.tabs[day] && bookingSettings.tabs[day].closeTime) document.getElementById("close-" + day).value = bookingSettings.tabs[day].closeTime; }); }
+window.openReserveFromStatus = function() { if(!isTabActuallyOpen(currentBuff) && !adminAuthenticated) return; window.closeReservedModal(); window.openReserveModal(); };
+
+window.openReserveModal = function() { var m = localStorage.getItem(MY_BOOKING_KEY); if(m) { var mine = JSON.parse(m); document.getElementById("alliance").value = mine.alliance || ""; document.getElementById("player").value = mine.player || ""; document.getElementById("playerId").value = mine.playerId || ""; document.getElementById("cancelKey").value = mine.cancelKey || ""; } document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; document.getElementById("modal").classList.add("show"); };
+
+function openReservedModal(id) { 
+    document.getElementById("reservedSlotInfo").innerText = id.replace('_', ' ') + " UTC"; 
+    var list = document.getElementById("attendeeListDetail"); list.innerHTML = ""; 
+    
+    var showSpeeds = false;
+    if (bookingSettings && bookingSettings.tabs && bookingSettings.tabs[currentBuff]) {
+        showSpeeds = bookingSettings.tabs[currentBuff].showSpeeds || false;
+    }
+    
+    var p = langPack[currentLang];
+    var m = localStorage.getItem(MY_BOOKING_KEY);
+    var mineName = m ? normalizeText(JSON.parse(m).player) : "";
+    var isSpecificallyClosed = bookingSettings.closedSlots && bookingSettings.closedSlots.includes(id);
+
+    if (adminAuthenticated) {
+        var toggleCloseBtn = document.createElement("button");
+        toggleCloseBtn.innerText = isSpecificallyClosed ? p.slotOpenBtn : p.slotCloseBtn;
+        toggleCloseBtn.className = isSpecificallyClosed ? "btn-primary" : "btn-danger";
+        toggleCloseBtn.style.padding = "8px 16px"; toggleCloseBtn.style.fontSize = "12px"; toggleCloseBtn.style.fontWeight = "800"; toggleCloseBtn.style.width = "100%"; toggleCloseBtn.style.marginBottom = "15px"; toggleCloseBtn.style.borderRadius = "8px"; toggleCloseBtn.style.border = "none"; toggleCloseBtn.style.cursor = "pointer";
+        toggleCloseBtn.onclick = function() { window.toggleSpecificSlot(id); };
+        list.appendChild(toggleCloseBtn);
+        
+        var hr = document.createElement("hr");
+        hr.style.marginBottom = "15px";
+        list.appendChild(hr);
+        
+        showSpeeds = true;
+    }
+    
+    var displayList = ((allSlotsData[id] || {}).attendees || []).slice().sort(function(a, b) {
+        return (b.isDesignated ? 1 : 0) - (a.isDesignated ? 1 : 0);
+    });
+    
+    displayList.forEach(function(a) { 
+        var d = document.createElement("div"); 
+        d.className = a.isDesignated ? "miniItem is-designated" : "miniItem"; 
+        d.style.display = "flex"; d.style.justifyContent = "space-between"; d.style.alignItems = "center"; d.style.margin = "4px 0";
+        
+        var speedText = showSpeeds ? " (" + a.daysSaved + p.speedUnit + ")" : "";
+        var crownPrefix = a.isDesignated ? "👑 " : "";
+        
+        var mainWrapper = document.createElement("div");
+        mainWrapper.style.display = "flex"; mainWrapper.style.justifyContent = "space-between"; mainWrapper.style.width = "100%"; mainWrapper.style.alignItems = "center";
+        
+        var textSpan = document.createElement("span");
+        textSpan.innerHTML = crownPrefix + "[" + a.alliance + "] " + a.player;
+        
+        var speedSpan = document.createElement("span");
+        speedSpan.innerHTML = speedText;
+        
+        mainWrapper.appendChild(textSpan); mainWrapper.appendChild(speedSpan);
+        d.appendChild(mainWrapper);
+        
+        var btnGroup = document.createElement("div");
+        btnGroup.style.display = "flex"; btnGroup.style.gap = "4px"; btnGroup.style.marginLeft = "10px";
+        
+        if (!adminAuthenticated && normalizeText(a.player) === mineName) {
+            var userEditBtn = document.createElement("button");
+            userEditBtn.type = "button";
+            userEditBtn.innerText = p.editBtn;
+            userEditBtn.className = "btn-primary";
+            userEditBtn.style.padding = "4px 8px"; userEditBtn.style.fontSize = "11px"; userEditBtn.style.flex = "none"; userEditBtn.style.width = "auto";
+            userEditBtn.onclick = function() { window.editSpecificBooking(id, a.id); };
+            btnGroup.appendChild(userEditBtn);
+
+            var userDelBtn = document.createElement("button");
+            userDelBtn.type = "button";
+            userDelBtn.innerText = p.cancelBtnSmall;
+            userDelBtn.className = "btn-danger";
+            userDelBtn.style.padding = "4px 8px"; userDelBtn.style.fontSize = "11px"; userDelBtn.style.flex = "none"; userDelBtn.style.width = "auto";
+            userDelBtn.onclick = function() { window.confirmCancelSpecific(a.id); };
+            btnGroup.appendChild(userDelBtn);
+            
+            d.appendChild(btnGroup);
+        }
+        
+        if (adminAuthenticated) { 
+            var desBtn = document.createElement("button"); 
+            desBtn.innerText = a.isDesignated ? "해제" : p.desBtn;
+            desBtn.className = "btn-primary"; desBtn.style.padding = "4px 8px"; desBtn.style.fontSize = "11px"; desBtn.style.flex = "none"; desBtn.style.width = "auto";
+            desBtn.onclick = function() { window.toggleDesignateById(id, a.id); };
+            
+            var delBtn = document.createElement("button"); 
+            delBtn.innerText = p.delBtn; delBtn.className = "btn-danger"; delBtn.style.padding = "4px 8px"; delBtn.style.fontSize = "11px"; delBtn.style.flex = "none"; delBtn.style.width = "auto";
+            delBtn.onclick = function() { window.deleteAttendeeById(id, a.id); };
+            
+            btnGroup.appendChild(desBtn); btnGroup.appendChild(delBtn); d.innerHTML = ""; d.appendChild(mainWrapper); d.appendChild(btnGroup); 
+        } 
+        list.appendChild(d); 
+    }); 
+    document.getElementById("reservedModal").classList.add("show"); 
+}
+
+init();
