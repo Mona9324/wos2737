@@ -58,6 +58,7 @@
     </div>
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 10px; color: #2d3748;"></div>
     <main><div id="slots" class="grid"></div></main>
+    
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3 id="modal-title-txt">New Booking</h3>
@@ -73,8 +74,10 @@
             <button type="button" onclick="window.closeModal()" class="btn-close-full" id="btn-close-txt">Close</button>
         </div>
     </div>
+
     <div id="reservedModal" class="modal">
-        <div class="modalBox">
+        <div class="modalBox" style="max-width: 500px; position: relative;">
+            <button type="button" class="admin-close-x" onclick="window.closeReservedModal()">×</button>
             <h3 id="res-title-txt">Booking Status</h3>
             <div id="reservedSlotInfo" style="margin-bottom:15px; font-weight:800;"></div>
             <div id="attendeeListDetail" style="margin-bottom: 20px;"></div>
@@ -87,7 +90,6 @@
                     <button type="button" onclick="window.openReserveFromStatus()" class="btn-primary" id="btn-add-txt">Add Booking</button>
                 </div>
             </div>
-            <button type="button" onclick="window.closeReservedModal()" class="btn-close-full" id="btn-res-close-txt">Close</button>
         </div>
     </div>
     
