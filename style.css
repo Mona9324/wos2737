@@ -25,9 +25,8 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1300px; marg
     text-align: center;
     transition: all 0.2s ease;
 }
-/* [오타 교정 완료] 비정상적이었던 배경색 코드를 표준 웹 컬러 규격인 #bbdefb로 원천 수선했습니다 */
 #langSelect:hover {
-    background: #bbdefb;
+    background: #ebbdefb;
     border-color: #1976d2;
 }
 
@@ -97,6 +96,23 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1300px; marg
 .modal.show { display: flex !important; }
 .modalBox { background: white; padding: 30px; border-radius: 24px; width: 95%; max-width: 480px; box-sizing: border-box; text-align: left; margin: auto; box-shadow: 0 12px 40px rgba(0,0,0,0.25); animation: zoomIn 0.25s ease-out; }
 
+/* [디테일 패치] 관리자 패널 X 버튼 스타일 마감 완료 */
+.admin-close-x {
+    position: absolute;
+    right: 25px;
+    top: 20px;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    font-weight: 300;
+    color: #a0aec0;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+    padding: 0;
+}
+.admin-close-x:hover { color: #e53935; }
+
 @keyframes zoomIn {
     from { transform: scale(0.92); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
@@ -116,7 +132,7 @@ header { padding: 20px; position: relative; z-index: 10; max-width: 1300px; marg
 
 .adminSection { margin-bottom: 15px; padding: 15px; border-radius: 15px; background: #f8fafc; border: 1px solid #edf2f7; }
 .adminSection p { font-size: 13.3px; font-weight: 800; margin-bottom: 10px; }
-.admin-tab-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; cursor: pointer; font-weight: 800; background: #f1f5f9; color: #94a3b8; transition: 0.2s; }
+.admin-tab-btn { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e2e2f0; cursor: pointer; font-weight: 800; background: #f1f5f9; color: #94a3b8; transition: 0.2s; }
 .admin-tab-btn.on { background: #bbdefb !important; color: #1976d2 !important; border-color: #90cdf4 !important; }
 .admin-tab-btn.on-speed { background: #c8e6c9 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
 .logsBox { background: #1a202c; color: #68d391; padding: 12px; border-radius: 12px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; margin: 15px 0; }
