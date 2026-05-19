@@ -109,11 +109,19 @@
                 <p style="font-size:13px; font-weight:800; margin-bottom:8px;" id="cancel-label-txt">Password</p>
                 <input id="editCancelKey" type="text" class="mask-input" placeholder="Password" />
                 <div class="buttonRow">
-                    <button type="button" onclick="window.confirmCancel()" class="btn-danger" id="btn-cancel-txt">Cancel Booking</button>
+                    <button type="button" onclick="window.confirmCancelAll()" class="btn-danger" id="btn-cancel-txt">Cancel All</button>
                     <button type="button" onclick="window.openReserveFromStatus()" class="btn-primary" id="btn-add-txt">Add Booking</button>
                 </div>
             </div>
             <button type="button" onclick="window.closeReservedModal()" class="btn-close-full" id="btn-res-close-txt">Close</button>
+        </div>
+    </div>
+
+    <div id="alertModal" class="modal">
+        <div class="modalBox" style="max-width: 380px; text-align: center; border: 2.5px solid #ffcdd2;">
+            <h3 style="color: #e53935; margin-top: 0;" id="alert-modal-title">⚠️ Notice</h3>
+            <p id="alertModalMessage" style="font-weight: 700; color: #4a5568; line-height: 1.5; margin: 18px 0; word-break: keep-all;"></p>
+            <button type="button" onclick="document.getElementById('alertModal').classList.remove('show')" class="btn-close-full" style="background: #ffeef0; color: #e53935; margin-top: 5px;">OK</button>
         </div>
     </div>
 
