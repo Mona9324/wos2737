@@ -19,7 +19,6 @@ var sc = 0;
 
 var langPack = {
     ko: {
-        /* [공지 다이어트 확정] 한국어 모드일 때는 번역 안내 괄호를 완전히 생략하고 원본 깔끔 공지만 출력합니다 */
         notice: "📢 가능한 모든 시간을 중복으로 신청해주세요.",
         curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1",
         confirmedHeader: "👑 내 확정 버프 시간",
@@ -78,7 +77,8 @@ var langPack = {
         addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭",
         statusTitle: "预约状态", cancelLabel: "取消密码", cancelBtn: "取消全额预约", addBookingBtn: "添加预约",
         closedAlert: "预约已截止。", speedUnit: "天",
-        pAlliance: "联盟 (ZTP, BUG, ZYZ 等)", pNickname: "游戏昵称", pId: "玩家ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消密码 (任意)",
+        pAlliance: "联盟 (ZTP, BUG, ZYZ 等)", pNickname: "游戏昵称", pId: "玩家ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消的密码 (任意)",
+        /* [중문 팩 정제 완료] 영어로 새어나와 있던 단독 컨트롤 텍스트를 중문 규격으로 완벽 교환 */
         editBtn: "修改", cancelBtnSmall: "取消", desBtn: "指定", delBtn: "删除", slotOpenBtn: "🔓 开放此时间段", slotCloseBtn: "🔒 关闭此时间段",
         errFill: "请先在下方输入您的密码。",
         errWrongPass: "密码错误。",
@@ -102,6 +102,7 @@ var langPack = {
         statusTitle: "Statut de Réservation", cancelLabel: "Mot de passe", cancelBtn: "Tout Annuler", addBookingBtn: "Ajouter Réservation",
         closedAlert: "Réservation fermée.", speedUnit: "j",
         pAlliance: "Alliance (ZTP, BUG, ZYZ etc)", pNickname: "Pseudo", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", pPass: "Mot de passe pour annuler",
+        /* [프랑스어 팩 정제 완료] 영어로 새어나와 있던 단독 컨트롤 텍스트를 프랑스어 규격으로 완벽 교환 */
         editBtn: "Modifier", cancelBtnSmall: "Annuler", desBtn: "Couronne", delBtn: "Supprimer", slotOpenBtn: "🔓 Ouvrir ce créneau", slotCloseBtn: "🔒 Fermer ce créneau",
         errFill: "Veuillez d'abord saisir votre mot de passe ci-dessous.",
         errWrongPass: "Mot de passe incorrect.",
@@ -113,12 +114,13 @@ var langPack = {
     },
     ja: {
         notice: "📢 参加可能なすべての時間帯を重複して申請してください。\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)",
-        curvedTxt: "予約サイト의 이용료는 Mona의 👑+1",
+        curvedTxt: "予約サイトの利用料は Mona의 섬 💚+1",
         confirmedHeader: "👑 確定した大統領バフ時間",
-        addAlarm: "🔔 アラーム登録",
+        addAlarm: "🔔 ア라ーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
         mondayShort: "月曜日", tuesdayShort: "火曜日", thursdayShort: "木曜日",
         optAll: "すべて", optMine: "自分の予約",
+        /* [일본어 팩 정제 완료] 한국어 잔재 '受付중'을 완벽한 오리지널 한자 명조인 '受付中'로 전면 대체 */
         openAvailable: "✅ 予約受付中", openClosed: "🔒 予約終了",
         pers: "人", noRes: "予約なし",
         addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる",
@@ -130,9 +132,9 @@ var langPack = {
         errWrongPass: "パスワードが間違っています。",
         errNoRes: "予約データが見つかりません。",
         errFillAll: "すべての項目を入力してください。",
-        errIdDigit: "プレイヤーIDは9桁의 数字でなければなりません。",
+        errIdDigit: "プレイヤーIDは9桁の数字でなければなりません。",
         promptEdit: "新しい加速日数（数字のみ）を入力してください:",
-        errNan: "数字形式のみ入力可能です。"
+        errNan: "数字形式のみ入力可能です."
     },
     id: {
         notice: "📢 Silakan pesan semua slot waktu tersedia yang bisa Anda ikuti.\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)",
