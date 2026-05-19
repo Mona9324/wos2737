@@ -112,7 +112,7 @@ var langPack = {
     },
     ja: {
         notice: "📢 参加可能なすべての時間帯を重複して申請してください。\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)",
-        curvedTxt: "予約サイトの利用料は Mona의 섬 💚+1",
+        curvedTxt: "予約サイトの利用料は Monaの島 💚+1",
         confirmedHeader: "👑 確定した大統領バフ時間",
         addAlarm: "🔔 アラーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
@@ -172,11 +172,16 @@ function applyLanguagePack() {
     var p = langPack[currentLang];
     var langSelectEl = document.getElementById("langSelect");
     if (langSelectEl) langSelectEl.value = currentLang;
+    
+    // [실시간 프로필 링 업데이트 패치] 언어 변경 시마다 즉시 갱신
     var noticeKoEl = document.getElementById("notice-dynamic-txt");
     if (noticeKoEl) {
         if (currentLang === "ko") noticeKoEl.innerHTML = "📢 가능한 모든 시간을 중복으로 신청해주세요.";
         else noticeKoEl.innerHTML = "📢 Please book all available time slots you can attend.<br />(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)";
     }
+    var curvedEl = document.getElementById("curved-profile-txt");
+    if (curvedEl) curvedEl.textContent = p.curvedTxt;
+    
     document.getElementById("tab-mon-txt").innerText = p.mon;
     document.getElementById("tab-tue-txt").innerText = p.tue;
     document.getElementById("tab-thu-txt").innerText = p.thu;
@@ -363,6 +368,10 @@ window.clearSearch = function() { window.renderAll(); };
 window.closeModal = function() { document.getElementById("modal").classList.remove("show"); };
 window.closeReservedModal = function() { document.getElementById("reservedModal").classList.remove("show"); };
 window.closeAdmin = function() { document.getElementById("adminPanel").classList.remove("show"); };
+function fillAdminInputs() { if (!bookingSettings.baseDate) return; document.getElementById("adminBaseDate").value = bookingSettings.baseDate.slice(0, 16); document.getElementById("global-open-time").value = bookingSettings.globalOpenTime || ""; ['monday', 'tuesday', 'thursday'].forEach(function(day) { if(bookingSettings.tabs[day].closeTime) document.getElementById("close-" + day).value = bookingSettings.tabs[day].closeTime; }); }
+window.openReserveFromStatus = function() { if(!isTabActuallyOpen(currentBuff) && !adminAuthenticated) return; window.closeReservedModal(); window.openReserveModal(); };
+
+window.openReserveModal = function() { var m = localStorage.getItem(MY_BOOKING_KEY); if(m) { var mine = JSON.parse(m); document.getElementById("alliance").value = mine.alliance || ""; document.getElementById("player").value = mine.player || ""; document.getElementById("playerId").value = mine.playerId || ""; } document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; document.getElementById("modal").classList.add("show"); };
 
 window.openReservedModal = function(id) { 
     document.getElementById("reservedSlotInfo").innerText = id.replace('_', ' ') + " UTC"; 
