@@ -131,7 +131,7 @@ var langPack = {
         errFillAll: "すべての項目を入力してください。",
         errIdDigit: "プレイヤーIDは9桁の数字でなければなりません。",
         promptEdit: "新しい加速日数（数字のみ）を入力してください:",
-        errNan: "数字形式のみ入力可能です."
+        errNan: "数字形式のみ入力可能です。"
     },
     id: {
         notice: "📢 Silakan pesan semua slot waktu tersedia yang bisa Anda ikuti.\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)",
@@ -260,9 +260,9 @@ window.renderAll = function() {
     updateMyConfirmedSummary();
 };
 
-window.handleSlotClick = function(id, isOpen) {
+window.handleSlotClick = function(id, effectivelyOpen) {
     var p = langPack[currentLang];
-    if(!isOpen && !adminAuthenticated) return openCustomAlert(p.closedAlert);
+    if(!effectivelyOpen && !adminAuthenticated) return openCustomAlert(p.closedAlert);
     selectedSlot = id;
     window.openReservedModal(id);
 };
@@ -390,7 +390,7 @@ window.openReservedModal = function(id) {
     }
     
     var slot = allSlotsData[id] || { attendees: [] };
-    if (!effectivelyOpen && !adminAuthenticated) { list.innerHTML = p.closedAlert; }
+    if (!effectivelyOpen && !adminAuthenticated) { list.innerHTML = "<div style='padding:20px; font-weight:800; color:#e53935;'>" + p.closedAlert + "</div>"; }
     else if (slot.attendees.length === 0 && !adminAuthenticated) { window.closeReservedModal(); window.openReserveModal(); return; }
     
     slot.attendees.forEach(function(a) { 
@@ -405,7 +405,7 @@ window.openReservedModal = function(id) {
     
     if (adminAuthenticated || effectivelyOpen) {
         var area = document.createElement("div"); area.style.marginTop = "15px"; area.style.borderTop = "1px solid #eee"; area.style.paddingTop = "10px";
-        area.innerHTML = "<label>" + p.cancelLabel + "</label><input type='password' id='editCancelKey' placeholder='" + p.pPass + "' />";
+        area.innerHTML = "<label style='display:block; margin-bottom:5px; font-size:13px; font-weight:800;'>" + p.cancelLabel + "</label><input type='password' id='editCancelKey' placeholder='" + p.pPass + "' style='margin-bottom:10px;' />";
         var row = document.createElement("div"); row.className = "buttonRow";
         var cBtn = document.createElement("button"); cBtn.innerText = p.cancelBtn; cBtn.className = "btn-danger"; cBtn.onclick = window.confirmCancelAll; row.appendChild(cBtn);
         var aBtn = document.createElement("button"); aBtn.innerText = p.addBookingBtn; aBtn.className = "btn-primary"; aBtn.onclick = function() { window.closeReservedModal(); window.openReserveModal(); }; row.appendChild(aBtn);
