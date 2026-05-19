@@ -8,11 +8,7 @@ var bookingSettings = {
     baseDate: "2026-05-23T21:00:00", 
     globalOpenTime: "", 
     closedSlots: [], 
-    tabs: { 
-        monday: { isOpen: true, closeTime: "", showSpeeds: false }, 
-        tuesday: { isOpen: true, closeTime: "", showSpeeds: false }, 
-        thursday: { isOpen: true, closeTime: "", showSpeeds: false } 
-    } 
+    tabs: { monday: { isOpen: true, closeTime: "", showSpeeds: false }, tuesday: { isOpen: true, closeTime: "", showSpeeds: false }, thursday: { isOpen: true, closeTime: "", showSpeeds: false } } 
 };
 var adminAuthenticated = false;
 var sc = 0;
@@ -131,7 +127,7 @@ var langPack = {
         errFillAll: "すべての項目を入力してください。",
         errIdDigit: "プレイヤーIDは9桁の数字でなければなりません。",
         promptEdit: "新しい加速日数（数字のみ）を入力してください:",
-        errNan: "数字形式のみ入力可能です。"
+        errNan: "数字形式のみ入力可能です."
     },
     id: {
         notice: "📢 Silakan pesan semua slot waktu tersedia yang bisa Anda ikuti.\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)",
