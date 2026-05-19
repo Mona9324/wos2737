@@ -9,7 +9,6 @@
 </head>
 <body>
     <canvas id="snow"></canvas>
-    
     <header>
         <div class="headerTop">
             <div class="titleArea">
@@ -34,53 +33,31 @@
                 </div>
             </div>
         </div>
-        
         <div class="creatorBadge">
             <div class="profile-wrapper">
                 <svg viewBox="0 0 400 140" class="curved-text-svg" xmlns="http://www.w3.org/2000/svg">
                     <path id="finalCurve" d="M 40,130 A 160,110 0 0,1 360,130" fill="transparent"></path>
-                    <text>
-                        <textPath href="#finalCurve" startOffset="50%" text-anchor="middle" id="curved-profile-txt">
-                            The website usage fee is Mona's Island 💚+1
-                        </textPath>
-                    </text>
+                    <text><textPath href="#finalCurve" startOffset="50%" text-anchor="middle" id="curved-profile-txt">The website usage fee is Mona's Island 💚+1</textPath></text>
                 </svg>
                 <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="window.handleAdminAccess()" />
             </div>
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
-            
             <div id="myConfirmedSection" class="confirmedSection" style="display: none;">
                 <div class="confirmedHeader" id="confirmed-header-txt">👑 My Confirmed Buffs</div>
                 <div id="confirmedList" class="confirmedList"></div>
             </div>
-
             <div class="ministerNotice">
                 <div id="notice-dynamic-txt" class="notice-ko">📢 Please book all available time slots you can attend.<br />(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)</div>
             </div>
         </div>
     </header>
-
     <div class="tabs">
-        <div id="tab-monday" class="tab-item" onclick="window.switchBuff('monday')">
-            <div class="tabTitle" id="tab-mon-txt">Monday</div>
-            <div id="cd-monday" class="tabCD"></div>
-        </div>
-        <div id="tab-tuesday" class="tab-item" onclick="window.switchBuff('tuesday')">
-            <div class="tabTitle" id="tab-tue-txt">Tuesday</div>
-            <div id="cd-tuesday" class="tabCD"></div>
-        </div>
-        <div id="tab-thursday" class="tab-item" onclick="window.switchBuff('thursday')">
-            <div class="tabTitle" id="tab-thu-txt">Thursday</div>
-            <div id="cd-thursday" class="tabCD"></div>
-        </div>
+        <div id="tab-monday" class="tab-item" onclick="window.switchBuff('monday')"><div class="tabTitle" id="tab-mon-txt">Monday</div><div id="cd-monday" class="tabCD"></div></div>
+        <div id="tab-tuesday" class="tab-item" onclick="window.switchBuff('tuesday')"><div class="tabTitle" id="tab-tue-txt">Tuesday</div><div id="cd-tuesday" class="tabCD"></div></div>
+        <div id="tab-thursday" class="tab-item" onclick="window.switchBuff('thursday')"><div class="tabTitle" id="tab-thu-txt">Thursday</div><div id="cd-thursday" class="tabCD"></div></div>
     </div>
-    
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 10px; color: #2d3748;"></div>
-    
-    <main>
-        <div id="slots" class="grid"></div>
-    </main>
-
+    <main><div id="slots" class="grid"></div></main>
     <div id="modal" class="modal">
         <div class="modalBox">
             <h3 id="modal-title-txt">New Booking</h3>
@@ -92,13 +69,10 @@
                 <input id="daysSaved" type="number" placeholder="Speed-up Days" />
                 <input id="cancelKey" type="text" class="mask-input" placeholder="Password for cancel" autocomplete="off" />
             </div>
-            <div class="buttonRow">
-                <button type="button" onclick="window.confirmBooking()" class="btn-primary" id="btn-confirm-txt">Confirm</button>
-            </div>
+            <div class="buttonRow"><button type="button" onclick="window.confirmBooking()" class="btn-primary" id="btn-confirm-txt">Confirm</button></div>
             <button type="button" onclick="window.closeModal()" class="btn-close-full" id="btn-close-txt">Close</button>
         </div>
     </div>
-
     <div id="reservedModal" class="modal">
         <div class="modalBox">
             <h3 id="res-title-txt">Booking Status</h3>
@@ -116,7 +90,7 @@
             <button type="button" onclick="window.closeReservedModal()" class="btn-close-full" id="btn-res-close-txt">Close</button>
         </div>
     </div>
-
+    
     <div id="alertModal" class="modal">
         <div class="modalBox" style="max-width: 380px; text-align: center; border: 2.5px solid #ffcdd2;">
             <h3 style="color: #e53935; margin-top: 0;" id="alert-modal-title">⚠️ Notice</h3>
@@ -125,10 +99,23 @@
         </div>
     </div>
 
+    <div id="promptModal" class="modal">
+        <div class="modalBox" style="max-width: 380px; text-align: center; border: 2.5px solid #bbdefb;">
+            <h3 style="color: #1976d2; margin-top: 0;" id="prompt-modal-title">Edit Speed-up</h3>
+            <p id="promptModalMessage" style="font-weight: 700; color: #4a5568; line-height: 1.5; margin: 18px 0; word-break: keep-all;"></p>
+            <div class="inputGroup" style="margin-bottom: 20px;">
+                <input type="number" id="promptInputValue" style="text-align:center; font-size: 16px; font-weight: 800; border: 2px solid #e2e8f0; outline: none;" />
+            </div>
+            <div class="buttonRow">
+                <button type="button" id="btn-prompt-cancel" class="btn-danger" onclick="window.closeCustomPrompt()">Cancel</button>
+                <button type="button" id="btn-prompt-confirm" class="btn-primary" onclick="window.confirmCustomPrompt()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <div id="adminPanel" class="modal">
         <div class="modalBox" style="max-width: 500px; position: relative;">
             <button type="button" class="admin-close-x" onclick="window.closeAdmin()">×</button>
-            
             <h3>관리자 시스템 / Admin System</h3>
             <div class="adminSection">
                 <p>SVS 기준일 설정 / Set Base Date</p>
@@ -145,7 +132,6 @@
                     <button type="button" id="btn-admin-thursday" class="admin-tab-btn" onclick="window.toggleTabStatus('thursday')">Thu</button>
                 </div>
             </div>
-            
             <div class="adminSection">
                 <p>가속 일수 공개 제어 / Speed-up Visibility</p>
                 <div class="buttonRow">
@@ -154,7 +140,6 @@
                     <button type="button" id="btn-speed-thursday" class="admin-tab-btn" onclick="window.toggleSpeedVisibility('thursday')">Thu</button>
                 </div>
             </div>
-            
             <div class="adminSection">
                 <p>자동 시간 설정 / Auto Schedule</p>
                 <div class="autoTimeGroup">
@@ -183,11 +168,9 @@
                     <button type="button" onclick="window.exportAllCSV()" class="btn-primary" style="background:#e8f5e9; color:#2e7d32;">엑셀 추출 / Excel</button>
                     <button type="button" onclick="window.backupAndClearAll()" class="btn-danger">전체 삭제 / Reset</button>
                 </div>
-                <button type="button" onclick="window.closeAdmin()" class="btn-close-full" style="margin-top:10px;">닫기 / Close</button>
             </div>
         </div>
     </div>
-
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
