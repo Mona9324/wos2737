@@ -38,8 +38,7 @@ function applyLanguagePack() {
     if (langSelectEl) langSelectEl.value = currentLang;
     var noticeKoEl = document.getElementById("notice-dynamic-txt");
     if (noticeKoEl) {
-        if (currentLang === "ko") noticeKoEl.innerHTML = "📢 가능한 모든 시간을 중복으로 신청해주세요.";
-        else noticeKoEl.innerHTML = "📢 Please book all available time slots you can attend.<br />(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)";
+        noticeKoEl.innerHTML = p.notice;
     }
     document.getElementById("tab-mon-txt").innerText = p.mon;
     document.getElementById("tab-tue-txt").innerText = p.tue;
@@ -56,7 +55,7 @@ function applyLanguagePack() {
     document.getElementById("daysSaved").placeholder = p.pSpeed;
     document.getElementById("cancelKey").placeholder = p.pPass;
     document.getElementById("res-title-txt").innerText = p.statusTitle;
-    document.getElementById("cancel-label-txt").innerText = p.cancelBtn;
+    document.getElementById("cancel-label-txt").innerText = p.cancelLabel;
     document.getElementById("btn-cancel-txt").innerText = p.cancelBtn;
     document.getElementById("btn-add-txt").innerText = p.addBookingBtn;
     document.getElementById("btn-res-close-txt").innerText = p.closeBtn;
@@ -135,11 +134,70 @@ window.toggleTabStatus = function(day) { if (!window.db) return; var newStatus =
 window.toggleSpeedVisibility = function(day) { if (!window.db) return; var newStatus = !(bookingSettings.tabs[day].showSpeeds || false); var path = "tabs." + day + ".showSpeeds"; var obj = {}; obj[path] = newStatus; window.db.collection("settings").doc("booking").update(obj); };
 window.toggleSpecificSlot = function(slotId) { if (!window.db) return; var closedList = bookingSettings.closedSlots || []; if (closedList.includes(slotId)) closedList = closedList.filter(function(s) { return s !== slotId; }); else closedList.push(slotId); window.db.collection("settings").doc("booking").update({ closedSlots: closedList }).then(function() { openReservedModal(slotId); }); };
 window.toggleDesignateById = function(slotId, playerId) { if (!window.db) return; var ref = window.db.collection("slots").doc(slotId); ref.get().then(function(doc) { if (!doc.exists) return; var list = doc.data().attendees || []; var target = list.find(function(a) { return String(a.playerId) === String(playerId); }); if (!target) return; var nextState = !target.isDesignated; list.forEach(function(a) { a.isDesignated = (String(a.playerId) === String(playerId)) ? nextState : false; }); ref.update({ attendees: list }).then(function() { openReservedModal(slotId); }); }); };
-window.deleteAttendeeById = function(slotId, playerId) { if (!confirm("Delete?")) return; var ref = window.db.collection("slots").doc(slotId); ref.get().then(function(doc) { var list = doc.data().attendees.filter(function(a) { return String(a.playerId) !== String(playerId); }); ref.update({ attendees: list }).then(function() { openReservedModal(slotId); }); }); };
+window.deleteAttendeeById = function(slotId, uniqueId) { if (!confirm("Delete?")) return; var ref = window.db.collection("slots").doc(slotId); ref.get().then(function(doc) { var list = doc.data().attendees.filter(function(a) { return String(a.id) !== String(uniqueId); }); ref.update({ attendees: list }).then(function() { openReservedModal(slotId); }); }); };
 window.exportAllCSV = function() { try { if (typeof XLSX === 'undefined') return openCustomAlert("XLSX Loading..."); var wb = XLSX.utils.book_new(); ["monday", "tuesday", "thursday"].forEach(function(day) { var rows = []; Object.keys(allSlotsData).filter(function(k) { return k.startsWith(day); }).forEach(function(slotId) { var timeStr = slotId.split('_')[1]; allSlotsData[slotId].attendees.forEach(function(a) { rows.push({ "Day": day, "Time(UTC)": timeStr, "Alliance": a.alliance, "Nickname": a.player, "PlayerID": a.playerId, "SpeedDays": a.daysSaved, "Designated": a.isDesignated ? "Y" : "N" }); }); }); if (rows.length > 0) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day); }); XLSX.writeFile(wb, "2737_SVS_Booking.xlsx"); } catch (e) { openCustomAlert("Failed."); } };
-window.confirmBooking = function() { var p = langPack[currentLang]; var a = document.getElementById("alliance").value, nickname = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("cancelKey").value; if(!a || !nickname || !idNum || !d || !pass) return openCustomAlert(p.errFillAll); if(idNum.length !== 9) return openCustomAlert(p.errIdDigit); var newEntry = { alliance: a, player: nickname, playerId: idNum, playerNormalized: normalizeText(nickname), daysSaved: Number(d), passwordHash: simpleHash(pass), isDesignated: false }; window.db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(function() { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: nickname, playerId: idNum })); window.closeModal(); window.renderAll(); }); };
-window.confirmCancelAll = function() { var p = langPack[currentLang], pass = document.getElementById("editCancelKey").value, m = localStorage.getItem(MY_BOOKING_KEY); if(!pass || !m) return openCustomAlert(p.errFill); var mine = JSON.parse(m), pNormalized = normalizeText(mine.player); var ref = window.db.collection("slots").doc(selectedSlot); ref.get().then(function(doc) { if (!doc.exists) return; var list = doc.data().attendees || []; var target = list.find(function(a) { return a.playerNormalized === pNormalized && String(a.playerId) === String(mine.playerId); }); if(!target || target.passwordHash !== simpleHash(pass)) return openCustomAlert(p.errWrongPass); var updatedList = list.filter(function(a) { return !(a.playerNormalized === pNormalized && String(a.playerId) === String(mine.playerId)); }); ref.update({ attendees: updatedList }).then(function() { window.closeReservedModal(); window.renderAll(); }); }); };
+
+window.confirmBooking = function() {
+    var p = langPack[currentLang];
+    var a = document.getElementById("alliance").value, nickname = document.getElementById("player").value, idNum = document.getElementById("playerId").value, d = document.getElementById("daysSaved").value, pass = document.getElementById("cancelKey").value;
+    if(!a || !nickname || !idNum || !d || !pass) return openCustomAlert(p.errFillAll);
+    if(idNum.length !== 9) return openCustomAlert(p.errIdDigit);
+    var entryId = "uid_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+    var newEntry = { id: entryId, alliance: a, player: nickname, playerId: idNum, playerNormalized: normalizeText(nickname), daysSaved: Number(d), passwordHash: simpleHash(pass), isDesignated: false };
+    window.db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(function() { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: nickname, playerId: idNum })); window.closeModal(); window.renderAll(); });
+};
+
+window.editSpecificBooking = function(slotId, uniqueId) {
+    var p = langPack[currentLang], pass = document.getElementById("editCancelKey").value;
+    if(!pass) return openCustomAlert(p.errFill);
+    var ref = window.db.collection("slots").doc(slotId);
+    ref.get().then(function(doc) {
+        var list = doc.data().attendees || [];
+        var target = list.find(function(a) { return String(a.id) === String(uniqueId); });
+        if(!target) return openCustomAlert(p.errNoRes);
+        if (target.passwordHash !== simpleHash(pass)) return openCustomAlert(p.errWrongPass);
+        var newDays = prompt(p.promptEdit, target.daysSaved);
+        if(newDays === null || newDays.trim() === "") return;
+        if(isNaN(newDays)) return openCustomAlert(p.errNan);
+        target.daysSaved = Number(newDays);
+        ref.update({ attendees: list }).then(function() { openReservedModal(slotId); window.renderAll(); });
+    });
+};
+
+window.confirmCancelSpecific = function(uniqueId) {
+    var p = langPack[currentLang], pass = document.getElementById("editCancelKey").value;
+    if(!pass) return openCustomAlert(p.errFill);
+    var ref = window.db.collection("slots").doc(selectedSlot);
+    ref.get().then(function(doc) {
+        var list = doc.data().attendees || [];
+        var target = list.find(function(a) { return String(a.id) === String(uniqueId); });
+        if(!target) return openCustomAlert(p.errNoRes);
+        if (target.passwordHash !== simpleHash(pass)) return openCustomAlert(p.errWrongPass);
+        var updatedList = list.filter(function(a) { return String(a.id) !== String(uniqueId); });
+        ref.update({ attendees: updatedList }).then(function() { window.closeReservedModal(); window.renderAll(); });
+    });
+};
+
+window.confirmCancelAll = function() {
+    var p = langPack[currentLang], pass = document.getElementById("editCancelKey").value, m = localStorage.getItem(MY_BOOKING_KEY);
+    if(!pass) return openCustomAlert(p.errFill);
+    if(!m) return openCustomAlert(p.errNoRes);
+    var mine = JSON.parse(m), myName = normalizeText(mine.player);
+    var ref = window.db.collection("slots").doc(selectedSlot);
+    ref.get().then(function(doc) {
+        if (!doc.exists) return;
+        var list = doc.data().attendees || [];
+        var myEntries = list.filter(function(a) { return normalizeText(a.player) === myName; });
+        if (myEntries.length === 0) return openCustomAlert(p.errNoRes);
+        var isPassCorrect = myEntries.some(function(a) { return a.passwordHash === simpleHash(pass); });
+        if (!isPassCorrect) return openCustomAlert(p.errWrongPass);
+        var updatedList = list.filter(function(a) { return !(normalizeText(a.player) === myName && a.passwordHash === simpleHash(pass)); });
+        ref.update({ attendees: updatedList }).then(function() { window.closeReservedModal(); window.renderAll(); });
+    });
+};
+
 window.confirmCancel = function() { window.confirmCancelAll(); };
+
 window.handleAdminAccess = function() { sc++; if(sc>=3) { sc=0; var p=prompt("Admin Pass:"); if(p==="2737") { adminAuthenticated=true; document.getElementById("adminPanel").classList.add("show"); fillAdminInputs(); updateAdminUI(); } } };
 window.saveAutoSchedule = function() { if(!window.db) return; bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; ['monday', 'tuesday', 'thursday'].forEach(function(d) { bookingSettings.tabs[d].closeTime = document.getElementById("close-" + d).value; }); window.db.collection("settings").doc("booking").update(bookingSettings).then(function() { alert("Saved!"); }); };
 window.saveAdminBaseDate = function() { if(!window.db) return; var val = document.getElementById("adminBaseDate").value; if(!val) return; window.db.collection("settings").doc("booking").update({baseDate: val}).then(function() { alert("Saved!"); }); };
@@ -156,45 +214,95 @@ function fillAdminInputs() { if (!bookingSettings.baseDate) return; document.get
 window.openReserveFromStatus = function() { if(!isTabActuallyOpen(currentBuff) && !adminAuthenticated) return; window.closeReservedModal(); window.openReserveModal(); };
 window.openReserveModal = function() { var m = localStorage.getItem(MY_BOOKING_KEY); if(m) { var mine = JSON.parse(m); document.getElementById("alliance").value = mine.alliance || ""; document.getElementById("player").value = mine.player || ""; document.getElementById("playerId").value = mine.playerId || ""; } document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; document.getElementById("modal").classList.add("show"); };
 
-// 마지막으로 openReservedModal 함수가 팝업 내부의 중복을 방지하도록 재작성
 window.openReservedModal = function(id) { 
     document.getElementById("reservedSlotInfo").innerText = id.replace('_', ' ') + " UTC"; 
+    
+    // 리스트 영역 완벽 초기화
     var list = document.getElementById("attendeeListDetail"); 
-    list.innerHTML = ""; // 1. 항상 초기화
+    list.innerHTML = ""; 
+    
     var p = langPack[currentLang];
+    var m = localStorage.getItem(MY_BOOKING_KEY);
+    var mineName = m ? normalizeText(JSON.parse(m).player) : "";
+    
     var isSpecificallyClosed = bookingSettings.closedSlots && bookingSettings.closedSlots.includes(id);
     var effectivelyOpen = isTabActuallyOpen(currentBuff) && !isSpecificallyClosed;
 
     if (adminAuthenticated) {
-        var btn = document.createElement("button"); btn.innerText = effectivelyOpen ? p.slotOpenBtn : p.slotCloseBtn;
-        btn.className = effectivelyOpen ? "btn-primary" : "btn-danger"; btn.style.width = "100%"; btn.style.marginBottom = "10px";
-        btn.onclick = function() { window.toggleSpecificSlot(id); }; list.appendChild(btn);
+        var toggleCloseBtn = document.createElement("button");
+        toggleCloseBtn.innerText = effectivelyOpen ? p.slotOpenBtn : p.slotCloseBtn;
+        toggleCloseBtn.className = effectivelyOpen ? "btn-primary" : "btn-danger";
+        toggleCloseBtn.style.padding = "8px 16px"; toggleCloseBtn.style.fontSize = "12px"; toggleCloseBtn.style.fontWeight = "800"; toggleCloseBtn.style.width = "100%"; toggleCloseBtn.style.marginBottom = "15px"; toggleCloseBtn.style.borderRadius = "8px"; toggleCloseBtn.style.border = "none"; toggleCloseBtn.style.cursor = "pointer";
+        toggleCloseBtn.onclick = function() { window.toggleSpecificSlot(id); };
+        list.appendChild(toggleCloseBtn);
+        
+        var hr = document.createElement("hr"); hr.style.marginBottom = "15px"; list.appendChild(hr);
     }
     
     var slot = allSlotsData[id] || { attendees: [] };
-    if (!effectivelyOpen && !adminAuthenticated) { list.innerHTML = "<div style='padding:20px; font-weight:800; color:#e53935;'>" + p.closedAlert + "</div>"; }
-    else if (slot.attendees.length === 0 && !adminAuthenticated) { window.closeReservedModal(); window.openReserveModal(); return; }
     
-    slot.attendees.forEach(function(a) { 
-        var d = document.createElement("div"); d.className = "miniItem" + (a.isDesignated ? " is-designated" : "");
-        d.innerHTML = "<span>" + (a.isDesignated ? "👑 " : "") + "[" + a.alliance + "] " + a.player + " (" + a.daysSaved + "d)</span>";
-        if (adminAuthenticated) {
-            var desBtn = document.createElement("button"); desBtn.innerText = a.isDesignated ? "해제" : p.desBtn; desBtn.onclick = function() { window.toggleDesignateById(id, a.playerId); }; d.appendChild(desBtn);
-            var delBtn = document.createElement("button"); delBtn.innerText = p.delBtn; delBtn.onclick = function() { window.deleteAttendeeById(id, a.playerId); }; d.appendChild(delBtn);
+    if (!effectivelyOpen && !adminAuthenticated) { 
+        list.innerHTML = "<div style='padding:20px; font-weight:800; color:#e53935; text-align:center;'>" + p.closedAlert + "</div>"; 
+    } else if (slot.attendees.length === 0 && !adminAuthenticated) { 
+        window.closeReservedModal(); window.openReserveModal(); return; 
+    }
+    
+    var displayList = (slot.attendees || []).slice().sort(function(a, b) { return (b.isDesignated ? 1 : 0) - (a.isDesignated ? 1 : 0); });
+    
+    displayList.forEach(function(a) { 
+        var d = document.createElement("div"); 
+        d.className = a.isDesignated ? "miniItem is-designated" : "miniItem"; 
+        d.style.display = "flex"; d.style.justifyContent = "space-between"; d.style.alignItems = "center"; d.style.margin = "4px 0";
+        
+        var mainWrapper = document.createElement("div");
+        mainWrapper.style.display = "flex"; mainWrapper.style.justifyContent = "space-between"; mainWrapper.style.width = "100%"; mainWrapper.style.alignItems = "center";
+        
+        var textSpan = document.createElement("span");
+        textSpan.innerHTML = (a.isDesignated ? "👑 " : "") + "[" + a.alliance + "] " + a.player;
+        
+        var speedSpan = document.createElement("span");
+        speedSpan.innerHTML = " (" + a.daysSaved + "d)";
+        
+        mainWrapper.appendChild(textSpan); mainWrapper.appendChild(speedSpan);
+        d.appendChild(mainWrapper);
+        
+        var btnGroup = document.createElement("div");
+        btnGroup.style.display = "flex"; btnGroup.style.gap = "4px"; btnGroup.style.marginLeft = "10px";
+        
+        // 내 예약일 경우 닉네임 옆에 수정/취소 버튼 생성
+        if (!adminAuthenticated && normalizeText(a.player) === mineName) {
+            var userEditBtn = document.createElement("button");
+            userEditBtn.type = "button"; userEditBtn.innerText = p.editBtn; userEditBtn.className = "btn-primary";
+            userEditBtn.style.padding = "4px 8px"; userEditBtn.style.fontSize = "11px"; userEditBtn.style.flex = "none"; userEditBtn.style.width = "auto";
+            userEditBtn.onclick = function() { window.editSpecificBooking(id, a.id); };
+            btnGroup.appendChild(userEditBtn);
+
+            var userDelBtn = document.createElement("button");
+            userDelBtn.type = "button"; userDelBtn.innerText = p.cancelBtnSmall; userDelBtn.className = "btn-danger";
+            userDelBtn.style.padding = "4px 8px"; userDelBtn.style.fontSize = "11px"; userDelBtn.style.flex = "none"; userDelBtn.style.width = "auto";
+            userDelBtn.onclick = function() { window.confirmCancelSpecific(a.id); };
+            btnGroup.appendChild(userDelBtn);
         }
+        
+        // 관리자용 버튼
+        if (adminAuthenticated) { 
+            var desBtn = document.createElement("button"); desBtn.innerText = a.isDesignated ? "해제" : p.desBtn; desBtn.className = "btn-primary"; desBtn.style.padding = "4px 8px"; desBtn.style.fontSize = "11px"; desBtn.style.flex = "none"; desBtn.style.width = "auto"; desBtn.onclick = function() { window.toggleDesignateById(id, a.playerId); }; btnGroup.appendChild(desBtn);
+            var delBtn = document.createElement("button"); delBtn.innerText = p.delBtn; delBtn.className = "btn-danger"; delBtn.style.padding = "4px 8px"; delBtn.style.fontSize = "11px"; delBtn.style.flex = "none"; delBtn.style.width = "auto"; delBtn.onclick = function() { window.deleteAttendeeById(id, a.id); }; btnGroup.appendChild(delBtn); 
+        } 
+        
+        if(btnGroup.childNodes.length > 0) d.appendChild(btnGroup);
         list.appendChild(d); 
-    });
+    }); 
     
-    // 2. 예약 정보 폼이 여러 번 그려지지 않도록 구조 단순화
-    var area = document.createElement("div"); 
-    area.style.marginTop = "15px"; area.style.borderTop = "1px solid #eee"; area.style.paddingTop = "10px";
-    area.innerHTML = "<label style='display:block; margin-bottom:5px; font-size:13px; font-weight:800;'>" + p.cancelLabel + "</label><input type='password' id='editCancelKey' placeholder='" + p.pPass + "' style='margin-bottom:10px;' />";
-    var row = document.createElement("div"); row.className = "buttonRow";
-    var cBtn = document.createElement("button"); cBtn.innerText = p.cancelBtn; cBtn.className = "btn-danger"; cBtn.onclick = window.confirmCancelAll; row.appendChild(cBtn);
-    var aBtn = document.createElement("button"); aBtn.innerText = p.addBookingBtn; aBtn.className = "btn-primary"; aBtn.onclick = function() { window.closeReservedModal(); window.openReserveModal(); }; row.appendChild(aBtn);
-    area.appendChild(row); list.appendChild(area);
-    
-    document.getElementById("reservedModal").classList.add("show");
+    // 하단 전체 취소/추가 영역 (HTML에 미리 작성된 영역을 On/Off만 제어해서 중복 방지)
+    var cancelArea = document.querySelector("#reservedModal .cancelArea");
+    if (cancelArea) {
+        cancelArea.style.display = (adminAuthenticated || effectivelyOpen) ? "block" : "none";
+        var pwdInput = document.getElementById("editCancelKey");
+        if(pwdInput) pwdInput.value = ""; // 창 열때마다 비밀번호 입력칸 초기화
+    }
+
+    document.getElementById("reservedModal").classList.add("show"); 
 };
 
 init();
