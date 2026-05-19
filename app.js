@@ -2,11 +2,13 @@ var currentBuff = "monday";
 var selectedSlot = null;
 var allSlotsData = {};
 var MY_BOOKING_KEY = "svs_my_booking_info";
-var currentLang = localStorage.getItem("svs_lang") || "ko";
+/* [기본 언어 영문 세팅] 처음 접속하는 글로벌 유저를 위해 디폴트 값을 en으로 설정했습니다 */
+var currentLang = localStorage.getItem("svs_lang") || "en";
 
 var bookingSettings = { 
     baseDate: "2026-05-23T21:00:00", 
     globalOpenTime: "", 
+    closedSlots: [], /* 특정 개별 슬롯 마감 데이터를 담을 새로운 배열 창고 추가 */
     tabs: { 
         monday: { isOpen: true, closeTime: "", showSpeeds: false }, 
         tuesday: { isOpen: true, closeTime: "", showSpeeds: false }, 
@@ -18,7 +20,7 @@ var sc = 0;
 
 var langPack = {
     ko: {
-        notice: "📢 가능한 모든 시간을 중복으로 신청해주세요.\nYou can change the language using the blue menu at the top.",
+        notice: "📢 가능한 모든 시간을 중복으로 신청해주세요.",
         curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1",
         confirmedHeader: "👑 내 확정 버프 시간",
         addAlarm: "🔔 알람 등록",
@@ -30,10 +32,12 @@ var langPack = {
         addTitle: "새 예약 추가", confirmBtn: "확정", closeBtn: "닫기",
         statusTitle: "예약 현황", cancelLabel: "취소 비밀번호", cancelBtn: "예약 취소", addBookingBtn: "예약 추가",
         closedAlert: "예약 마감되었습니다.", speedUnit: "일",
-        pAlliance: "연맹 (ZTP, BUG, ZYZ 등)", pNickname: "닉네임", pId: "ID (숫자 9자리)", pSpeed: "가속 일수", pPass: "예약 취소용 비밀번호 (아무거나)"
+        pAlliance: "연맹 (ZTP, BUG, ZYZ 등)", pNickname: "닉네임", pId: "ID (숫자 9자리)", pSpeed: "가속 일수", pPass: "예약 취소용 비밀번호 (아무거나)",
+        editBtn: "수정", cancelBtnSmall: "취소", desBtn: "지정", delBtn: "삭제", slotOpenBtn: "🔓 이 예약칸 열기", slotCloseBtn: "🔒 이 예약칸 마감하기"
     },
     en: {
-        notice: "📢 Please book all available time slots you can attend.",
+        /* [영문 2줄 공지] 영문 모드일 때만 글로벌 안내 가이드가 출력됩니다 */
+        notice: "📢 Please book all available time slots you can attend.\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)",
         curvedTxt: "The website usage fee is Mona's Island 💚+1",
         confirmedHeader: "👑 My Confirmed Buffs",
         addAlarm: "🔔 Add Alarm",
@@ -45,7 +49,8 @@ var langPack = {
         addTitle: "New Booking", confirmBtn: "Confirm", closeBtn: "Close",
         statusTitle: "Booking Status", cancelLabel: "Password", cancelBtn: "Cancel Booking", addBookingBtn: "Add Booking",
         closedAlert: "Reservation Closed.", speedUnit: "d",
-        pAlliance: "Alliance (ZTP, BUG, ZYZ etc)", pNickname: "Nickname", pId: "Player ID (9 digits)", pSpeed: "Speed-up Days", pPass: "Password for cancel (any password)"
+        pAlliance: "Alliance (ZTP, BUG, ZYZ etc)", pNickname: "Nickname", pId: "Player ID (9 digits)", pSpeed: "Speed-up Days", pPass: "Password for cancel (any password)",
+        editBtn: "Edit", cancelBtnSmall: "Cancel", desBtn: "Crown", delBtn: "Delete", slotOpenBtn: "🔓 Open this Slot", slotCloseBtn: "🔒 Close this Slot"
     },
     zh: {
         notice: "📢 请尽可能重叠申请所有您可以参加的时间段。",
@@ -60,10 +65,11 @@ var langPack = {
         addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭",
         statusTitle: "预约状态", cancelLabel: "取消密码", cancelBtn: "取消预约", addBookingBtn: "添加预约",
         closedAlert: "预约已截止。", speedUnit: "天",
-        pAlliance: "联盟 (ZTP, BUG, ZYZ 等)", pNickname: "游戏昵称", pId: "玩家ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消密码 (任意)"
+        pAlliance: "联盟 (ZTP, BUG, ZYZ 等)", pNickname: "游戏昵称", pId: "玩家ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消的密码 (任意)",
+        editBtn: "Edit", cancelBtnSmall: "Cancel", desBtn: "Crown", delBtn: "Delete", slotOpenBtn: "🔓 Open Slot", slotCloseBtn: "🔒 Close Slot"
     },
     fr: {
-        notice: "📢 Veuillez réserver tous les créнеaux horaires disponibles auxquels vous pouvez participer.",
+        notice: "📢 Veuillez réserver tous les créneaux horaires disponibles auxquels vous pouvez participer.",
         curvedTxt: "Frais d'utilisation du site : L'île de Mona 💚+1",
         confirmedHeader: "👑 Mes Buffs Confirmés",
         addAlarm: "🔔 Alarme",
@@ -75,11 +81,12 @@ var langPack = {
         addTitle: "Nouvelle Réservation", confirmBtn: "Confirmer", closeBtn: "Fermer",
         statusTitle: "Statut de Réservation", cancelLabel: "Mot de passe", cancelBtn: "Annuler Réservation", addBookingBtn: "Ajouter Réservation",
         closedAlert: "Réservation fermée.", speedUnit: "j",
-        pAlliance: "Alliance (ZTP, BUG, ZYZ etc)", pNickname: "Pseudo", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", pPass: "Mot de passe pour annuler"
+        pAlliance: "Alliance (ZTP, BUG, ZYZ etc)", pNickname: "Pseudo", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", pPass: "Mot de passe pour annuler",
+        editBtn: "Edit", cancelBtnSmall: "Cancel", desBtn: "Crown", delBtn: "Delete", slotOpenBtn: "🔓 Open Slot", slotCloseBtn: "🔒 Close Slot"
     },
     ja: {
         notice: "📢 参加可能なすべての時間帯を重複して申請してください。",
-        curvedTxt: "予約サイトの利用料는 Monaの島 💚+1",
+        curvedTxt: "予約サイトの利用料は Monaの島 💚+1",
         confirmedHeader: "👑 確定した大統領バフ時間",
         addAlarm: "🔔 アラーム登録",
         mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)",
@@ -90,7 +97,8 @@ var langPack = {
         addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる",
         statusTitle: "予約状況", cancelLabel: "キャンセルパスワード", cancelBtn: "予約キャンセル", addBookingBtn: "予約追加",
         closedAlert: "予約は締め切られました。", speedUnit: "日",
-        pAlliance: "同盟 (ZTP, BUG, ZYZ など)", pNickname: "名前", pId: "プレイヤーID (9桁)", pSpeed: "加速日数", pPass: "キャンセル用パスワード"
+        pAlliance: "同盟 (ZTP, BUG, ZYZ など)", pNickname: "名前", pId: "プレイヤーID (9桁)", pSpeed: "加速日数", pPass: "キャンセル用パスワード",
+        editBtn: "Edit", cancelBtnSmall: "Cancel", desBtn: "Crown", delBtn: "Delete", slotOpenBtn: "🔓 Open Slot", slotCloseBtn: "🔒 Close Slot"
     },
     id: {
         notice: "📢 Silakan pesan semua slot waktu tersedia yang bisa Anda ikuti.",
@@ -105,7 +113,8 @@ var langPack = {
         addTitle: "Tambah Pesanan Baru", confirmBtn: "Konfirmasi", closeBtn: "Tutup",
         statusTitle: "Status Pesanan", cancelLabel: "Kata Sandi", cancelBtn: "Batalkan Pesanan", addBookingBtn: "Tambah Pesanan",
         closedAlert: "Pendaftaran telah ditutup.", speedUnit: "hari",
-        pAlliance: "Aliansi (ZTP, BUG, ZYZ dll)", pNickname: "Nama Pengguna", pId: "ID Pemain (9 digit)", pSpeed: "Jumlah Hari Speed-up", pPass: "Kata sandi pembatalan"
+        pAlliance: "Aliansi (ZTP, BUG, ZYZ dll)", pNickname: "Nama Pengguna", pId: "ID Pemain (9 digit)", pSpeed: "Jumlah Hari Speed-up", pPass: "Kata sandi pembatalan",
+        editBtn: "Edit", cancelBtnSmall: "Cancel", desBtn: "Crown", delBtn: "Delete", slotOpenBtn: "🔓 Open Slot", slotCloseBtn: "🔒 Close Slot"
     }
 };
 
@@ -334,8 +343,13 @@ window.renderAll = function() {
             var tId = padTime(h, m), eId = padTime(h, m + 30), id = currentBuff + "_" + tId, slot = allSlotsData[id] || { attendees: [] };
             if (filter === "mine" && !slot.attendees.some(isMyReservation)) continue;
             
+            /* [개별 마감 판단] DB에 저장된 개별 마감 슬롯 목록에 이 시간이 포함되어 있는지 확인 */
+            var isSpecificallyClosed = bookingSettings.closedSlots && bookingSettings.closedSlots.includes(id);
+            var effectivelyOpen = isOpen && !isSpecificallyClosed;
+            
             var div = document.createElement("div"); 
-            div.className = "slot " + (h >= 12 ? "pm-slot " : "") + (!isOpen ? " locked" : "") + (slot.attendees.some(isMyReservation) ? " myReservation" : "");
+            var slotClass = "slot " + (h >= 12 ? "pm-slot " : "") + (!effectivelyOpen ? " locked" : "") + (slot.attendees.some(isMyReservation) ? " myReservation" : "");
+            div.className = slotClass;
             
             var displayList = ((allSlotsData[id] || {}).attendees || []).slice().sort(function(a, b) {
                 return (b.isDesignated ? 1 : 0) - (a.isDesignated ? 1 : 0);
@@ -349,10 +363,16 @@ window.renderAll = function() {
                 return "<div class='" + itemClass + "'><span>" + crownText + "[" + a.alliance + "] " + a.player + "</span><span>" + speedText + "</span></div>"; 
             }).join('');
             
-            div.innerHTML = "<div class=\"dayBadge\">" + badgeDay + "</div><div class=\"timeRow\"><span>" + tId + "~" + eId + " UTC</span><span style=\"color:#d34b4b;\">" + slot.attendees.length + p.pers + "</span></div><div class=\"localTime\">Local: " + formatLocalTime(new Date(new Date().setUTCHours(h,m,0,0))) + "</div><div class=\"attendeeMiniList\">" + (listHtml || p.noRes) + "</div>";
+            var lockMark = isSpecificallyClosed ? " <span style='color:red;'>🔒</span>" : "";
+            div.innerHTML = "<div class=\"dayBadge\">" + badgeDay + "</div><div class=\"timeRow\"><span>" + tId + "~" + eId + " UTC" + lockMark + "</span><span style=\"color:#d34b4b;\">" + slot.attendees.length + p.pers + "</span></div><div class=\"localTime\">Local: " + formatLocalTime(new Date(new Date().setUTCHours(h,m,0,0))) + "</div><div class=\"attendeeMiniList\">" + (listHtml || p.noRes) + "</div>";
             
             (function(savedId) {
-                div.onclick = function() { if(!isOpen && !adminAuthenticated) return alert(p.closedAlert); selectedSlot = savedId; if ((allSlotsData[savedId] || {attendees:[]}).attendees.length > 0) openReservedModal(savedId); else window.openReserveModal(); };
+                div.onclick = function() { 
+                    if(!effectivelyOpen && !adminAuthenticated) return alert(p.closedAlert); 
+                    selectedSlot = savedId; 
+                    if ((allSlotsData[savedId] || {attendees:[]}).attendees.length > 0 || adminAuthenticated) openReservedModal(savedId); 
+                    else window.openReserveModal(); 
+                };
             })(id);
             grid.appendChild(div);
         }
@@ -377,14 +397,27 @@ window.toggleSpeedVisibility = function(day) {
     window.db.collection("settings").doc("booking").update(obj).then(function() { addLog(day.toUpperCase() + " Speed Show: " + newStatus); });
 };
 
-/* [완벽 수선 전격 도킹] 매개변수 이름을 기존 playerId에서 실제 고유 id로 정확하게 교정 완료 */
+/* [관리자 전용] 특정 슬롯 딱 1칸만 마감/오픈 스위치 */
+window.toggleSpecificSlot = function(slotId) {
+    if (!window.db) return;
+    var closedList = bookingSettings.closedSlots || [];
+    if (closedList.includes(slotId)) {
+        closedList = closedList.filter(function(s) { return s !== slotId; });
+    } else {
+        closedList.push(slotId);
+    }
+    window.db.collection("settings").doc("booking").update({ closedSlots: closedList }).then(function() {
+        addLog("Slot " + slotId + " toggled.");
+        openReservedModal(slotId); 
+    });
+};
+
 window.toggleDesignateById = function(slotId, uniqueId) {
     if (!window.db) return;
     var ref = window.db.collection("slots").doc(slotId);
     ref.get().then(function(doc) {
         if (!doc.exists) return;
         var list = doc.data().attendees || [];
-        /* [핵심 코드 수정] String(uniqueId)와 a.id를 칼같이 비교하여 딱 한 명만 조준 지정 */
         var target = list.find(function(a) { return String(a.id) === String(uniqueId); });
         if (!target) return;
         
@@ -452,9 +485,40 @@ window.confirmBooking = function() {
     window.db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(function() { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: p, playerId: idNum, cancelKey: pass })); window.closeModal(); window.renderAll(); });
 };
 
+/* [다이렉트 수정 기능] 비밀번호 검증 후 바로 가속일수를 물어보고 서버에 덮어씌우는 스마트 에딧 탑재 */
+window.editSpecificBooking = function(slotId, uniqueId) {
+    var pass = document.getElementById("editCancelKey").value;
+    var passAlertMsg = currentLang === 'ko' ? "아래 '취소 비밀번호' 칸에 본인의 비밀번호를 먼저 입력해주세요." : "Please enter your password in the bottom field first.";
+    
+    if(!pass) return alert(passAlertMsg);
+    var ref = window.db.collection("slots").doc(slotId);
+    
+    ref.get().then(function(doc) {
+        var list = doc.data().attendees || [];
+        var target = list.find(function(a) { return String(a.id) === String(uniqueId); });
+        
+        if(!target) return alert("Reservation not found.");
+        if (target.passwordHash !== simpleHash(pass)) return alert("Wrong password.");
+        
+        var promptMsg = currentLang === 'ko' ? "새로운 가속 일수(숫자)를 입력하세요:" : "Enter new speed-up days (numbers only):";
+        var newDays = prompt(promptMsg, target.daysSaved);
+        
+        if(newDays === null || newDays.trim() === "") return;
+        if(isNaN(newDays)) return alert(currentLang === 'ko' ? "숫자만 입력 가능합니다." : "Please enter a valid number.");
+        
+        target.daysSaved = Number(newDays);
+        ref.update({ attendees: list }).then(function() { 
+            openReservedModal(slotId); 
+            window.renderAll(); 
+        });
+    });
+};
+
 window.confirmCancelSpecific = function(uniqueId) {
     var pass = document.getElementById("editCancelKey").value, m = localStorage.getItem(MY_BOOKING_KEY);
-    if(!pass) return alert("Enter password.");
+    var passAlertMsg = currentLang === 'ko' ? "아래 '취소 비밀번호' 칸에 본인의 비밀번호를 먼저 입력해주세요." : "Please enter your password in the bottom field first.";
+    
+    if(!pass) return alert(passAlertMsg);
     var mine = JSON.parse(m), ref = window.db.collection("slots").doc(selectedSlot);
     
     ref.get().then(function(doc) {
@@ -504,11 +568,27 @@ function openReservedModal(id) {
     if (bookingSettings && bookingSettings.tabs && bookingSettings.tabs[currentBuff]) {
         showSpeeds = bookingSettings.tabs[currentBuff].showSpeeds || false;
     }
-    if (adminAuthenticated) showSpeeds = true;
     
     var p = langPack[currentLang];
     var m = localStorage.getItem(MY_BOOKING_KEY);
     var mineName = m ? normalizeText(JSON.parse(m).player) : "";
+    var isSpecificallyClosed = bookingSettings.closedSlots && bookingSettings.closedSlots.includes(id);
+
+    /* [관리자 기능 추가] 예약 현황창 꼭대기에 이 슬롯만 열고 닫는 토글 스위치 생성 */
+    if (adminAuthenticated) {
+        var toggleCloseBtn = document.createElement("button");
+        toggleCloseBtn.innerText = isSpecificallyClosed ? p.slotOpenBtn : p.slotCloseBtn;
+        toggleCloseBtn.className = isSpecificallyClosed ? "btn-primary" : "btn-danger";
+        toggleCloseBtn.style.padding = "8px 16px"; toggleCloseBtn.style.fontSize = "12px"; toggleCloseBtn.style.fontWeight = "800"; toggleCloseBtn.style.width = "100%"; toggleCloseBtn.style.marginBottom = "15px"; toggleCloseBtn.style.borderRadius = "8px"; toggleCloseBtn.style.border = "none"; toggleCloseBtn.style.cursor = "pointer";
+        toggleCloseBtn.onclick = function() { window.toggleSpecificSlot(id); };
+        list.appendChild(toggleCloseBtn);
+        
+        var hr = document.createElement("hr");
+        hr.style.marginBottom = "15px";
+        list.appendChild(hr);
+        
+        showSpeeds = true;
+    }
     
     var displayList = ((allSlotsData[id] || {}).attendees || []).slice().sort(function(a, b) {
         return (b.isDesignated ? 1 : 0) - (a.isDesignated ? 1 : 0);
@@ -537,26 +617,35 @@ function openReservedModal(id) {
         var btnGroup = document.createElement("div");
         btnGroup.style.display = "flex"; btnGroup.style.gap = "4px"; btnGroup.style.marginLeft = "10px";
         
+        /* [유저 수정 버튼 탑재] 취소 버튼 옆에 수정 버튼을 추가 배치했습니다 */
         if (!adminAuthenticated && normalizeText(a.player) === mineName) {
+            var userEditBtn = document.createElement("button");
+            userEditBtn.type = "button";
+            userEditBtn.innerText = p.editBtn;
+            userEditBtn.className = "btn-primary";
+            userEditBtn.style.padding = "4px 8px"; userEditBtn.style.fontSize = "11px"; userEditBtn.style.flex = "none"; userEditBtn.style.width = "auto";
+            userEditBtn.onclick = function() { window.editSpecificBooking(id, a.id); };
+            btnGroup.appendChild(userEditBtn);
+
             var userDelBtn = document.createElement("button");
             userDelBtn.type = "button";
-            userDelBtn.innerText = "취소";
+            userDelBtn.innerText = p.cancelBtnSmall;
             userDelBtn.className = "btn-danger";
             userDelBtn.style.padding = "4px 8px"; userDelBtn.style.fontSize = "11px"; userDelBtn.style.flex = "none"; userDelBtn.style.width = "auto";
             userDelBtn.onclick = function() { window.confirmCancelSpecific(a.id); };
             btnGroup.appendChild(userDelBtn);
+            
             d.appendChild(btnGroup);
         }
         
         if (adminAuthenticated) { 
             var desBtn = document.createElement("button"); 
-            desBtn.innerText = a.isDesignated ? "해제" : "지정";
+            desBtn.innerText = a.isDesignated ? "해제" : p.desBtn;
             desBtn.className = "btn-primary"; desBtn.style.padding = "4px 8px"; desBtn.style.fontSize = "11px"; desBtn.style.flex = "none"; desBtn.style.width = "auto";
-            /* 이름 기준이 아닌 고유 개별 모델 ID를 정확히 실어 나르도록 수정 완료 */
             desBtn.onclick = function() { window.toggleDesignateById(id, a.id); };
             
             var delBtn = document.createElement("button"); 
-            delBtn.innerText = "삭제"; delBtn.className = "btn-danger"; delBtn.style.padding = "4px 8px"; delBtn.style.fontSize = "11px"; delBtn.style.flex = "none"; delBtn.style.width = "auto";
+            delBtn.innerText = p.delBtn; delBtn.className = "btn-danger"; delBtn.style.padding = "4px 8px"; delBtn.style.fontSize = "11px"; delBtn.style.flex = "none"; delBtn.style.width = "auto";
             delBtn.onclick = function() { window.deleteAttendeeById(id, a.id); };
             
             btnGroup.appendChild(desBtn); btnGroup.appendChild(delBtn); d.innerHTML = ""; d.appendChild(mainWrapper); d.appendChild(btnGroup); 
