@@ -2,7 +2,7 @@ var currentBuff = "monday";
 var selectedSlot = null;
 var allSlotsData = {};
 var MY_BOOKING_KEY = "svs_my_booking_info";
-var currentLang = localStorage.getItem("svs_lang") || "en
+var currentLang = localStorage.getItem("svs_lang") || "en";
 
 var bookingSettings = { 
     baseDate: "2026-05-23T21:00:00", 
