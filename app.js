@@ -1,4 +1,4 @@
-var currentBuff = "monda
+var currentBuff = "monday";
 var selectedSlot = null;
 var allSlotsData = {};
 var MY_BOOKING_KEY = "svs_my_booking_info";
