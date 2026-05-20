@@ -20,8 +20,8 @@ var langPack = {
     fr: { notice: "📢 Veuillez réserver tous les créneaux horaires disponibles auxquels vous pouvez participer.\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "Frais d'utilisation du site : L'île de Mona 💚+1", confirmedHeader: "👑 Mes Buffs Confirmés", addAlarm: "🔔 Alarme", mon: "Lundi (Construction)", tue: "Mardi (Recherche)", thu: "Jeudi (Entraînement)", mondayShort: "Lundi", tuesdayShort: "Mardi", thursdayShort: "Jeudi", optAll: "Tout", optMine: "Mes Réservations", openAvailable: "✅ Réservation Ouverte", openClosed: "🔒 Réservation Fermée", pers: "Pers.", noRes: "Aucune Réservation", addTitle: "Nouvelle Réservation", confirmBtn: "Confirmer", closeBtn: "Fermer", statusTitle: "Statut de Réservation", cancelLabel: "Mot de passe", cancelBtn: "Annuler toutes mes réservations", addBookingBtn: "Ajouter Réservation", closedAlert: "Réservation fermée.", speedUnit: "j", pAlliance: "Alliance (ZTP, BUG etc)", pNickname: "Pseudo", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", pPass: "Mot de passe pour annuler", editBtn: "Modifier", cancelBtnSmall: "Annuler", desBtn: "Couronne", delBtn: "Supprimer", slotOpenBtn: "🔓 Ouvrir ce créneau", slotCloseBtn: "🔒 Fermer ce créneau", errFill: "Veuillez d'abord saisir votre mot de passe ci-dessous.", errWrongPass: "Mot de passe incorrect.", errNoRes: "Réservation introuvable.", errFillAll: "Veuillez remplir tous les champs.", errIdDigit: "L'identifiant doit comporter 9 chiffres.", promptEdit: "Entrez le nouveau nombre de jours (chiffres uniquement):", errNan: "Veuillez entrer un nombre valide." },
     ja: { notice: "📢 参加可能なすべての時間帯を重複して申請してください。\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "予約サイトの利用料は Monaの島 💚+1", confirmedHeader: "👑 確定した大統領バフ時間", addAlarm: "🔔 アラーム登録", mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)", mondayShort: "月曜日", tuesdayShort: "火曜日", thursdayShort: "木曜日", optAll: "すべて", optMine: "自分の予約", openAvailable: "✅ 予約受付中", openClosed: "🔒 予約終了", pers: "人", noRes: "予約なし", addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる", statusTitle: "予約状況", cancelLabel: "キャンセルパスワード", cancelBtn: "自分の予約をすべて取消", addBookingBtn: "予約追加", closedAlert: "予約は締め切られました。", speedUnit: "日", pAlliance: "同盟 (ZTP, BUG など)", pNickname: "名前", pId: "プレイヤーID (9桁)", pSpeed: "加速日数", pPass: "キャンセル用パスワード", editBtn: "修正", cancelBtnSmall: "取消", desBtn: "指定", delBtn: "削除", slotOpenBtn: "🔓 スロットを開く", slotCloseBtn: "🔒 スロットを閉じる", errFill: "まず下欄にパスワードを入力してください。", errWrongPass: "パスワードが間違っています。", errNoRes: "予約データが見つかりません。", errFillAll: "すべての項目を入力してください。", errIdDigit: "プレイヤーIDは9桁の数字でなければなりません。", promptEdit: "新しい加速日数（数字のみ）を入力してください:", errNan: "数字形式のみ入力可能です." },
     id: { notice: "📢 Silakan pesan semua slot waktu tersedia yang bisa Anda ikuti.\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "Biaya penggunaan situs adalah Pulau Mona 💚+1", confirmedHeader: "👑 Buff Saya yang Dikonfirmasi", addAlarm: "🔔 Pasang Alarm", mon: "Senin (Konstruksi)", tue: "Selasa (Riset)", thu: "Kamis (Pelatihan)", mondayShort: "Senin", tuesdayShort: "Selasa", thursdayShort: "Kamis", optAll: "Semua", optMine: "Pesanan Saya", openAvailable: "✅ Pendaftaran Buka", openClosed: "🔒 Pendaftaran Tutup", pers: "Orang", noRes: "Belum Ada Pesanan", addTitle: "Tambah Pesanan Baru", confirmBtn: "Konfirmasi", closeBtn: "Tutup", statusTitle: "Status Pesanan", cancelLabel: "Kata Sandi", cancelBtn: "Batalkan Semua Pesanan Saya", addBookingBtn: "Tambah Pesanan", closedAlert: "Pendaftaran telah ditutup.", speedUnit: "hari", pAlliance: "Aliansi (ZTP, BUG etc)", pNickname: "Nama Pengguna", pId: "Player ID (9 digit)", pSpeed: "Speed-up Hari", pPass: "Kata sandi pembatalan", editBtn: "Ubah", cancelBtnSmall: "Batal", desBtn: "Mahkota", delBtn: "Hapus", slotOpenBtn: "🔓 Buka Slot Ini", slotCloseBtn: "🔒 Tutup Slot Ini", errFill: "Silakan masukkan kata sandi Anda di kolom bawah terlebih dahulu.", errWrongPass: "Kata sandi salah.", errNoRes: "Data reservasi tidak ditemukan.", errFillAll: "Semua kolom harus diisi.", errIdDigit: "ID Pemain harus berupa 9 digit angka.", promptEdit: "Masukkan jumlah hari speed-up yang baru (angka saja):", errNan: "Hanya format angka yang diperbolehkan." },
-    tr: { notice: "📢 Lütfen katılabileceğiniz tüm uygun zaman dilimleri için rezervasyon yapın.\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "Web sitesi kullanım ücreti Mona'nın Adası 💚+1", confirmedHeader: "👑 Onaylanmış Güçlendirmelerim", addAlarm: "🔔 Alarm Ekle", mon: "Pazartesi (İnşaat)", tue: "Salı (Araştırma)", thu: "Perşembe (Eğitim)", mondayShort: "Pazartesi", tuesdayShort: "Salı", thursdayShort: "Perşembe", optAll: "Tümü", optMine: "Rezervasyonum", openAvailable: "✅ Rezervasyona Açık", openClosed: "🔒 Rezervasyon Kapalı", pers: "Kişi", noRes: "Rezervasyon Yok", addTitle: "Yeni Rezervasyon", confirmBtn: "Onayla", closeBtn: "Kapat", statusTitle: "Rezervasyon Durumu", cancelLabel: "Şifre", cancelBtn: "Tüm Rezervasyonlarımı İptal Et", addBookingBtn: "Rezervasyon Ekle", closedAlert: "Rezervasyon Kapandı.", speedUnit: "g", pAlliance: "İttifak (ZTP, BUG vb.)", pNickname: "Kullanıcı Adı", pId: "Oyuncu ID (9 haneli)", pSpeed: "Hızlandırma Günleri", pPass: "Şifre (herhangi bir şifre)", editBtn: "Düzenle", cancelBtnSmall: "İptal", desBtn: "Taç", delBtn: "Sil", slotOpenBtn: "🔓 Bu Slotu Aç", slotCloseBtn: "🔒 Bu Slotu Kapat", errFill: "Lütfen önce alt alana şifrenizi girin.", errWrongPass: "Yanlış şifre.", errNoRes: "Rezervasyon bulunamadı.", errFillAll: "Lütfen tüm alanları doldurun.", errIdDigit: "ID tam olarak 9 haneli olmalıdır.", promptEdit: "Yeni hızlandırma günlerini girin (sadece rakam):", errNan: "Lütfen geçerli bir sayı girin." },
-    ar: { notice: "📢 يرجى حجز جميع الأوقات المتاحة التي يمكنك الحضور فيها.\n(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "رسوم استخدام الموقع هي جزيرة منى 💚+1", confirmedHeader: "👑 تعزيزاتي المؤكدة", addAlarm: "🔔 إضافة منبه", mon: "الاثنين (بناء)", tue: "الثلاثاء (أبحاث)", thu: "الخميس (تدريب)", mondayShort: "الاثنين", tuesdayShort: "الثلاثاء", thursdayShort: "الخميس", optAll: "الكل", optMine: "حجزي", openAvailable: "✅ الحجز مفتوح", openClosed: "🔒 الحجز مغلق", pers: "شخص", noRes: "لا يوجد حجز", addTitle: "حجز جديد", confirmBtn: "تأكيد", closeBtn: "إغلاق", statusTitle: "حالة الحجز", cancelLabel: "كلمة المرور", cancelBtn: "إلغاء جميع حجوزاتي", addBookingBtn: "إضافة حجز", closedAlert: "الحجز مغلق.", speedUnit: "يوم", pAlliance: "التحالف (ZTP, BUG إلخ)", pNickname: "الاسم المستعار", pId: "معرف اللاعب (9 أرقام)", pSpeed: "أيام التسريع", pPass: "كلمة المرور (أي كلمة مرور)", editBtn: "تعديل", cancelBtnSmall: "إلغاء", desBtn: "تاج", delBtn: "حذف", slotOpenBtn: "🔓 فتح هذه الخانة", slotCloseBtn: "🔒 إغلاق هذه الخانة", errFill: "يرجى إدخال كلمة المرور في الحقل السفلي أولاً.", errWrongPass: "كلمة المرور خاطئة.", errNoRes: "لم يتم العثور على الحجز.", errFillAll: "يرجى تعبئة جميع الحقول.", errIdDigit: "يجب أن يتكون المعرف من 9 أرقام بالضبط.", promptEdit: "أدخل أيام التسريع الجديدة (أرقام فقط):", errNan: "يرجى إدخال رقم صحيح." }
+    tr: { notice: "📢 Lütfen katılabileceğiniz tüm uygun zaman dilimleri için rezervasyon yapın.\n(Üstteki mavi menüyü kullanarak dili değiştirebilirsiniz / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "Web sitesi kullanım ücreti Mona'nın Adası 💚+1", confirmedHeader: "👑 Onaylanmış Bufflarım", addAlarm: "🔔 Alarm Ekle", mon: "Pazartesi (İnşaat)", tue: "Salı (Araştırma)", thu: "Perşembe (Eğitim)", mondayShort: "Pazartesi", tuesdayShort: "Salı", thursdayShort: "Perşembe", optAll: "Tümü", optMine: "Benim Rezervasyonum", openAvailable: "✅ Rezervasyona Açık", openClosed: "🔒 Rezervasyon Kapalı", pers: "Kişi", noRes: "Rezervasyon Yok", addTitle: "Yeni Rezervasyon", confirmBtn: "Onayla", closeBtn: "Kapat", statusTitle: "Rezervasyon Durumu", cancelLabel: "Şifre", cancelBtn: "Tüm Rezervasyonlarımı İptal Et", addBookingBtn: "Rezervasyon Ekle", closedAlert: "Rezervasyon kapandı.", speedUnit: "g", pAlliance: "İttifak (ZTP, BUG vb.)", pNickname: "Kullanıcı Adı", pId: "Oyuncu ID (9 haneli)", pSpeed: "Hızlandırma (Gün)", pPass: "İptal Şifresi (Herhangi biri)", editBtn: "Düzenle", cancelBtnSmall: "İptal", desBtn: "Taç", delBtn: "Sil", slotOpenBtn: "🔓 Bu Saati Aç", slotCloseBtn: "🔒 Bu Saati Kapat", errFill: "Lütfen önce aşağıdaki alana şifrenizi girin.", errWrongPass: "Yanlış şifre.", errNoRes: "Rezervasyon bulunamadı.", errFillAll: "Lütfen tüm alanları doldurun.", errIdDigit: "Oyuncu ID tam olarak 9 haneli olmalıdır.", promptEdit: "Yeni hızlandırma gün sayısını girin (Sadece rakam):", errNan: "Lütfen geçerli bir sayı girin." },
+    ar: { notice: "📢 يرجى حجز جميع الأوقات المتاحة التي يمكنك الحضور فيها.\n(يمكنك تغيير اللغة باستخدام القائمة الزرقاء في الأعلى / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "رسوم استخدام الموقع هي جزيرة منى 💚+1", confirmedHeader: "👑 المعززات المؤكدة الخاصة بي", addAlarm: "🔔 إضافة منبه", mon: "الاثنين (بناء)", tue: "الثلاثاء (أبحاث)", thu: "الخميس (تدريب)", mondayShort: "الاثنين", tuesdayShort: "الثلاثاء", thursdayShort: "الخميس", optAll: "الكل", optMine: "حجوزاتي", openAvailable: "✅ الحجز مفتوح", openClosed: "🔒 الحجز مغلق", pers: "أشخاص", noRes: "لا يوجد حجز", addTitle: "حجز جديد", confirmBtn: "تأكيد", closeBtn: "إغلاق", statusTitle: "حالة الحجز", cancelLabel: "كلمة المرور", cancelBtn: "إلغاء جميع حجوزاتي", addBookingBtn: "إضافة حجز", closedAlert: "تم إغلاق الحجز.", speedUnit: "ي", pAlliance: "التحالف (ZTP، BUG إلخ)", pNickname: "الاسم المستعار", pId: "معرف اللاعب (9 أرقام)", pSpeed: "أيام التسريع", pPass: "كلمة المرور للإلغاء (أي كلمة)", editBtn: "تعديل", cancelBtnSmall: "إلغاء", desBtn: "تاج", delBtn: "حذف", slotOpenBtn: "🔓 فتح هذا الوقت", slotCloseBtn: "🔒 إغلاق هذا الوقت", errFill: "الرجاء إدخال كلمة المرور الخاصة بك في الحقل أدناه أولاً.", errWrongPass: "كلمة المرور خاطئة.", errNoRes: "لم يتم العثور على الحجز.", errFillAll: "يرجى تعبئة جميع الحقول.", errIdDigit: "يجب أن يتكون معرف اللاعب من 9 أرقام بالضبط.", promptEdit: "أدخل أيام التسريع الجديدة (أرقام فقط):", errNan: "الرجاء إدخال رقم صحيح." }
 };
 
 function openCustomAlert(msg) {
@@ -74,7 +74,7 @@ function applyLanguagePack() {
     var noticeKoEl = document.getElementById("notice-dynamic-txt");
     if (noticeKoEl) {
         if (currentLang === "ko") noticeKoEl.innerHTML = "📢 가능한 모든 시간을 중복으로 신청해주세요.";
-        else noticeKoEl.innerHTML = "📢 Please book all available time slots you can attend.<br />(You can change the language using the blue menu at the top / 상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)";
+        else noticeKoEl.innerHTML = p.notice;
     }
     
     var safeSetText = function(id, text) {
@@ -117,37 +117,6 @@ function formatLocalTime(date) { return date.toLocaleTimeString([], { hour: '2-d
 function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
 function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return "h_" + Math.abs(hash); }
 function isTabActuallyOpen(day) { var s = bookingSettings.tabs[day], now = new Date(); if (!s.isOpen) return false; if (bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime)) return false; if (s.closeTime && now > new Date(s.closeTime)) return false; return true; }
-
-function isMyReservation(person) { 
-    var m = localStorage.getItem(MY_BOOKING_KEY); 
-    if(!m || !person) return false; 
-    var mine = JSON.parse(m); 
-    return normalizeText(person.player) === normalizeText(mine.player); 
-}
-
-function getGoogleCalendarUrl(dayName, timeStr) {
-    var parts = timeStr.split(":");
-    var hour = parseInt(parts[0], 10);
-    var min = parseInt(parts[1], 10);
-    var daysMap = { monday: 1, tuesday: 2, thursday: 4 };
-    var targetDay = daysMap[dayName];
-    
-    var now = new Date();
-    var targetDate = new Date();
-    var currentDay = now.getDay();
-    var distance = targetDay - currentDay;
-    if (distance <= 0) distance += 7;
-    
-    targetDate.setDate(now.getDate() + distance);
-    targetDate.setUTCHours(hour, min, 0, 0);
-    var endDate = new Date(targetDate.getTime() + 30 * 60 * 1000);
-    
-    var formatTime = function(d) { return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z"; };
-    var title = encodeURIComponent("👑 [2737 SVS] Minister Buff Time");
-    var details = encodeURIComponent("It's your minister buff time! Please use speedups.");
-    var dates = formatTime(targetDate) + "/" + formatTime(endDate);
-    return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + title + "&dates=" + dates + "&details=" + details;
-}
 
 function updateMyConfirmedSummary() {
     var el = document.getElementById("myConfirmedSection");
@@ -207,16 +176,16 @@ window.renderAll = function() {
     for (var h = 0; h < 24; h++) {
         for (var m = 0; m < 60; m += 30) {
             var tId = padTime(h, m), eId = padTime(h, m + 30), id = currentBuff + "_" + tId, slot = allSlotsData[id] || { attendees: [] };
-            if (filter === "mine" && !slot.attendees.some(isMyReservation)) continue;
+            if (filter === "mine" && !slot.attendees.some(function(a) { return normalizeText(a.player) === normalizeText(localStorage.getItem(MY_BOOKING_KEY) ? JSON.parse(localStorage.getItem(MY_BOOKING_KEY)).player : ""); })) continue;
             
             var isSpecificallyClosed = bookingSettings.closedSlots && bookingSettings.closedSlots.includes(id);
             var effectivelyOpen = isOpen && !isSpecificallyClosed;
             
             var div = document.createElement("div"); 
-            var slotClass = "slot " + (h >= 12 ? "pm-slot " : "") + (!effectivelyOpen ? " locked" : "") + (slot.attendees.some(isMyReservation) ? " myReservation" : "");
+            var slotClass = "slot " + (h >= 12 ? "pm-slot " : "") + (!effectivelyOpen ? " locked" : "") + (slot.attendees.some(function(a) { return normalizeText(a.player) === normalizeText(localStorage.getItem(MY_BOOKING_KEY) ? JSON.parse(localStorage.getItem(MY_BOOKING_KEY)).player : ""); }) ? " myReservation" : "");
             div.className = slotClass;
             
-            var displayList = ((allSlotsData[id] || {}).attendees || []).slice().sort(function(a, b) { return (b.isDesignated ? 1 : 0) - (a.isDesignated ? 1 : 0); });
+            var displayList = (slot.attendees || []).slice().sort(function(a, b) { return (b.isDesignated ? 1 : 0) - (a.isDesignated ? 1 : 0); });
             
             var listHtml = displayList.slice(0,3).map(function(a, i) { 
                 var speedText = showSpeeds ? "(" + a.daysSaved + p.speedUnit + ")" : "";
@@ -329,8 +298,7 @@ window.closeReservedModal = function() { document.getElementById("reservedModal"
 window.closeAdmin = function() { document.getElementById("adminPanel").classList.remove("show"); };
 function fillAdminInputs() { if (!bookingSettings.baseDate) return; document.getElementById("adminBaseDate").value = bookingSettings.baseDate.slice(0, 16); document.getElementById("global-open-time").value = bookingSettings.globalOpenTime || ""; ['monday', 'tuesday', 'thursday'].forEach(function(day) { if(bookingSettings.tabs[day].closeTime) document.getElementById("close-" + day).value = bookingSettings.tabs[day].closeTime; }); }
 window.openReserveFromStatus = function() { if(!isTabActuallyOpen(currentBuff) && !adminAuthenticated) return; window.closeReservedModal(); window.openReserveModal(); };
-
-window.openReserveModal = function() { var m = localStorage.getItem(MY_BOOKING_KEY); if(m) { var mine = JSON.parse(m); document.getElementById("alliance").value = mine.alliance || ""; document.getElementById("player").value = mine.player || ""; document.getElementById("playerId").value = mine.playerId || ""; } document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; document.getElementById("modal").classList.add("show"); };
+window.openReserveModal = function() { var m = localStorage.getItem(MY_BOOKING_KEY); if(m) { var mine = JSON.parse(m); document.getElementById("alliance").value = mine.alliance || ""; document.getElementById("player").value = mine.player || ""; document.getElementById("playerId").value = mine.playerId || ""; document.getElementById("cancelKey").value = mine.cancelKey || ""; } document.getElementById("selectedSlotInfo").innerText = selectedSlot.replace('_', ' ') + " UTC"; document.getElementById("modal").classList.add("show"); };
 
 window.openReservedModal = function(id) { 
     document.getElementById("reservedSlotInfo").innerText = id.replace('_', ' ') + " UTC"; 
