@@ -4,24 +4,19 @@ var allSlotsData = {};
 var MY_BOOKING_KEY = "svs_my_booking_info";
 var currentLang = localStorage.getItem("svs_lang") || "ko"; 
 
-// 초기화 에러 방지를 위한 완벽한 기본 객체 구조 정의
 var bookingSettings = { 
     baseDate: "2026-05-23T21:00:00", 
     globalOpenTime: "", 
     globalCloseTime: "", 
-    closedSlots: [], 
+    closedSlots: [], // 개별 마감 리스트
     adminLogs: [], 
-    tabs: { 
-        monday: { isOpen: true, showSpeeds: false }, 
-        tuesday: { isOpen: true, showSpeeds: false }, 
-        thursday: { isOpen: true, showSpeeds: false } 
-    } 
+    tabs: { monday: { isOpen: true, showSpeeds: false }, tuesday: { isOpen: true, showSpeeds: false }, thursday: { isOpen: true, showSpeeds: false } } 
 };
 var adminAuthenticated = false;
 var sc = 0;
 
 var langPack = {
-    ko: { notice: "📢 요일별 1인 1타임만 예약 가능합니다.<br />(상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1", confirmedHeader: "👑 내 예약 시간", addAlarm: "🔔 알람 등록", mon: "월요일 (건설)", tue: "화요일 (연구)", thu: "목요일 (훈련)", mondayShort: "월요일", tuesdayShort: "화요일", thursdayShort: "목요일", optAll: "전체 / All", optMine: "내 예약 / Mine", openAvailable: "✅ 예약 가능", openClosed: "🔒 예약 마감", pers: "명", noRes: "No Reservation / 예약 없음", addTitle: "새 예약 추가", confirmBtn: "확정", closeBtn: "닫기", statusTitle: "예약 현황", cancelLabel: "취소 비밀번호", cancelBtn: "나의 예약 전체 취소", addBookingBtn: "예약 추가", closedAlert: "예약 마감되었습니다.", speedUnit: "일", pAlliance: "연맹 (ZTP, BUG 등)", pNickname: "닉네임", pId: "플레이어 ID (9자리)", pSpeed: "가속 일수", pPass: "비밀번호 (아무거나)", editBtn: "수정", cancelBtnSmall: "취소", delBtn: "삭제", slotOpenBtn: "🔓 예약 열기", slotCloseBtn: "🔒 예약 마감", errFill: "비밀번호 칸에 본인의 비밀번호를 먼저 입력해주세요.", errWrongPass: "비밀번호가 올바르지 않습니다.", errNoRes: "삭제할 예약 데이터를 찾을 수 없습니다.", errFillAll: "모든 항목을 입력해야 합니다.", errIdDigit: "플레이어 ID는 반드시 숫자 9자리여야 합니다.", promptEdit: "새로운 가속 일수(숫자만)를 입력하세요:", errNan: "숫자 형식만 입력 가능합니다.", promptDelete: "정말 삭제하시겠습니까?", promptClear: "모든 예약 데이터를 삭제하시겠습니까? (이 작업은 기록에 남습니다)", promptSaved: "저장되었습니다!" },
+    ko: { notice: "📢 요일별 1인 1타임만 예약 가능합니다.<br />(상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1", confirmedHeader: "👑 내 예약 시간", addAlarm: "🔔 알람 등록", mon: "월요일 (건설)", tue: "화요일 (연구)", thu: "목요일 (훈련)", mondayShort: "월요일", tuesdayShort: "화요일", thursdayShort: "목요일", optAll: "전체 / All", optMine: "내 예약 / Mine", openAvailable: "✅ 예약 가능", openClosed: "🔒 예약 마감", pers: "명", noRes: "No Reservation / 예약 없음", addTitle: "새 예약 추가", confirmBtn: "확정", closeBtn: "닫기", statusTitle: "예약 현황", cancelLabel: "취소 비밀번호", cancelBtn: "나의 예약 전체 취소", addBookingBtn: "예약 추가", closedAlert: "예약 마감되었습니다.", speedUnit: "일", pAlliance: "연맹 (ZTP, BUG 등)", pNickname: "닉네임", pId: "플레이어 ID (9자리)", pSpeed: "가속 일수", pPass: "비밀번호 (아무거나)", editBtn: "수정", cancelBtnSmall: "취소", delBtn: "삭제", slotOpenBtn: "🔓 예약 열기", slotCloseBtn: "🔒 예약 마감", errFill: "비밀번호 칸에 본인의 비밀번호를 먼저 입력해주세요.", errWrongPass: "비밀번호가 올바르지 않습니다.", errNoRes: "삭제할 예약 데이터를 찾을 수 없습니다.", errFillAll: "모든 항목을 입력해야 합니다.", errIdDigit: "플레이어 ID는 반드시 숫자 9자리여야 합니다.", promptEdit: "새로운 가속 일수(숫자만)를 입력하세요:", errNan: "숫자 형식만 입력 가능합니다.", promptDelete: "정말 삭제하시겠습니까?", promptClear: "모든 데이터를 초기화하시겠습니까? (이 작업은 기록에 남습니다)", promptSaved: "저장되었습니다!" },
     en: { notice: "📢 1 Booking Per Person Per Day.\n(You can change the language using the blue menu at the top)", curvedTxt: "The website usage fee is Mona's Island 💚+1", confirmedHeader: "👑 My Booked Buffs", addAlarm: "🔔 Add Alarm", mon: "Monday (Construction)", tue: "Tuesday (Research)", thu: "Thursday (Troops Training)", mondayShort: "Monday", tuesdayShort: "Tuesday", thursdayShort: "Thursday", optAll: "All", optMine: "My Booking", openAvailable: "✅ Booking Open", openClosed: "🔒 Booking Closed", pers: "Pers.", noRes: "No Reservation", addTitle: "New Booking", confirmBtn: "Confirm", closeBtn: "Close", statusTitle: "Booking Status", cancelLabel: "Password", cancelBtn: "Cancel My All Bookings", addBookingBtn: "Add Booking", closedAlert: "Reservation Closed.", speedUnit: "d", pAlliance: "Alliance (ZTP, BUG etc)", pNickname: "Nickname", pId: "Player ID (9 digits)", pSpeed: "Speed-up Days", pPass: "Password (any password)", editBtn: "Edit", cancelBtnSmall: "Cancel", delBtn: "Delete", slotOpenBtn: "🔓 Open", slotCloseBtn: "🔒 Close", errFill: "Please enter your password in the bottom field first.", errWrongPass: "Wrong password.", errNoRes: "Reservation not found.", errFillAll: "Please fill all fields.", errIdDigit: "ID must be exactly 9 digits.", promptEdit: "Enter new speed-up days (numbers only):", errNan: "Please enter a valid number.", promptDelete: "Are you sure you want to delete?", promptClear: "Clear all data? (This action is logged)", promptSaved: "Saved!" }
 };
 
@@ -150,7 +145,7 @@ function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
 function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return "h_" + Math.abs(hash); }
 
 function isTabActuallyOpen(day) { 
-    if (!bookingSettings || !bookingSettings.tabs || !bookingSettings.tabs[day]) return true; // 방어 코드 추가
+    if (!bookingSettings || !bookingSettings.tabs || !bookingSettings.tabs[day]) return true; 
     var s = bookingSettings.tabs[day], now = new Date(); 
     if (!s.isOpen) return false; 
     if (bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime)) return false; 
@@ -219,7 +214,6 @@ function updateMyConfirmedSummary() {
     el.style.display = "block";
 }
 
-// window 전역 함수로 먼저 배치하여 레이스 컨디션 완벽 차단
 window.renderAll = function() {
     var grid = document.getElementById("slots"); if (!grid) return; grid.innerHTML = "";
     var isOpen = isTabActuallyOpen(currentBuff), filter = document.getElementById("filterStatus") ? document.getElementById("filterStatus").value : "all";
@@ -240,12 +234,13 @@ window.renderAll = function() {
             
             var id = currentBuff + "_" + startId;
             var slot = allSlotsData[id] || {};
-            // [핵심 에러 해결] slot이 undefined거나 attendees가 없을 때 안전하게 빈 배열 할당
             var attendees = slot.attendees || [];
             
             if (filter === "mine" && !attendees.some(function(a) { return normalizeText(a.player) === normalizeText(localStorage.getItem(MY_BOOKING_KEY) ? JSON.parse(localStorage.getItem(MY_BOOKING_KEY)).player : ""); })) continue;
             
-            var isSpecificallyClosed = bookingSettings.closedSlots && bookingSettings.closedSlots.includes(id);
+            // [방어 코드 추가] closedSlots 배열이 존재하지 않을 때 에러 차단
+            var closedList = bookingSettings.closedSlots || [];
+            var isSpecificallyClosed = closedList.includes(id);
             var effectivelyOpen = isOpen && !isSpecificallyClosed;
             
             var div = document.createElement("div"); 
@@ -331,7 +326,7 @@ window.confirmAdminLogin = function() {
 };
 
 window.toggleTabStatus = function(day) { 
-    if (!window.db || !bookingSettings.tabs[day]) return; 
+    if (!window.db || !bookingSettings.tabs || !bookingSettings.tabs[day]) return; 
     var newStatus = !bookingSettings.tabs[day].isOpen; 
     var path = "tabs." + day + ".isOpen"; 
     var obj = {}; obj[path] = newStatus; 
@@ -341,7 +336,7 @@ window.toggleTabStatus = function(day) {
 };
 
 window.toggleSpeedVisibility = function(day) { 
-    if (!window.db || !bookingSettings.tabs[day]) return; 
+    if (!window.db || !bookingSettings.tabs || !bookingSettings.tabs[day]) return; 
     var newStatus = !(bookingSettings.tabs[day].showSpeeds || false); 
     var path = "tabs." + day + ".showSpeeds"; 
     var obj = {}; obj[path] = newStatus; 
@@ -494,7 +489,7 @@ window.backupAndClearAll = function() {
     window.openCustomConfirm(p.promptClear || "Clear all data?", function() {
         window.db.collection("slots").get().then(function(snap) { 
             var batch = window.db.batch(); 
-            snap.forEach(function(doc) { batch.delete(doc.ref); }); 
+            snap.forEach(function(doc) { batch.delete(doc.ref)); 
             batch.commit().then(function() { 
                 window.addAdminLog("🚨 데이터 센터 경보: 관리자가 전체 예약을 강제 리셋했습니다.");
                 window.closeAdmin(); window.renderAll(); 
