@@ -10,14 +10,17 @@ var bookingSettings = {
     globalCloseTime: "", 
     closedSlots: [], 
     adminLogs: [], 
-    tabs: { monday: { isOpen: true, showSpeeds: false }, tuesday: { isOpen: true, showSpeeds: false }, thursday: { isOpen: true, showSpeeds: false } } 
+    tabs: { 
+        monday: { isOpen: true, showSpeeds: false }, 
+        tuesday: { isOpen: true, showSpeeds: false }, 
+        thursday: { isOpen: true, showSpeeds: false } 
+    } 
 };
 var adminAuthenticated = false;
 var sc = 0;
 
 var langPack = {
     ko: { 
-        // [수정] 피드백 반영: 깔끔한 검은색(#2d3748)으로 공지 통일, 토~일요일 범위 수정
         notice: "📢 요일별 1인 1타임만 예약 가능합니다.<br /><span style='color: #2d3748; font-weight: bold;'>[예약 오픈 조건] 수요일: 가속 50일 이상 | 목요일: 30일 이상 | 금요일: 15일 이상 | 토~일요일: 자유 예약</span>", 
         curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1", 
         confirmedHeader: "👑 내 예약 시간", 
@@ -43,7 +46,6 @@ var langPack = {
         addBookingBtn: "예약 추가", 
         closedAlert: "예약 마감되었습니다.", 
         speedUnit: "일", 
-        // [수정] 피드백 주신 한국어 텍스트 패치 완벽 반영
         pAlliance: "연맹 (ZYZ, BUG, ZTP 등)", 
         pNickname: "닉네임", 
         pId: "플레이어 ID (9자리)", 
@@ -202,9 +204,7 @@ function applyLanguagePack() {
     if (langSelectEl) langSelectEl.value = currentLang;
     
     var noticeKoEl = document.getElementById("notice-dynamic-txt");
-    if (noticeKoEl) {
-        noticeKoEl.innerHTML = p.notice; 
-    }
+    if (noticeKoEl) { noticeKoEl.innerHTML = p.notice; }
     
     var safeSetText = function(id, text) { var el = document.getElementById(id); if (el) el.innerText = text; };
     var safeSetPlaceholder = function(id, placeholder) { var el = document.getElementById(id); if (el) el.placeholder = placeholder; };
@@ -232,16 +232,23 @@ function getLocalTimeStr(h, m) {
 function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
 function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return "h_" + Math.abs(hash); }
 
+// [로직 교정] 자동 예약 마감 상태에서도 관리자가 수동 ON한 요일은 무조건 강제 오픈되도록 연동식 개선
 function isTabActuallyOpen(day) { 
     if (!bookingSettings || !bookingSettings.tabs || !bookingSettings.tabs[day]) return true; 
     var s = bookingSettings.tabs[day], now = new Date(); 
+    
+    // 1순위: 관리자가 직접 수동으로 비활성화(OFF)했다면 조건 없이 무조건 마감
     if (!s.isOpen) return false; 
-    if (bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime)) return false; 
+    
+    // 2순위: 전체 마감 스케줄 체크 (지정 시각을 지나면 자동 마감)
     if (bookingSettings.globalCloseTime && now > new Date(bookingSettings.globalCloseTime)) return false; 
+    
+    // 3순위: 전체 오픈 스케줄 체크 (지정 시각 이전이면 자동 대기)
+    if (bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime)) return false; 
+    
     return true; 
 }
 
-// [문법 오류 교정] 오타로 꼬여있던 시간 포맷 대괄호 유효성 정상화 완료
 window.addAdminLog = function(msg) {
     if(!window.db) return;
     var now = new Date();
@@ -602,12 +609,27 @@ window.backupAndClearAll = function() {
     });
 };
 
+// [UI 싱크 개정] 스케줄 마감 상태라 하더라도, 수동 버튼 UI 컴포넌트 클래스가 비활성(OFF) 상태와 정확히 연동되도록 바인딩 보완
 function updateAdminUI() { 
     if(!bookingSettings || !bookingSettings.tabs) return;
+    
+    var now = new Date();
+    var isScheduleClosed = bookingSettings.globalCloseTime && now > new Date(bookingSettings.globalCloseTime);
+    var isScheduleNotOpened = bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime);
+    var isSystemLocked = isScheduleClosed || isScheduleNotOpened; // 전체 스케줄 차단 여부
+
     ['monday', 'tuesday', 'thursday'].forEach(function(day) { 
         if(!bookingSettings.tabs[day]) return;
-        var btn = document.getElementById("btn-admin-" + day); if (btn) { btn.classList.toggle("on", bookingSettings.tabs[day].isOpen); } 
-        var sBtn = document.getElementById("btn-speed-" + day); if (sBtn) { sBtn.classList.toggle("on-speed", bookingSettings.tabs[day].showSpeeds); } 
+        
+        var btn = document.getElementById("btn-admin-" + day); 
+        if (btn) { 
+            // 스케줄 마감 상태이거나 수동으로 껐을 경우 UI 단추 OFF 표시
+            var shouldBeOn = bookingSettings.tabs[day].isOpen && !isSystemLocked;
+            btn.classList.toggle("on", shouldBeOn); 
+        } 
+        
+        var sBtn = document.getElementById("btn-speed-" + day); 
+        if (sBtn) { sBtn.classList.toggle("on-speed", bookingSettings.tabs[day].showSpeeds); } 
     }); 
 }
 
