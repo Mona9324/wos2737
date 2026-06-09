@@ -17,8 +17,8 @@ var sc = 0;
 
 var langPack = {
     ko: { 
-        // [수정] 가독성이 떨어지던 형광 동적 공지 대신 한눈에 들어오는 가속 조건 고정 공지 배치
-        notice: "📢 요일별 1인 1타임만 예약 가능합니다.<br /><span style='color: #1976d2; font-weight: bold;'>[예약 오픈 조건] 수요일: 가속 50일 이상 | 목요일: 30일 이상 | 금요일: 15일 이상 | 토~화요일: 자유 예약</span>", 
+        // [수정] 색상을 차분하게 통일하고, 토~일요일로 범위 정정
+        notice: "📢 요일별 1인 1타임만 예약 가능합니다.<br /><span style='color: #2d3748; font-weight: bold;'>[예약 오픈 조건] 수요일: 가속 50일 이상 | 목요일: 30일 이상 | 금요일: 15일 이상 | 토~일요일: 자유 예약</span>", 
         curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1", 
         confirmedHeader: "👑 내 예약 시간", 
         addAlarm: "🔔 알람 등록", 
@@ -43,11 +43,12 @@ var langPack = {
         addBookingBtn: "예약 추가", 
         closedAlert: "예약 마감되었습니다.", 
         speedUnit: "일", 
-        pAlliance: "연맹 (ZTP, BUG 등)", 
+        // [유의사항 반영] 요청하신 한국어 텍스트 패치 적용
+        pAlliance: "연맹 (ZYZ, BUG, ZTP 등)", 
         pNickname: "닉네임", 
         pId: "플레이어 ID (9자리)", 
         pSpeed: "가속 일수", 
-        pPass: "비밀번호 (아무거나)", 
+        pPass: "예약취소를 위한 비밀번호 (아무거나)", 
         editBtn: "수정", 
         cancelBtnSmall: "취소", 
         delBtn: "삭제", 
@@ -65,7 +66,7 @@ var langPack = {
         promptSaved: "저장되었습니다!" 
     },
     en: { 
-        notice: "📢 1 Booking Per Person Per Day.<br /><span style='color: #1976d2; font-weight: bold;'>[Req] Wed: 50d+ | Thu: 30d+ | Fri: 15d+ | Sat~Tue: Free</span>", 
+        notice: "📢 1 Booking Per Person Per Day.<br /><span style='color: #2d3748; font-weight: bold;'>[Requirements] Wed: 50d+ | Thu: 30d+ | Fri: 15d+ | Sat~Sun: Free Booking</span>", 
         curvedTxt: "The website usage fee is Mona's Island 💚+1", 
         confirmedHeader: "👑 My Booked Buffs", 
         addAlarm: "🔔 Add Alarm", 
@@ -90,11 +91,11 @@ var langPack = {
         addBookingBtn: "Add Booking", 
         closedAlert: "Reservation Closed.", 
         speedUnit: "d", 
-        pAlliance: "Alliance (ZTP, BUG etc)", 
+        pAlliance: "Alliance (ZYZ, BUG, ZTP etc)", 
         pNickname: "Nickname", 
         pId: "Player ID (9 digits)", 
         pSpeed: "Speed-up Days", 
-        pPass: "Password (any password)", 
+        pPass: "Password for cancellation (any password)", 
         editBtn: "Edit", 
         cancelBtnSmall: "Cancel", 
         delBtn: "Delete", 
@@ -129,7 +130,7 @@ function openCustomAlert(msg) {
     var titleEl = document.getElementById("alert-modal-title");
     if(titleEl) titleEl.innerText = currentLang === 'ko' ? "⚠️ 안내" : "⚠️ Notice";
     var msgEl = document.getElementById("alertModalMessage");
-    if(msgEl) msgEl.innerHTML = msg; // 개행(\n -> <br />) 처리를 위해 innerHTML로 변경
+    if(msgEl) msgEl.innerHTML = msg; // 팝업 줄바꿈 처리를 위해 innerHTML 고정
     var modal = document.getElementById("alertModal");
     if(modal) modal.classList.add("show");
 }
@@ -202,7 +203,7 @@ function applyLanguagePack() {
     
     var noticeKoEl = document.getElementById("notice-dynamic-txt");
     if (noticeKoEl) {
-        noticeKoEl.innerHTML = p.notice; // 고정된 스타일 공지사항 주입
+        noticeKoEl.innerHTML = p.notice; 
     }
     
     var safeSetText = function(id, text) { var el = document.getElementById(id); if (el) el.innerText = text; };
@@ -500,7 +501,7 @@ window.confirmBooking = function() {
         }
     });
 
-    // [수정] 안내창에 뜰 문구 개행(<br />) 반영 및 요일별 1회 뜻이 명확하도록 다듬기
+    // [교정 완역] 요구사항에 맞춰 개행(\n) 및 한글 안내 2줄 출력 정렬
     if (alreadyBooked && !adminAuthenticated) { 
         return openCustomAlert(currentLang === 'ko' ? "이 요일에는 이미 예약된 내역이 있습니다.<br />(월/화/목 요일별 각 1회만 가능)" : "You have already booked a slot for this day.<br />(1 booking per day allowed)"); 
     }
@@ -508,7 +509,7 @@ window.confirmBooking = function() {
     var entryId = "uid_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
     var newEntry = { id: entryId, alliance: a, player: nickname, playerId: idNum, playerNormalized: normalizeText(nickname), daysSaved: Number(d), passwordHash: simpleHash(pass), createdAt: Date.now() };
     
-    window.db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(function() { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: nickname, playerId: idNum, cancelKey: pass })); window.closeModal(); window.renderAll(); });
+    window.db.collection("slots").doc(selectedSlot).set({ attendees: firebase.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(function() { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: nickname, playerId: idNum, cancelKey: pass })); window.closeModal(); window.renderAll(); });
 };
 
 window.editSpecificBooking = function(slotId, uniqueId) {
@@ -610,8 +611,51 @@ function updateAdminUI() {
     }); 
 }
 
-function updateStatusMessage() { var el = document.getElementById("bookingStatusMsg"); if(el) el.innerText = isTabActuallyOpen(currentBuff) ? langPack[currentLang].openAvailable : langPack[currentLang].openClosed; }
-function updateCountdown() { if (!bookingSettings || !bookingSettings.baseDate) return; var diff = new Date(bookingSettings.baseDate) - new Date(); while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000; var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000); if(document.getElementById("countdown")) document.getElementById("countdown").innerText = "Next SVS in " + d + "d " + h + "h " + m + "m " + s + "s"; }
+// [업그레이드] 실시간 예약 마감/오픈 시간 카운트다운 추적 장치
+function updateStatusMessage() { 
+    var el = document.getElementById("bookingStatusMsg"); 
+    if(!el) return;
+    
+    var isOpen = isTabActuallyOpen(currentBuff);
+    var p = langPack[currentLang] || langPack['en'];
+    var now = new Date();
+    
+    if (isOpen) {
+        // 열려있다면 언제 닫히는지 추적
+        if (bookingSettings.globalCloseTime) {
+            var diff = new Date(bookingSettings.globalCloseTime) - now;
+            if (diff > 0) {
+                var h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+                el.innerHTML = "✅ " + (currentLang === 'ko' ? "예약 가능 (마감까지 " : "Booking Open (Closes in ") + h + "h " + m + "m " + s + "s)";
+                return;
+            }
+        }
+        el.innerText = p.openAvailable;
+    } else {
+        // 닫혀있다면 언제 열리는지 추적
+        if (bookingSettings.globalOpenTime) {
+            var diff = new Date(bookingSettings.globalOpenTime) - now;
+            if (diff > 0) {
+                var h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+                el.innerHTML = "🔒 " + (currentLang === 'ko' ? "예약 대기 (오픈까지 " : "Booking Queue (Opens in ") + h + "h " + m + "m " + s + "s)";
+                return;
+            }
+        }
+        el.innerText = p.openClosed;
+    }
+}
+
+function updateCountdown() { 
+    if (!bookingSettings || !bookingSettings.baseDate) return; 
+    var diff = new Date(bookingSettings.baseDate) - new Date(); 
+    while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000; 
+    var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000); 
+    if(document.getElementById("countdown")) document.getElementById("countdown").innerText = "Next SVS in " + d + "d " + h + "h " + m + "m " + s + "s"; 
+    
+    // 예약 상태 라벨 카운트다운도 매초 함께 동기화 처리
+    updateStatusMessage();
+}
+
 window.switchBuff = function(b) { currentBuff = b; updateStatusMessage(); window.renderAll(); };
 window.clearSearch = function() { window.renderAll(); };
 window.closeModal = function() { document.getElementById("modal").classList.remove("show"); };
