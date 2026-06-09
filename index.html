@@ -15,20 +15,17 @@
                 <h1 id="mainTitle"><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
                 <div id="countdown" class="countdown"></div>
             </div>
-            <div class="headerToolbar">
-                <div style="display: flex; flex-direction: column; align-items: flex-end; position: relative;">
-                    <select id="langSelect" onchange="window.changeLanguage(this.value)">
-                        <option value="ko">🇰🇷 한국어</option>
-                        <option value="en" selected="selected">🇺🇸 English</option>
-                        <option value="zh">🇨🇳 中文(简体)</option>
-                        <option value="ja">🇯🇵 日本語</option>
-                        <option value="fr">🇫🇷 Français</option>
-                        <option value="ar">🇸🇦 العربية</option>
-                        <option value="id">🇮🇩 Indonesia</option>
-                        <option value="tr">🇹🇷 Türkçe</option>
-                    </select>
-                    <div id="lang-help-msg" style="font-size: 11px; color: #718096; font-weight: 700; position: absolute; top: 100%; right: 0; margin-top: 4px; white-space: nowrap;"></div>
-                </div>
+            <div class="headerToolbar" style="position: relative;">
+                <select id="langSelect" onchange="window.changeLanguage(this.value)">
+                    <option value="ko">🇰🇷 한국어</option>
+                    <option value="en" selected="selected">🇺🇸 English</option>
+                    <option value="zh">🇨🇳 中文(简体)</option>
+                    <option value="ja">🇯🇵 日本語</option>
+                    <option value="fr">🇫🇷 Français</option>
+                    <option value="ar">🇸🇦 العربية</option>
+                    <option value="id">🇮🇩 Indonesia</option>
+                    <option value="tr">🇹🇷 Türkçe</option>
+                </select>
                 <div class="filterGroup">
                     <select id="filterStatus" onchange="window.renderAll()">
                         <option value="all" id="opt-all">All</option>
@@ -36,6 +33,7 @@
                     </select>
                     <button type="button" class="btn-reset" id="btn-reset-txt" onclick="window.clearSearch()">Reset</button>
                 </div>
+                <div id="lang-help-msg" style="position: absolute; top: 100%; right: 0; margin-top: 6px; font-size: 11px; color: #718096; font-weight: 700; white-space: nowrap;"></div>
             </div>
         </div>
         <div class="creatorBadge">
@@ -220,6 +218,7 @@
             </div>
         </div>
     </div>
+    
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
