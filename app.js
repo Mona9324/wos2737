@@ -17,7 +17,7 @@ var sc = 0;
 
 var langPack = {
     ko: { 
-        // [수정] 피드백 반영하여 차분한 검은색으로 고정 공지 통일 (토~일요일 범위 수정)
+        // [수정] 피드백 반영: 깔끔한 검은색(#2d3748)으로 공지 통일, 토~일요일 범위 수정
         notice: "📢 요일별 1인 1타임만 예약 가능합니다.<br /><span style='color: #2d3748; font-weight: bold;'>[예약 오픈 조건] 수요일: 가속 50일 이상 | 목요일: 30일 이상 | 금요일: 15일 이상 | 토~일요일: 자유 예약</span>", 
         curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1", 
         confirmedHeader: "👑 내 예약 시간", 
@@ -43,7 +43,7 @@ var langPack = {
         addBookingBtn: "예약 추가", 
         closedAlert: "예약 마감되었습니다.", 
         speedUnit: "일", 
-        // [유의사항 반영] 피드백주신 한글 플레이스홀더 텍스트 적용
+        // [수정] 피드백 주신 한국어 텍스트 패치 완벽 반영
         pAlliance: "연맹 (ZYZ, BUG, ZTP 등)", 
         pNickname: "닉네임", 
         pId: "플레이어 ID (9자리)", 
@@ -241,10 +241,11 @@ function isTabActuallyOpen(day) {
     return true; 
 }
 
+// [문법 오류 교정] 오타로 꼬여있던 시간 포맷 대괄호 유효성 정상화 완료
 window.addAdminLog = function(msg) {
     if(!window.db) return;
     var now = new Date();
-    var timeStr = "[" + now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,'0') + "-" + String(now.getDate()).padStart(2,'0'] + " " + String(now.getHours()).padStart(2,'0') + ":" + String(now.getMinutes()).padStart(2,'0') + "]";
+    var timeStr = "[" + now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,'0') + "-" + String(now.getDate()).padStart(2,'0') + " " + String(now.getHours()).padStart(2,'0') + ":" + String(now.getMinutes()).padStart(2,'0') + "]";
     var fullMsg = timeStr + " " + msg;
     
     var logs = bookingSettings.adminLogs || [];
@@ -501,7 +502,6 @@ window.confirmBooking = function() {
         }
     });
 
-    // [두 줄 줄바꿈 패치 적용] 문구 변경 및 개행 태그(<br />) 세팅 완료
     if (alreadyBooked && !adminAuthenticated) { 
         return openCustomAlert(currentLang === 'ko' ? "이 요일에는 이미 예약된 내역이 있습니다.<br />(월/화/목 요일별 각 1회만 가능)" : "You have already booked a slot for this day.<br />(1 booking per day allowed)"); 
     }
@@ -509,7 +509,6 @@ window.confirmBooking = function() {
     var entryId = "uid_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
     var newEntry = { id: entryId, alliance: a, player: nickname, playerId: idNum, playerNormalized: normalizeText(nickname), daysSaved: Number(d), passwordHash: simpleHash(pass), createdAt: Date.now() };
     
-    // [치명적 버그 수정 완료!] firebase.FieldValue가 아니라 firebase.firestore.FieldValue로 경로 명시!!
     window.db.collection("slots").doc(selectedSlot).set({ attendees: firebase.firestore.FieldValue.arrayUnion(newEntry) }, {merge: true}).then(function() { localStorage.setItem(MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: nickname, playerId: idNum, cancelKey: pass })); window.closeModal(); window.renderAll(); });
 };
 
