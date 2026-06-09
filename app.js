@@ -185,18 +185,46 @@ function applyLanguagePack() {
     var langSelectEl = document.getElementById("langSelect");
     if (langSelectEl) langSelectEl.value = currentLang;
     
+    // 1. 공지사항 및 조건부 공지
     var speeds = bookingSettings.minSpeeds || { wed: 50, thu: 30, fri: 15 };
     var noticeKoEl = document.getElementById("notice-dynamic-txt");
     if (noticeKoEl) { 
-        // [다국어 엔진 복구] 어떤 국가의 언어로 전환하든 완벽히 실시간 연동 매칭되도록 가속 조건식 개선
         var rawTemplate = p.speedCond || "";
         var convertedTemplate = rawTemplate
             .replace("{wed}", speeds.wed)
             .replace("{thu}", speeds.thu)
             .replace("{fri}", speeds.fri);
-            
         noticeKoEl.innerHTML = p.notice + "<br /><span style='color: #2d3748; font-weight: bold;'>" + convertedTemplate + "</span>";
     }
+    
+    // 2. 기본 UI 텍스트
+    var safeSetText = function(id, text) { var el = document.getElementById(id); if (el) el.innerText = text; };
+    var safeSetPlaceholder = function(id, placeholder) { var el = document.getElementById(id); if (el) el.placeholder = placeholder; };
+
+    safeSetText("tab-mon-txt", p.mon); safeSetText("tab-tue-txt", p.tue); safeSetText("tab-thu-txt", p.thu);
+    safeSetText("opt-all", p.optAll); safeSetText("opt-mine", p.optMine); safeSetText("btn-reset-txt", "Reset");
+    safeSetText("modal-title-txt", p.addTitle); safeSetText("btn-confirm-txt", p.confirmBtn); safeSetText("btn-close-txt", p.closeBtn);
+    
+    safeSetPlaceholder("alliance", p.pAlliance); safeSetPlaceholder("player", p.pNickname);
+    safeSetPlaceholder("playerId", p.pId); safeSetPlaceholder("daysSaved", p.pSpeed); safeSetPlaceholder("cancelKey", p.pPass);
+    
+    safeSetText("res-title-txt", p.statusTitle); safeSetText("cancel-label-txt", p.cancelLabel);
+    safeSetText("btn-cancel-txt", p.cancelBtn); safeSetText("btn-add-txt", p.addBookingBtn); safeSetText("btn-res-close-txt", p.closeBtn);
+    
+    // 3. [추가] 관리자 패널 텍스트 자동 매핑
+    safeSetText("btn-admin-monday", p.mondayShort); 
+    safeSetText("btn-admin-tuesday", p.tuesdayShort); 
+    safeSetText("btn-admin-thursday", p.thursdayShort);
+    
+    safeSetText("btn-speed-monday", p.mondayShort); 
+    safeSetText("btn-speed-tuesday", p.tuesdayShort); 
+    safeSetText("btn-speed-thursday", p.thursdayShort);
+    
+    safeSetText("btn-admin-clear-all", p.btnAdminDel); // 이제 리셋 버튼도 다국어 적용!
+    
+    var curvedEl = document.getElementById("curved-profile-txt"); if (curvedEl) curvedEl.textContent = p.curvedTxt;
+    var confHeader = document.getElementById("confirmed-header-txt"); if (confHeader) confHeader.innerText = p.confirmedHeader;
+}
     
     var safeSetText = function(id, text) { var el = document.getElementById(id); if (el) el.innerText = text; };
     var safeSetPlaceholder = function(id, placeholder) { var el = document.getElementById(id); if (el) el.placeholder = placeholder; };
