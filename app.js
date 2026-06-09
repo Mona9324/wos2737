@@ -194,7 +194,6 @@ function isTabActuallyOpen(day) {
     return true; 
 }
 
-// [결정적 에러 수정 완료!] 날짜 포맷에서 남아있던 괄호 오류를 완벽하게 고쳤습니다. (padStart(2,'0'))
 window.addAdminLog = function(msg) {
     if(!window.db) return;
     var now = new Date();
@@ -622,19 +621,31 @@ function updateAdminUI() {
     }); 
 }
 
+// [개선] 116h 같은 큰 시간 단위를 d(일), h(시간), m(분), s(초) 포맷으로 정갈하게 파싱
 function updateStatusMessage() { 
     var el = document.getElementById("bookingStatusMsg"); 
     if(!el) return;
+    
     var isOpen = isTabActuallyOpen(currentBuff);
     var p = langPack[currentLang] || langPack['en'];
     var now = new Date();
     
+    function formatTime(diffMs) {
+        var d = Math.floor(diffMs / 86400000);
+        var h = Math.floor((diffMs % 86400000) / 3600000);
+        var m = Math.floor((diffMs % 3600000) / 60000);
+        var s = Math.floor((diffMs % 60000) / 1000);
+        var res = "";
+        if (d > 0) res += d + "d ";
+        res += h + "h " + m + "m " + s + "s";
+        return res;
+    }
+
     if (isOpen) {
         if (bookingSettings.globalCloseTime) {
             var diff = new Date(bookingSettings.globalCloseTime) - now;
             if (diff > 0) {
-                var h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-                el.innerHTML = "✅ " + (currentLang === 'ko' ? "예약 가능 (마감까지 " : "Booking Open (Closes in ") + h + "h " + m + "m " + s + "s)";
+                el.innerHTML = "✅ " + (currentLang === 'ko' ? "예약 가능 (마감까지 " : "Booking Open (Closes in ") + formatTime(diff) + ")";
                 return;
             }
         }
@@ -643,8 +654,7 @@ function updateStatusMessage() {
         if (bookingSettings.globalOpenTime) {
             var diff = new Date(bookingSettings.globalOpenTime) - now;
             if (diff > 0) {
-                var h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-                el.innerHTML = "🔒 " + (currentLang === 'ko' ? "예약 대기 (오픈까지 " : "Booking Queue (Opens in ") + h + "h " + m + "m " + s + "s)";
+                el.innerHTML = "🔒 " + (currentLang === 'ko' ? "예약 대기 (오픈까지 " : "Booking Queue (Opens in ") + formatTime(diff) + ")";
                 return;
             }
         }
@@ -658,6 +668,7 @@ function updateCountdown() {
     while(diff <= 0) diff += 28 * 24 * 60 * 60 * 1000; 
     var d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000); 
     if(document.getElementById("countdown")) document.getElementById("countdown").innerText = "Next SVS in " + d + "d " + h + "h " + m + "m " + s + "s"; 
+    
     updateStatusMessage();
 }
 
