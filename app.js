@@ -4,25 +4,113 @@ var allSlotsData = {};
 var MY_BOOKING_KEY = "svs_my_booking_info";
 var currentLang = localStorage.getItem("svs_lang") || "ko"; 
 
-// 기본값 완벽 보장 정의
 var bookingSettings = { 
     baseDate: "2026-05-23T21:00:00", 
     globalOpenTime: "", 
     globalCloseTime: "", 
     closedSlots: [], 
     adminLogs: [], 
-    tabs: { 
-        monday: { isOpen: true, showSpeeds: false }, 
-        tuesday: { isOpen: true, showSpeeds: false }, 
-        thursday: { isOpen: true, showSpeeds: false } 
-    } 
+    tabs: { monday: { isOpen: true, showSpeeds: false }, tuesday: { isOpen: true, showSpeeds: false }, thursday: { isOpen: true, showSpeeds: false } } 
 };
 var adminAuthenticated = false;
 var sc = 0;
 
 var langPack = {
-    ko: { notice: "📢 요일별 1인 1타임만 예약 가능합니다.<br />(상단의 파란색 메뉴로 언어를 변경할 수 있습니다.)", curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1", confirmedHeader: "👑 내 예약 시간", addAlarm: "🔔 알람 등록", mon: "월요일 (건설)", tue: "화요일 (연구)", thu: "목요일 (훈련)", mondayShort: "월요일", tuesdayShort: "화요일", thursdayShort: "목요일", optAll: "전체 / All", optMine: "내 예약 / Mine", openAvailable: "✅ 예약 가능", openClosed: "🔒 예약 마감", pers: "명", noRes: "No Reservation / 예약 없음", addTitle: "새 예약 추가", confirmBtn: "확정", closeBtn: "닫기", statusTitle: "예약 현황", cancelLabel: "취소 비밀번호", cancelBtn: "나의 예약 전체 취소", addBookingBtn: "예약 추가", closedAlert: "예약 마감되었습니다.", speedUnit: "일", pAlliance: "연맹 (ZTP, BUG 등)", pNickname: "닉네임", pId: "플레이어 ID (9자리)", pSpeed: "가속 일수", pPass: "비밀번호 (아무거나)", editBtn: "수정", cancelBtnSmall: "취소", delBtn: "삭제", slotOpenBtn: "🔓 예약 열기", slotCloseBtn: "🔒 예약 마감", errFill: "비밀번호 칸에 본인의 비밀번호를 먼저 입력해주세요.", errWrongPass: "비밀번호가 올바르지 않습니다.", errNoRes: "삭제할 예약 데이터를 찾을 수 없습니다.", errFillAll: "모든 항목을 입력해야 합니다.", errIdDigit: "플레이어 ID는 반드시 숫자 9자리여야 합니다.", promptEdit: "새로운 가속 일수(숫자만)를 입력하세요:", errNan: "숫자 형식만 입력 가능합니다.", promptDelete: "정말 삭제하시겠습니까?", promptClear: "모든 데이터를 초기화하시겠습니까? (이 작업은 기록에 남습니다)", promptSaved: "저장되었습니다!" },
-    en: { notice: "📢 1 Booking Per Person Per Day.\n(You can change the language using the blue menu at the top)", curvedTxt: "The website usage fee is Mona's Island 💚+1", confirmedHeader: "👑 My Booked Buffs", addAlarm: "🔔 Add Alarm", mon: "Monday (Construction)", tue: "Tuesday (Research)", thu: "Thursday (Troops Training)", mondayShort: "Monday", tuesdayShort: "Tuesday", thursdayShort: "Thursday", optAll: "All", optMine: "My Booking", openAvailable: "✅ Booking Open", openClosed: "🔒 Booking Closed", pers: "Pers.", noRes: "No Reservation", addTitle: "New Booking", confirmBtn: "Confirm", closeBtn: "Close", statusTitle: "Booking Status", cancelLabel: "Password", cancelBtn: "Cancel My All Bookings", addBookingBtn: "Add Booking", closedAlert: "Reservation Closed.", speedUnit: "d", pAlliance: "Alliance (ZTP, BUG etc)", pNickname: "Nickname", pId: "Player ID (9 digits)", pSpeed: "Speed-up Days", pPass: "Password (any password)", editBtn: "Edit", cancelBtnSmall: "Cancel", delBtn: "Delete", slotOpenBtn: "🔓 Open", slotCloseBtn: "🔒 Close", errFill: "Please enter your password in the bottom field first.", errWrongPass: "Wrong password.", errNoRes: "Reservation not found.", errFillAll: "Please fill all fields.", errIdDigit: "ID must be exactly 9 digits.", promptEdit: "Enter new speed-up days (numbers only):", errNan: "Please enter a valid number.", promptDelete: "Are you sure you want to delete?", promptClear: "Clear all data? (This action is logged)", promptSaved: "Saved!" }
+    ko: { 
+        // [수정] 가독성이 떨어지던 형광 동적 공지 대신 한눈에 들어오는 가속 조건 고정 공지 배치
+        notice: "📢 요일별 1인 1타임만 예약 가능합니다.<br /><span style='color: #1976d2; font-weight: bold;'>[예약 오픈 조건] 수요일: 가속 50일 이상 | 목요일: 30일 이상 | 금요일: 15일 이상 | 토~화요일: 자유 예약</span>", 
+        curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1", 
+        confirmedHeader: "👑 내 예약 시간", 
+        addAlarm: "🔔 알람 등록", 
+        mon: "월요일 (건설)", 
+        tue: "화요일 (연구)", 
+        thu: "목요일 (훈련)", 
+        mondayShort: "월요일", 
+        tuesdayShort: "화요일", 
+        thursdayShort: "목요일", 
+        optAll: "전체 / All", 
+        optMine: "내 예약 / Mine", 
+        openAvailable: "✅ 예약 가능", 
+        openClosed: "🔒 예약 마감", 
+        pers: "명", 
+        noRes: "No Reservation / 예약 없음", 
+        addTitle: "새 예약 추가", 
+        confirmBtn: "확정", 
+        closeBtn: "닫기", 
+        statusTitle: "예약 현황", 
+        cancelLabel: "취소 비밀번호", 
+        cancelBtn: "나의 예약 전체 취소", 
+        addBookingBtn: "예약 추가", 
+        closedAlert: "예약 마감되었습니다.", 
+        speedUnit: "일", 
+        pAlliance: "연맹 (ZTP, BUG 등)", 
+        pNickname: "닉네임", 
+        pId: "플레이어 ID (9자리)", 
+        pSpeed: "가속 일수", 
+        pPass: "비밀번호 (아무거나)", 
+        editBtn: "수정", 
+        cancelBtnSmall: "취소", 
+        delBtn: "삭제", 
+        slotOpenBtn: "🔓 예약 열기", 
+        slotCloseBtn: "🔒 예약 마감", 
+        errFill: "비밀번호 칸에 본인의 비밀번호를 먼저 입력해주세요.", 
+        errWrongPass: "비밀번호가 올바르지 않습니다.", 
+        errNoRes: "삭제할 예약 데이터를 찾을 수 없습니다.", 
+        errFillAll: "모든 항목을 입력해야 합니다.", 
+        errIdDigit: "플레이어 ID는 반드시 숫자 9자리여야 합니다.", 
+        promptEdit: "새로운 가속 일수(숫자만)를 입력하세요:", 
+        errNan: "숫자 형식만 입력 가능합니다.", 
+        promptDelete: "정말 삭제하시겠습니까?", 
+        promptClear: "모든 데이터를 초기화하시겠습니까? (이 작업은 기록에 남습니다)", 
+        promptSaved: "저장되었습니다!" 
+    },
+    en: { 
+        notice: "📢 1 Booking Per Person Per Day.<br /><span style='color: #1976d2; font-weight: bold;'>[Req] Wed: 50d+ | Thu: 30d+ | Fri: 15d+ | Sat~Tue: Free</span>", 
+        curvedTxt: "The website usage fee is Mona's Island 💚+1", 
+        confirmedHeader: "👑 My Booked Buffs", 
+        addAlarm: "🔔 Add Alarm", 
+        mon: "Monday (Construction)", 
+        tue: "Tuesday (Research)", 
+        thu: "Thursday (Troops Training)", 
+        mondayShort: "Monday", 
+        tuesdayShort: "Tuesday", 
+        thursdayShort: "Thursday", 
+        optAll: "All", 
+        optMine: "My Booking", 
+        openAvailable: "✅ Booking Open", 
+        openClosed: "🔒 Booking Closed", 
+        pers: "Pers.", 
+        noRes: "No Reservation", 
+        addTitle: "New Booking", 
+        confirmBtn: "Confirm", 
+        closeBtn: "Close", 
+        statusTitle: "Booking Status", 
+        cancelLabel: "Password", 
+        cancelBtn: "Cancel My All Bookings", 
+        addBookingBtn: "Add Booking", 
+        closedAlert: "Reservation Closed.", 
+        speedUnit: "d", 
+        pAlliance: "Alliance (ZTP, BUG etc)", 
+        pNickname: "Nickname", 
+        pId: "Player ID (9 digits)", 
+        pSpeed: "Speed-up Days", 
+        pPass: "Password (any password)", 
+        editBtn: "Edit", 
+        cancelBtnSmall: "Cancel", 
+        delBtn: "Delete", 
+        slotOpenBtn: "🔓 Open", 
+        slotCloseBtn: "🔒 Close", 
+        errFill: "Please enter your password in the bottom field first.", 
+        errWrongPass: "Wrong password.", 
+        errNoRes: "Reservation not found.", 
+        errFillAll: "Please fill all fields.", 
+        errIdDigit: "ID must be exactly 9 digits.", 
+        promptEdit: "Enter new speed-up days (numbers only):", 
+        errNan: "Please enter a valid number.", 
+        promptDelete: "Are you sure you want to delete?", 
+        promptClear: "Clear all data? (This action is logged)", 
+        promptSaved: "Saved!" 
+    }
 };
 
 window.getGoogleCalendarUrl = window.getGoogleCalendarUrl || function(day, time) {
@@ -41,7 +129,7 @@ function openCustomAlert(msg) {
     var titleEl = document.getElementById("alert-modal-title");
     if(titleEl) titleEl.innerText = currentLang === 'ko' ? "⚠️ 안내" : "⚠️ Notice";
     var msgEl = document.getElementById("alertModalMessage");
-    if(msgEl) msgEl.innerText = msg;
+    if(msgEl) msgEl.innerHTML = msg; // 개행(\n -> <br />) 처리를 위해 innerHTML로 변경
     var modal = document.getElementById("alertModal");
     if(modal) modal.classList.add("show");
 }
@@ -112,15 +200,9 @@ function applyLanguagePack() {
     var langSelectEl = document.getElementById("langSelect");
     if (langSelectEl) langSelectEl.value = currentLang;
     
-    var reqSpeed = getMinSpeedRequired();
     var noticeKoEl = document.getElementById("notice-dynamic-txt");
-    
-    var speedNoticeKo = reqSpeed > 0 ? ("<br><span style='color:#ffeaa7; font-weight:bold;'>※ 오늘 기준 예약 최소 조건: 가속 " + reqSpeed + "일 이상</span>") : "<br><span style='color:#55efc4; font-weight:bold;'>※ 오늘은 누구나 자유롭게 예약 가능합니다!</span>";
-    var speedNoticeEn = reqSpeed > 0 ? ("<br><span style='color:#ffeaa7; font-weight:bold;'>※ Today's req: " + reqSpeed + "+ days</span>") : "<br><span style='color:#55efc4; font-weight:bold;'>※ Open to everyone today!</span>";
-
     if (noticeKoEl) {
-        if (currentLang === "ko") noticeKoEl.innerHTML = p.notice + speedNoticeKo;
-        else noticeKoEl.innerHTML = p.notice + speedNoticeEn;
+        noticeKoEl.innerHTML = p.notice; // 고정된 스타일 공지사항 주입
     }
     
     var safeSetText = function(id, text) { var el = document.getElementById(id); if (el) el.innerText = text; };
@@ -168,7 +250,7 @@ window.addAdminLog = function(msg) {
     logs.unshift(fullMsg); 
     if(logs.length > 50) logs.pop(); 
     
-    window.db.collection("settings").doc("booking").update({ adminLogs: logs }).catch(function(e){});
+    window.db.collection("settings").doc("booking").update({ adminLogs: logs });
 };
 
 function renderLogs() {
@@ -274,7 +356,6 @@ function init() {
     window.db.collection("settings").doc("booking").onSnapshot(function(doc) { 
         if(doc.exists) { 
             var data = doc.data();
-            // 파이어베이스 찌꺼기나 누락 필드를 위한 자동 결합 및 안전장치
             bookingSettings.baseDate = data.baseDate || "2026-05-23T21:00:00";
             bookingSettings.globalOpenTime = data.globalOpenTime || "";
             bookingSettings.globalCloseTime = data.globalCloseTime || "";
@@ -286,7 +367,6 @@ function init() {
                 bookingSettings.tabs.thursday = data.tabs.thursday || { isOpen: true, showSpeeds: false };
             }
         } else {
-            // 만약 문서 자체가 없으면 기본 구조 생성 유도
             window.db.collection("settings").doc("booking").set(bookingSettings).catch(function(e){});
         }
         updateStatusMessage(); updateAdminUI(); renderLogs(); window.renderAll(); 
@@ -420,9 +500,10 @@ window.confirmBooking = function() {
         }
     });
 
-   if (alreadyBooked && !adminAuthenticated) { 
-    return openCustomAlert(currentLang === 'ko' ? "이 요일에는 이미 예약된 내역이 있습니다. (월/화/목 요일별 각 1회만 가능)" : "You have already booked a slot for this day. (1 booking per day allowed)"); 
-}
+    // [수정] 안내창에 뜰 문구 개행(<br />) 반영 및 요일별 1회 뜻이 명확하도록 다듬기
+    if (alreadyBooked && !adminAuthenticated) { 
+        return openCustomAlert(currentLang === 'ko' ? "이 요일에는 이미 예약된 내역이 있습니다.<br />(월/화/목 요일별 각 1회만 가능)" : "You have already booked a slot for this day.<br />(1 booking per day allowed)"); 
+    }
 
     var entryId = "uid_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
     var newEntry = { id: entryId, alliance: a, player: nickname, playerId: idNum, playerNormalized: normalizeText(nickname), daysSaved: Number(d), passwordHash: simpleHash(pass), createdAt: Date.now() };
@@ -487,6 +568,7 @@ window.saveAutoSchedule = function() {
     if(!window.db) return; 
     bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; 
     bookingSettings.globalCloseTime = document.getElementById("global-close-time").value; 
+    bookingSettings.closedSlots = []; 
     
     window.db.collection("settings").doc("booking").set(bookingSettings, {merge: true}).then(function() { 
         window.addAdminLog("자동 오픈/마감 통합 스케줄을 업데이트했습니다.");
