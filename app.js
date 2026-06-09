@@ -36,7 +36,7 @@ var langPack = {
         openAvailable: "✅ 예약 가능", 
         openClosed: "🔒 예약 마감", 
         pers: "명", 
-        noRes: "No Reservation / 예약 없음", 
+        noRes: "예약 없음", // [수정] 영문 혼용 제거하고 깔끔하게 통일
         addTitle: "새 예약 추가", 
         confirmBtn: "확정", 
         closeBtn: "닫기", 
@@ -113,7 +113,13 @@ var langPack = {
         promptDelete: "Are you sure you want to delete?", 
         promptClear: "Clear all data? (This action is logged)", 
         promptSaved: "Saved!" 
-    }
+    },
+    zh: { notice: "📢 请尽可能重叠申请所有您可以参加的时间段。<br /><span style='color: #2d3748; font-weight: bold;'>[条件] 周三: 加速 50天+ | 周四: 30天+ | 周五: 15天+ | 周六~周日: 自由预约</span>", curvedTxt: "预约网站使用费是 Mona的岛 💚+1", confirmedHeader: "👑 我的确定的增益时间", addAlarm: "🔔 添加提醒", mon: "星期一 (建筑)", tue: "星期二 (研究)", thu: "星期四 (训练)", mondayShort: "星期一", tuesdayShort: "星期二", thursdayShort: "星期四", optAll: "全部", optMine: "我的预约", openAvailable: "✅ 开放预约", openClosed: "🔒 预约截止", pers: "人", noRes: "暂无预约", addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭", statusTitle: "预约状态", cancelLabel: "取消密码", cancelBtn: "取消我的所有预约", addBookingBtn: "添加预约", closedAlert: "预约已截止。", speedUnit: "天", pAlliance: "联盟 (ZYZ, BUG, ZTP 等)", pNickname: "游戏昵称", pId: "玩家 ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消密码 (任意)", editBtn: "修改", cancelBtnSmall: "取消", delBtn: "删除", slotOpenBtn: "🔓 开放此时间段", slotCloseBtn: "🔒 关闭此时间段", errFill: "请先在下方输入您的密码。", errWrongPass: "密码错误。", errNoRes: "找不到预约数据。", errFillAll: "必须填写所有字段。", errIdDigit: "玩家ID必须为9位数字。", promptEdit: "请输入新的加速天数（仅限数字）:", errNan: "只能输入数字格式。", promptDelete: "确定要删除吗？", promptClear: "清除所有数据？", promptSaved: "已保存！" },
+    fr: { notice: "📢 Veuillez réserver tous les créneaux horaires disponibles auxquels vous pouvez participer.<br /><span style='color: #2d3748; font-weight: bold;'>[Req] Mer: 50j+ | Jeu: 30j+ | Ven: 15j+ | Sam~Dim: Libre</span>", curvedTxt: "Frais d'utilisation du site : L'île de Mona 💚+1", confirmedHeader: "👑 Mes Buffs Confirmés", addAlarm: "🔔 Alarme", mon: "Lundi (Construction)", tue: "Mardi (Recherche)", thu: "Jeudi (Entraînement)", mondayShort: "Lundi", tuesdayShort: "Mardi", thursdayShort: "Jeudi", optAll: "Tout", optMine: "Mes Réservations", openAvailable: "✅ Réservation Ouverte", openClosed: "🔒 Réservation Fermée", pers: "Pers.", noRes: "Aucune Réservation", addTitle: "Nouvelle Réservation", confirmBtn: "Confirmer", closeBtn: "Fermer", statusTitle: "Statut de Réservation", cancelLabel: "Mot de passe", cancelBtn: "Annuler toutes mes réservations", addBookingBtn: "Ajouter Réservation", closedAlert: "Réservation fermée.", speedUnit: "j", pAlliance: "Alliance (ZYZ, BUG, ZTP etc)", pNickname: "Pseudo", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", pPass: "Mot de passe pour annuler", editBtn: "Modifier", cancelBtnSmall: "Annuler", delBtn: "Supprimer", slotOpenBtn: "🔓 Ouvrir ce créneau", slotCloseBtn: "🔒 Fermer ce créneau", errFill: "Veuillez d'abord saisir votre mot de passe ci-dessous.", errWrongPass: "Mot de passe incorrect.", errNoRes: "Réservation introuvable.", errFillAll: "Veuillez remplir tous les champs.", errIdDigit: "L'identifiant doit comporter 9 chiffres.", promptEdit: "Entrez le nouveau nombre de jours (chiffres uniquement):", errNan: "Veuillez entrer un nombre valide.", promptDelete: "Voulez-vous vraiment supprimer ?", promptClear: "Effacer toutes les données ?", promptSaved: "Enregistré !" },
+    ja: { notice: "📢 参加可能なすべての時間帯を重複して申请してください。<br /><span style='color: #2d3748; font-weight: bold;'>[条件] 水曜日: 加速 50日+ | 木曜日: 30日+ | 金曜日: 15日+ | 土~日曜日: 自由予約</span>", curvedTxt: "予約サイトの利用料は Monaの島 💚+1", confirmedHeader: "👑 確定した大統領バフ時間", addAlarm: "🔔 ア라ーム登録", mon: "月曜日 (建設)", tue: "火曜日 (研究)", thu: "木曜日 (訓練)", mondayShort: "月曜日", tuesdayShort: "火曜日", thursdayShort: "木曜日", optAll: "すべて", optMine: "自分の予約", openAvailable: "✅ 予約受付中", openClosed: "🔒 予約終了", pers: "人", noRes: "予約なし", addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる", statusTitle: "予約状況", cancelLabel: "キャンセルパスワード", cancelBtn: "自分の予約をすべて取消", addBookingBtn: "予約追加", closedAlert: "予約は締め切られました。", speedUnit: "日", pAlliance: "同盟 (ZYZ, BUG, ZTP など)", pNickname: "名前", pId: "プレイヤーID (9桁)", pSpeed: "加速日数", pPass: "キャンセル用パスワード", editBtn: "修正", cancelBtnSmall: "取消", delBtn: "削除", slotOpenBtn: "🔓 スロットを開く", slotCloseBtn: "🔒 スロットを閉じる", errFill: "まず下欄にパスワードを入力してください。", errWrongPass: "パスワードが間違っています。", errNoRes: "予約データが見つかりません。", errFillAll: "すべての項目を入力してください。", errIdDigit: "プレイヤーIDは9桁の数字でなければなりません。", promptEdit: "新しい加速日数（数字のみ）を入力してください:", errNan: "数字形式のみ入力可能です.", promptDelete: "本当に削除しますか？", promptClear: "すべてのデータを初期化しますか？", promptSaved: "保存されました！" },
+    id: { notice: "📢 Silakan pesan semua slot waktu tersedia yang bisa Anda ikuti.<br /><span style='color: #2d3748; font-weight: bold;'>[Syarat] Rabu: Speed-up 50h+ | Kamis: 30h+ | Jumat: 15h+ | Sabtu~Minggu: Bebas</span>", curvedTxt: "Biaya penggunaan situs adalah Pulau Mona 💚+1", confirmedHeader: "👑 Buff Saya yang Dikonfirmasi", addAlarm: "🔔 Pasang Alarm", mon: "Senin (Konstruksi)", tue: "Selasa (Riset)", thu: "Kamis (Pelatihan)", mondayShort: "Senin", tuesdayShort: "Selasa", thursdayShort: "Kamis", optAll: "Semua", optMine: "Pesanan Saya", openAvailable: "✅ Pendaftaran Buka", openClosed: "🔒 Pendaftaran Tutup", pers: "Orang", noRes: "Belum Ada Pesanan", addTitle: "Tambah Pesanan Baru", confirmBtn: "Konfirmasi", closeBtn: "Tutup", statusTitle: "Status Pesanan", cancelLabel: "Kata Sandi", cancelBtn: "Batalkan Semua Pesanan Saya", addBookingBtn: "Tambah Pesanan", closedAlert: "Pendaftaran telah ditutup.", speedUnit: "hari", pAlliance: "Aliansi (ZYZ, BUG, ZTP etc)", pNickname: "Nama Pengguna", pId: "Player ID (9 digit)", pSpeed: "Speed-up Hari", pPass: "Kata sandi pembatalan", editBtn: "Ubah", cancelBtnSmall: "Batal", delBtn: "Hapus", slotOpenBtn: "🔓 Buka Slot Ini", slotCloseBtn: "🔒 Tutup Slot Ini", errFill: "Silakan masukkan kata sandi Anda di kolom bawah terlebih dahulu.", errWrongPass: "Kata sandi salah.", errNoRes: "Data reservasi tidak ditemukan.", errFillAll: "Semua kolom harus diisi.", errIdDigit: "ID Pemain harus berupa 9 digit angka.", promptEdit: "Masukkan jumlah hari speed-up yang baru (angka saja):", errNan: "Hanya format angka yang diperbolehkan.", promptDelete: "Apakah Anda yakin ingin menghapus?", promptClear: "Hapus semua data?", promptSaved: "Tersimpan!" },
+    tr: { notice: "📢 Lütfen katılabileceğiniz tüm uygun zaman dilimleri için rezervasyon yapın.<br /><span style='color: #2d3748; font-weight: bold;'>[Şartlar] Çarş: 50g+ | Perş: 30g+ | Cuma: 15g+ | Cmt~Paz: Serbest</span>", curvedTxt: "Web sitesi kullanım ücreti Mona'nın Adası 💚+1", confirmedHeader: "👑 Onaylanmış Bufflarım", addAlarm: "🔔 Alarm Ekle", mon: "Pazartesi (İnşaat)", tue: "Salı (Araştırma)", thu: "Perşembe (Eğitim)", mondayShort: "Pazartesi", tuesdayShort: "Salı", thursdayShort: "Perşembe", optAll: "Tümü", optMine: "Benim Rezervasyonum", openAvailable: "✅ Rezervasyona Açık", openClosed: "🔒 Rezervasyon Kapalı", pers: "Kişi", noRes: "Rezervasyon Yok", addTitle: "Yeni Rezervasyon", confirmBtn: "Onayla", closeBtn: "Kapat", statusTitle: "Rezervasyon Durumu", cancelLabel: "Şifre", cancelBtn: "Tüm Rezervasyonlarımı İptal Et", addBookingBtn: "Rezervasyon Ekle", closedAlert: "Rezervasyon kapandı.", speedUnit: "g", pAlliance: "İttifak (ZYZ, BUG, ZTP vb.)", pNickname: "Kullanıcı Adı", pId: "Oyuncu ID (9 haneli)", pSpeed: "Hızlandırma (Gün)", pPass: "İptal Şifresi (Herhangi biri)", editBtn: "Düzenle", cancelBtnSmall: "İptal", delBtn: "Sil", slotOpenBtn: "🔓 Bu Saati Aç", slotCloseBtn: "🔒 Bu Saati Kapat", errFill: "Lütfen önce aşağıdaki alana şifrenizi girin.", errWrongPass: "Yanlış şifre.", errNoRes: "Rezervasyon bulunamadı.", errFillAll: "Lütfen tüm alanları doldurun.", errIdDigit: "Oyuncu ID tam olarak 9 haneli olmalıdır.", promptEdit: "Yeni hızlandırma दिन sayısını girin (Sadece rakam):", errNan: "Lütfen geçerli bir sayı girin.", promptDelete: "Silmek istediğinizden emin misiniz?", promptClear: "Tüm verileri temizle?", promptSaved: "Kaydedildi!" },
+    ar: { notice: "📢 يرجى حجز جميع الأوقات المتاحة التي يمكنك الحضور فيها.<br /><span style='color: #2d3748; font-weight: bold;'>[الشروط] الأربعاء: 50 ي+ | الخميس: 30 ي+ | الجمعة: 15 ي+ | السبت~الأحد: حجز حر</span>", curvedTxt: "رسوم استخدام الموقع هي جزيرة منى 💚+1", confirmedHeader: "👑 المعززات المؤكدة الخاصة بي", addAlarm: "🔔 إضافة منبه", mon: "الاثنين (بناء)", tue: "الثلاثاء (أبحاث)", thu: "الخميس (تدريب)", mondayShort: "الاثنين", tuesdayShort: "الثلاثاء", thursdayShort: "الخميس", optAll: "الكل", optMine: "حجوزاتي", openAvailable: "✅ الحجز مفتوح", openClosed: "🔒 الحجز مغلق", pers: "أشخاص", noRes: "لا يوجد حجز", addTitle: "حجز جديد", confirmBtn: "تأكيد", closeBtn: "إغلاق", statusTitle: "حالة الحجز", cancelLabel: "كلمة المرور", cancelBtn: "إلغاء جميع حجوزاتي", addBookingBtn: "إضافة حجز", closedAlert: "تم إغلاق الحجز.", speedUnit: "ي", pAlliance: "التحالف (ZYZ, BUG, ZTP إلخ)", pNickname: "الاسم المستعار", pId: "معرف اللاعب (9 أرقام)", pSpeed: "أيام التسريع", pPass: "كلمة المرور للإلغاء (أي كلمة)", editBtn: "تعديل", cancelBtnSmall: "إلغاء", delBtn: "حذف", slotOpenBtn: "🔓 فتح هذا الوقت", slotCloseBtn: "🔒 إغلاق هذا الوقت", errFill: "الرجاء إدخال كلمة المرور الخاصة بك في الحقل أدناه أولاً.", errWrongPass: "كلمة المرور خاطئة.", errNoRes: "لم يتم العثور على الحجز.", errFillAll: "يرجى تعبئة جميع الحقول.", errIdDigit: "يجب أن يتكون معرف اللاعب من 9 أرقام بالضبط.", promptEdit: "أدخل أيام التسريع الجديدة (أرقام فقط):", errNan: "الرجاء إدخال رقم صحيح.", promptDelete: "هل أنت متأكد أنك تريد الحذف؟", promptClear: "مسح كل البيانات؟", promptSaved: "تم الحفظ!" }
 };
 
 window.getGoogleCalendarUrl = window.getGoogleCalendarUrl || function(day, time) {
@@ -232,22 +238,14 @@ function getLocalTimeStr(h, m) {
 function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
 function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return "h_" + Math.abs(hash); }
 
-// [마스터 수정] 수동 강제 오픈(forceOpen) 상태가 세팅되어 있다면 자동 스케줄 시간을 시원하게 패스하고 즉시 통과시키는 연동 알고리즘
 function isTabActuallyOpen(day) { 
     if (!bookingSettings || !bookingSettings.tabs || !bookingSettings.tabs[day]) return true; 
     var s = bookingSettings.tabs[day], now = new Date(); 
-    
-    // 1순위: 관리자가 명시적으로 해당 요일을 수동으로 강제 마감(forceClosed)했다면 무조건 차단
     if (s.forceClosed === true) return false;
-    
-    // 2순위: 관리자가 스케줄보다 먼저 즉시 강제 활성화(forceOpen)를 켰다면 스케줄 클락을 무시하고 프리패스 오픈!
     if (s.forceOpen === true) return true;
-    
-    // 3순위: 아무런 수동 제어가 없는 완전 중립 상태라면 기존 자동화 스케줄 규칙을 연동 추적
     if (!s.isOpen) return false; 
     if (bookingSettings.globalCloseTime && now > new Date(bookingSettings.globalCloseTime)) return false; 
     if (bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime)) return false; 
-    
     return true; 
 }
 
@@ -341,17 +339,34 @@ window.renderAll = function() {
             var effectivelyOpen = isOpen && !isSpecificallyClosed;
             
             var div = document.createElement("div"); 
-            var slotClass = "slot " + (h >= 12 ? "pm-slot " : "") + (!effectivelyOpen ? " locked" : "") + (attendees.some(function(a) { return normalizeText(a.player) === normalizeText(localStorage.getItem(MY_BOOKING_KEY) ? JSON.parse(localStorage.getItem(MY_BOOKING_KEY)).player : ""); }) ? " myReservation" : "");
+            var isMine = attendees.some(function(a) { return normalizeText(a.player) === normalizeText(localStorage.getItem(MY_BOOKING_KEY) ? JSON.parse(localStorage.getItem(MY_BOOKING_KEY)).player : ""); });
+            var slotClass = "slot " + (h >= 12 ? "pm-slot " : "") + (!effectivelyOpen ? " locked" : "") + (isMine ? " myReservation" : "");
             div.className = slotClass;
             
+            // [업그레이드] 이미 마감된 예약을 연한 회색 레이아웃으로 변경하는 인라인 스타일 주입
+            if (attendees.length > 0) {
+                div.style.backgroundColor = "#eaedf2"; 
+                div.style.borderColor = isMine ? "#2ecc71" : "#cbd5e1"; 
+                if (isMine) div.style.borderWidth = "2px";
+            }
+            
             var displayList = attendees.slice();
-            var listHtml = displayList.slice(0,3).map(function(a, i) { 
-                var speedText = showSpeeds ? "(" + a.daysSaved + p.speedUnit + ")" : "";
-                return "<div class='miniItem'><span>" + (i+1) + ". [" + a.alliance + "] " + a.player + "</span><span style='font-weight:700;'> " + speedText + "</span></div>"; 
+            // [업그레이드] 번호 표기 삭제 및 이름 텍스트 크기 증가 가독성 확보
+            var listHtml = displayList.slice(0,1).map(function(a) { 
+                var speedText = showSpeeds ? " (" + a.daysSaved + p.speedUnit + ")" : "";
+                return "<div class='miniItem' style='font-size:15px; font-weight:800; padding:6px 0; justify-content:center; color:#2d3748;'><span>[" + a.alliance + "] " + a.player + speedText + "</span></div>"; 
             }).join('');
             
+            // [업그레이드] 예약 없음 우측에 실시간 수, 목, 금 보유 제한 일수 연동
+            var reqSpeed = getMinSpeedRequired();
+            var conditionSuffix = "";
+            if (reqSpeed > 0) {
+                conditionSuffix = currentLang === 'ko' ? " (" + reqSpeed + "일 이상)" : " (Req: " + reqSpeed + p.speedUnit + "+)";
+            }
+            var noResTxt = "<div style='color:#a0aec0; font-size:13px; font-weight:500;'>" + p.noRes + conditionSuffix + "</div>";
+            
             var lockMark = isSpecificallyClosed ? " <span style='color:red;'>🔒</span>" : "";
-            div.innerHTML = "<div class=\"dayBadge\">" + badgeDay + "</div><div class=\"timeRow\"><span>" + startId + "~" + endId + " UTC" + lockMark + "</span><span style=\"color:#d34b4b;\">" + attendees.length + p.pers + "</span></div><div class=\"localTime\">Local: " + getLocalTimeStr(h,m) + "</div><div class=\"attendeeMiniList\">" + (listHtml || p.noRes) + "</div>";
+            div.innerHTML = "<div class=\"dayBadge\">" + badgeDay + "</div><div class=\"timeRow\"><span>" + startId + "~" + endId + " UTC" + lockMark + "</span><span style=\"color:#d34b4b;\">" + attendees.length + p.pers + "</span></div><div class=\"localTime\">Local: " + getLocalTimeStr(h,m) + "</div><div class=\"attendeeMiniList\">" + (listHtml || noResTxt) + "</div>";
             
             (function(savedId, savedOpen) { div.onclick = function() { window.handleSlotClick(savedId, savedOpen); }; })(id, effectivelyOpen);
             grid.appendChild(div);
@@ -436,7 +451,6 @@ window.confirmAdminLogin = function() {
     }
 };
 
-// [수정 완역] 수동 제어 클릭 시 상태 분기에 맞추어 강제 제어 플래그(forceOpen/forceClosed)를 데이터베이스에 주입하여 즉각적인 개방/마감 처리 보장
 window.toggleTabStatus = function(day) { 
     if (!window.db || !bookingSettings.tabs || !bookingSettings.tabs[day]) return; 
     
@@ -445,13 +459,11 @@ window.toggleTabStatus = function(day) {
     var logMsg = "";
     
     if (currentlyOpen) {
-        // 현재 열려있는 상태에서 눌렀으므로 -> 무조건 즉시 닫기
         obj["tabs." + day + ".forceOpen"] = false;
         obj["tabs." + day + ".forceClosed"] = true;
         obj["tabs." + day + ".isOpen"] = false;
         logMsg = "[" + day + "] 관리자가 해당 요일을 수동으로 강제 마감(OFF) 처리했습니다.";
     } else {
-        // 현재 닫혀있는 상태에서 눌렀으므로 -> 스케줄 시간이 아니더라도 즉시 강제 열기!
         obj["tabs." + day + ".forceOpen"] = true;
         obj["tabs." + day + ".forceClosed"] = false;
         obj["tabs." + day + ".isOpen"] = true;
@@ -591,14 +603,12 @@ window.confirmCancelAll = function() {
     });
 };
 
-// [연동 최적화] 관리자가 자동 스케줄 세팅을 새로 저장할 때는 기존의 수동 개방/마감 강제 제어 장치를 자동으로 리셋시킵니다.
 window.saveAutoSchedule = function() { 
     if(!window.db) return; 
     bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; 
     bookingSettings.globalCloseTime = document.getElementById("global-close-time").value; 
     bookingSettings.closedSlots = []; 
     
-    // 신규 스케줄 등록 시 요일별 수동 강제 스위치 값 기본화
     ['monday', 'tuesday', 'thursday'].forEach(function(day) {
         if(bookingSettings.tabs[day]) {
             bookingSettings.tabs[day].isOpen = true;
@@ -638,19 +648,15 @@ window.backupAndClearAll = function() {
     });
 };
 
-// [UI 반응 싱크 완성] 실제 타임라인이 강제 개방(forceOpen) 또는 스케줄 연동으로 열려있을 때만 수동제어 스위치 컴포넌트에 ON 스타일 바인딩
 function updateAdminUI() { 
     if(!bookingSettings || !bookingSettings.tabs) return;
     ['monday', 'tuesday', 'thursday'].forEach(function(day) { 
         if(!bookingSettings.tabs[day]) return;
-        
         var btn = document.getElementById("btn-admin-" + day); 
         if (btn) { 
-            // 현재 요일이 마스터 스위치 또는 강제 개방 조건에 의해 최종 오픈되어있는지 파악
             var currentlyOpen = isTabActuallyOpen(day);
             btn.classList.toggle("on", currentlyOpen); 
         } 
-        
         var sBtn = document.getElementById("btn-speed-" + day); 
         if (sBtn) { sBtn.classList.toggle("on-speed", bookingSettings.tabs[day].showSpeeds); } 
     }); 
