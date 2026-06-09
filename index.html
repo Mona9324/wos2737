@@ -10,6 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <script>
+        // ※ 중요: 본인의 Firebase 프로젝트 설정 값으로 변경해야 정상 작동합니다.
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_AUTH_DOMAIN",
@@ -25,121 +26,346 @@
     </script>
 
     <style>
-        /* [유저님의 기존 디자인 스타일을 여기에 유지하세요] */
-        /* 아래는 스크린샷 기반으로 복구한 유저님의 기존 스타일 예시입니다. */
         :root {
             --bg-color: #1a2230;
             --card-bg: #242f42;
             --primary: #4a90e2;
+            --primary-hover: #357abd;
+            --accent: #f39c12;
+            --danger: #e74c3c;
             --text-main: #f5f6fa;
+            --text-sub: #a4b0be;
+            --border-color: #34495e;
         }
-        body { background-color: var(--bg-color); color: var(--text-main); font-family: sans-serif; margin: 0; }
-        header { padding: 20px; text-align: center; border-bottom: 2px solid var(--primary); }
-        .notice-banner { background: #2c3e50; padding: 15px; margin: 15px; border-radius: 8px; font-size: 14px; }
-        .navigation { display: flex; justify-content: space-around; padding: 10px; }
-        .tab-item { background: var(--card-bg); border: none; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-        .tab-item.active { background: var(--primary); }
-        #slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; padding: 20px; }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-user-select: none; user-select: none;
+        }
+
+        header {
+            background: linear-gradient(135deg, #111722, #1f293d);
+            padding: 20px; text-align: center;
+            border-bottom: 3px solid var(--primary);
+            position: relative;
+        }
+
+        h1 {
+            margin: 0 0 10px 0; font-size: 24px; letter-spacing: 1px; color: #fff;
+            cursor: pointer; display: inline-block;
+        }
+
+        #countdown {
+            font-size: 14px; color: var(--accent); font-weight: bold; margin-bottom: 10px;
+        }
+
+        .top-controls {
+            position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;
+        }
+
+        select, input {
+            background-color: var(--card-bg); color: #fff;
+            border: 1px solid var(--border-color); padding: 6px 12px;
+            border-radius: 6px; font-size: 14px; outline: none;
+        }
+
+        .notice-banner {
+            background-color: #2c3e50; padding: 15px; margin: 15px auto;
+            max-width: 1200px; border-left: 5px solid var(--primary);
+            border-radius: 4px; font-size: 14px; line-height: 1.6;
+        }
+
+        /* 내 예약 확인 섹션 */
+        #myConfirmedSection {
+            max-width: 1200px; margin: 15px auto; padding: 0 10px; display: none;
+        }
+        .confirmed-box {
+            background: #27ae60; padding: 15px; border-radius: 8px;
+        }
+        .confirmed-header { font-weight: bold; font-size: 16px; margin-bottom: 10px; }
+        #confirmedList { display: flex; flex-wrap: wrap; gap: 10px; }
+        .confirmedCard {
+            background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;
+            display: flex; align-items: center; gap: 10px; font-size: 13px;
+        }
+        .btn-cal {
+            background: var(--accent); border: none; color: #fff; padding: 3px 8px;
+            border-radius: 4px; cursor: pointer; font-size: 11px;
+        }
+
+        /* 탭 및 필터 */
+        .navigation {
+            max-width: 1200px; margin: 20px auto; padding: 0 10px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+        }
+        .tabs { display: flex; gap: 8px; }
+        .tab-item {
+            background-color: var(--card-bg); border: none; color: var(--text-sub);
+            padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .tab-item.active { background-color: var(--primary); color: #fff; }
         
-        /* 모달 기본 스타일 */
+        .status-badge {
+            background-color: #34495e; padding: 8px 15px; border-radius: 20px;
+            font-size: 13px; font-weight: bold;
+        }
+
+        /* 슬롯 그리드 */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 10px 40px 10px; }
+        #slots {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        .slot {
+            background-color: var(--card-bg); border-radius: 8px; padding: 15px;
+            border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .slot:hover { transform: translateY(-3px); border-color: var(--primary); }
+        .slot.locked { background-color: #1e2736; opacity: 0.6; }
+        .slot.myReservation { border: 2px solid #2ecc71; box-shadow: 0 0 10px rgba(46,204,113,0.3); }
+        .slot.pm-slot { border-left: 4px solid var(--accent); }
+
+        .dayBadge {
+            position: absolute; top: 0; right: 0; background: #2d3748;
+            font-size: 10px; padding: 2px 6px; border-bottom-left-radius: 6px; color: var(--text-sub);
+        }
+        .timeRow { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .localTime { font-size: 12px; color: var(--text-sub); margin-bottom: 10px; }
+        .attendeeMiniList {
+            background: rgba(0,0,0,0.15); padding: 8px; border-radius: 6px; font-size: 12px;
+            min-height: 50px; display: flex; flex-direction: column; gap: 4px;
+        }
+        .miniItem {
+            display: flex; justify-content: space-between; background: rgba(255,255,255,0.05);
+            padding: 4px 6px; border-radius: 4px;
+        }
+
+        /* 모달 공통 스타일 */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: 0.3s;
-            z-index: 1000; /* 기본 모달 레벨 */
+            opacity: 0; pointer-events: none; transition: 0.3s; z-index: 1000;
         }
         .modal.show { opacity: 1; pointer-events: auto; }
-        .modal-content { background: var(--card-bg); padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; }
+        .modal-content {
+            background: var(--card-bg); padding: 25px; border-radius: 12px;
+            width: 90%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .modal-header { font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .modal-body { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 13px; color: var(--text-sub); }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; }
 
-        /* [핵심 수정!!] 관리자 패널보다 알림 팝업이 위에 뜨도록 설정 */
-        #adminPanel { z-index: 1100; position: relative; } /* 관리자 패널 */
-        
-        /* 알림, 확인, 프롬프트 모달을 최상위로 올림 */
+        /* 버튼 마스터 */
+        .btn {
+            border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer;
+            font-weight: bold; font-size: 14px; transition: 0.2s;
+        }
+        .btn-primary { background-color: var(--primary); color: #fff; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-danger { background-color: var(--danger); color: #fff; }
+        .btn-secondary { background-color: #7f8c8d; color: #fff; }
+
+        /* 관리자 패널 */
+        #adminPanel {
+            max-width: 1200px; margin: 20px auto; padding: 20px;
+            background: #2c3e50; border-radius: 8px; display: none;
+        }
+        #adminPanel.show { display: block; }
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .admin-btn-group { display: flex; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 15px; }
+        .toggle-btn { background: #7f8c8d; color: #fff; padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; font-size: 12px; font-weight: bold;}
+        .toggle-btn.on { background: #2ecc71; }
+        .toggle-btn.on-speed { background: #9b59b6; }
+
+        #curved-profile-txt { font-size: 11px; color: var(--text-sub); margin-top: 5px; text-align: center; }
+
+        /* =======================================================
+           [버그 수정] 안내 팝업창이 관리자 패널 위로 오도록 레이어 조정
+           ======================================================= */
         #alertModal, #confirmModal, #promptModal {
             z-index: 9999 !important;
         }
-
-        .btn { padding: 10px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-danger { background: #e74c3c; color: white; }
     </style>
 </head>
 <body>
 
     <header>
         <h1 onclick="window.handleAdminAccess()">2737 SVS BUFF BOOKING</h1>
-        <div id="countdown">Next SVS Loading...</div>
+        <div id="countdown">Next SVS in --d --h --m --s</div>
+        <div id="curved-profile-txt"></div>
+        
+        <div class="top-controls">
+            <select id="langSelect" onchange="window.changeLanguage(this.value)">
+                <option value="ko">한국어</option>
+                <option value="en">English</option>
+            </select>
+        </div>
     </header>
 
-    <div class="notice-banner" id="notice-dynamic-txt">
-        📢 가능한 모든 시간을 중복으로 신청해주세요.
+    <div class="notice-banner" id="notice-dynamic-txt">📢 안내 로딩 중...</div>
+
+    <div id="myConfirmedSection">
+        <div class="confirmed-box">
+            <div class="confirmed-header" id="confirmedHeaderTitle">👑 내 예약 시간</div>
+            <div id="confirmedList"></div>
+        </div>
     </div>
 
     <div class="navigation">
-        <button class="tab-item active" id="tab-monday" onclick="window.switchBuff('monday')">월요일 (건설)</button>
-        <button class="tab-item" id="tab-tuesday" onclick="window.switchBuff('tuesday')">화요일 (연구)</button>
-        <button class="tab-item" id="tab-thursday" onclick="window.switchBuff('thursday')">목요일 (훈련)</button>
+        <div class="tabs">
+            <button class="tab-item active" id="tab-monday" onclick="window.switchBuff('monday')"><span id="tab-mon-txt">월요일</span></button>
+            <button class="tab-item" id="tab-tuesday" onclick="window.switchBuff('tuesday')"><span id="tab-tue-txt">화요일</span></button>
+            <button class="tab-item" id="tab-thursday" onclick="window.switchBuff('thursday')"><span id="tab-thu-txt">목요일</span></button>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <select id="filterStatus" onchange="window.clearSearch()">
+                <option value="all" id="opt-all">전체 / All</option>
+                <option value="mine" id="opt-mine">내 예약 / Mine</option>
+            </select>
+            <div class="status-badge" id="bookingStatusMsg">--</div>
+        </div>
     </div>
 
-    <div id="slots"></div>
+    <div class="container">
+        <div id="slots"></div>
+    </div>
 
-    <div id="adminPanel" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <h3>🛠️ 연맹 관리자 컨트롤</h3>
-            <div style="display: grid; gap: 10px; margin-bottom: 20px;">
+    <div id="adminPanel">
+        <h3 style="margin-top:0;">🛠️ 연맹 관리자 컨트롤 센터</h3>
+        <div class="admin-grid">
+            <div class="form-group">
+                <label>SVS 기준 시간 설정 (UTC)</label>
                 <input type="datetime-local" id="adminBaseDate">
-                <button class="btn btn-primary" onclick="window.saveAdminBaseDate()">기준일 저장</button>
+                <button class="btn btn-primary" style="margin-top:5px; padding:5px;" onclick="window.saveAdminBaseDate()">기준일 저장</button>
             </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                <button class="btn btn-primary" onclick="window.exportAllCSV()">📊 엑셀 다운로드</button>
-                <button class="btn" style="background: #5865F2; color: white;" onclick="window.exportTextAll()">📋 디스코드 텍스트 복사</button>
-                <button class="btn btn-danger" onclick="window.backupAndClearAll()">⚠️ 전체 초기화</button>
+            <div class="form-group">
+                <label>글로벌 자동 예약 오픈 일시</label>
+                <input type="text" id="global-open-time" placeholder="YYYY-MM-DD HH:MM:SS">
             </div>
-            <hr>
-            <button class="btn" onclick="window.closeAdmin()">닫기</button>
+            <div class="form-group">
+                <label>요일별 예약 마감 시간 설정</label>
+                <input type="text" id="close-monday" placeholder="월요일 마감시각" style="margin-bottom:3px;">
+                <input type="text" id="close-tuesday" placeholder="화요일 마감시각" style="margin-bottom:3px;">
+                <input type="text" id="close-thursday" placeholder="목요일 마감시각">
+            </div>
+        </div>
+        
+        <div style="margin: 15px 0; display:flex; gap:15px; flex-wrap:wrap;">
+            <div>
+                <span style="font-size:12px; font-weight:bold; display:block; margin-bottom:4px;">요일 활성화 제어</span>
+                <button id="btn-admin-monday" class="toggle-btn" onclick="window.toggleTabStatus('monday')">월요일 오픈</button>
+                <button id="btn-admin-tuesday" class="toggle-btn" onclick="window.toggleTabStatus('tuesday')">화요일 오픈</button>
+                <button id="btn-admin-thursday" class="toggle-btn" onclick="window.toggleTabStatus('thursday')">목요일 오픈</button>
+            </div>
+            <div>
+                <span style="font-size:12px; font-weight:bold; display:block; margin-bottom:4px;">가속 노출 제어</span>
+                <button id="btn-speed-monday" class="toggle-btn" onclick="window.toggleSpeedVisibility('monday')">월 가속공개</button>
+                <button id="btn-speed-tuesday" class="toggle-btn" onclick="window.toggleSpeedVisibility('tuesday')">화 가속공개</button>
+                <button id="btn-speed-thursday" class="toggle-btn" onclick="window.toggleSpeedVisibility('thursday')">목 가속공개</button>
+            </div>
+        </div>
+
+        <div class="admin-btn-group">
+            <button class="btn btn-primary" onclick="window.saveAutoSchedule()">설정 스케줄 저장</button>
+            <button class="btn btn-secondary" onclick="window.exportAllCSV()">📊 엑셀 다운로드 (XLSX)</button>
+            <button class="btn" style="background-color: #5865F2; color:white;" onclick="window.exportTextAll()">📋 디스코드 텍스트 복사</button>
+            <button class="btn btn-danger" onclick="window.backupAndClearAll()">⚠️ 전체 데이터 초기화</button>
+            <button class="btn btn-secondary" onclick="window.closeAdmin()">패널 닫기</button>
         </div>
     </div>
 
     <div class="modal" id="modal">
         <div class="modal-content">
-            <h2 id="modal-title-txt">새 예약 추가</h2>
-            <div id="selectedSlotInfo" style="margin-bottom: 15px; color: #4a90e2;"></div>
-            <input type="text" id="alliance" placeholder="연맹" style="width:100%; margin-bottom:10px; padding:8px;">
-            <input type="text" id="player" placeholder="닉네임" style="width:100%; margin-bottom:10px; padding:8px;">
-            <input type="text" id="playerId" placeholder="플레이어 ID" style="width:100%; margin-bottom:10px; padding:8px;">
-            <input type="number" id="daysSaved" placeholder="가속 일수" style="width:100%; margin-bottom:10px; padding:8px;">
-            <input type="password" id="cancelKey" placeholder="비밀번호" style="width:100%; margin-bottom:10px; padding:8px;">
-            <div style="display:flex; gap:10px;">
-                <button class="btn btn-primary" style="flex:1;" onclick="window.confirmBooking()">확정</button>
-                <button class="btn" style="flex:1;" onclick="window.closeModal()">취on</button>
+            <div class="modal-header">
+                <span id="modal-title-txt">새 예약 추가</span> (<span id="selectedSlotInfo" style="color:var(--accent);"></span>)
+            </div>
+            <div class="modal-body">
+                <div class="form-group"><input type="text" id="alliance" placeholder="연맹"></div>
+                <div class="form-group"><input type="text" id="player" placeholder="닉네임"></div>
+                <div class="form-group"><input type="text" id="playerId" placeholder="플레이어 ID (9자리)"></div>
+                <div class="form-group"><input type="number" id="daysSaved" placeholder="가속 일수"></div>
+                <div class="form-group"><input type="password" id="cancelKey" placeholder="비밀번호"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="window.confirmBooking()"><span id="btn-confirm-txt">확정</span></button>
+                <button class="btn btn-secondary" onclick="window.closeModal()"><span id="btn-close-txt">닫기</span></button>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="alertModal">
-        <div class="modal-content" style="text-align: center;">
-            <h3 id="alert-modal-title">⚠️ 안내</h3>
-            <p id="alertModalMessage"></p>
-            <button class="btn btn-primary" onclick="document.getElementById('alertModal').classList.remove('show')">확인</button>
-        </div>
-    </div>
-
-    <div class="modal" id="confirmModal">
-        <div class="modal-content" style="text-align: center;">
-            <h3 id="confirm-modal-title">⚠️ 확인</h3>
-            <p id="confirmModalMessage"></p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <button class="btn btn-danger" onclick="window.executeCustomConfirm()">확인</button>
-                <button class="btn" onclick="window.closeCustomConfirm()">취소</button>
+    <div class="modal" id="reservedModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="res-title-txt">예약 현황</span> (<span id="reservedSlotInfo" style="color:var(--accent);"></span>)
+            </div>
+            <div class="modal-body">
+                <div id="attendeeListDetail" style="max-height: 220px; overflow-y: auto; display:flex; flex-direction:column; gap:5px;"></div>
+                
+                <div class="cancelArea" style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--border-color);">
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label id="cancel-label-txt">취소 비밀번호</label>
+                        <input type="password" id="editCancelKey" placeholder="Password">
+                    </div>
+                    <button class="btn btn-danger" style="width:100%;" id="btn-cancel-txt" onclick="window.confirmCancelAll()">나의 예약 전체 취소</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="window.openReserveFromStatus()"><span id="btn-add-txt">예약 추가</span></button>
+                <button class="btn btn-secondary" onclick="window.closeReservedModal()"><span id="btn-res-close-txt">닫기</span></button>
             </div>
         </div>
     </div>
 
     <div class="modal" id="adminLoginModal">
-        <div class="modal-content">
-            <h3>Admin Access</h3>
-            <input type="password" id="adminLoginPwd" placeholder="Password" style="width:100%; padding:10px; margin-bottom:10px;">
-            <button class="btn btn-primary" style="width:100%;" onclick="window.confirmAdminLogin()">Login</button>
+        <div class="modal-content" style="max-width:320px;">
+            <div class="modal-header">Admin Access</div>
+            <div class="modal-body">
+                <input type="password" id="adminLoginPwd" placeholder="Password" style="text-align:center; font-size:16px;">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="window.confirmAdminLogin()">Login</button>
+                <button class="btn btn-secondary" onclick="window.closeAdminLogin()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="alertModal">
+        <div class="modal-content" style="max-width:350px; text-align:center;">
+            <div class="modal-header" id="alert-modal-title" style="border:none; margin:0; padding:0;">⚠️ 안내</div>
+            <div class="modal-body" id="alertModalMessage" style="padding:15px 0; font-weight:bold;"></div>
+            <div class="modal-footer" style="justify-content:center;"><button class="btn btn-primary" onclick="document.getElementById('alertModal').classList.remove('show')">OK</button></div>
+        </div>
+    </div>
+
+    <div class="modal" id="confirmModal">
+        <div class="modal-content" style="max-width:350px; text-align:center;">
+            <div class="modal-header" id="confirm-modal-title" style="border:none; margin:0; padding:0;">⚠️ 확인</div>
+            <div class="modal-body" id="confirmModalMessage" style="padding:15px 0; font-weight:bold;"></div>
+            <div class="modal-footer" style="justify-content:center;">
+                <button class="btn btn-danger" id="btn-confirm-ok" onclick="window.executeCustomConfirm()">Confirm</button>
+                <button class="btn btn-secondary" id="btn-confirm-cancel" onclick="window.closeCustomConfirm()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="promptModal">
+        <div class="modal-content" style="max-width:350px;">
+            <div class="modal-header" id="prompt-modal-title">수정</div>
+            <div class="modal-body">
+                <span id="promptModalMessage" style="font-size:13px; color:var(--text-sub);"></span>
+                <input type="number" id="promptInputValue" style="width:100%; box-sizing:border-box; margin-top:5px;">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btn-prompt-confirm" onclick="window.confirmCustomPrompt()">Confirm</button>
+                <button class="btn btn-secondary" id="btn-prompt-cancel" onclick="window.closeCustomPrompt()">Cancel</button>
+            </div>
         </div>
     </div>
 
