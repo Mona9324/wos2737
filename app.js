@@ -420,7 +420,9 @@ window.confirmBooking = function() {
         }
     });
 
-    if (alreadyBooked && !adminAuthenticated) { return openCustomAlert(currentLang === 'ko' ? "이미 해당 요일에 예약된 내역이 있습니다. (1인당 하루 1회만 가능)" : "You have already booked a slot for this day. (1 per day)"); }
+   if (alreadyBooked && !adminAuthenticated) { 
+    return openCustomAlert(currentLang === 'ko' ? "이 요일에는 이미 예약된 내역이 있습니다. (월/화/목 요일별 각 1회만 가능)" : "You have already booked a slot for this day. (1 booking per day allowed)"); 
+}
 
     var entryId = "uid_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
     var newEntry = { id: entryId, alliance: a, player: nickname, playerId: idNum, playerNormalized: normalizeText(nickname), daysSaved: Number(d), passwordHash: simpleHash(pass), createdAt: Date.now() };
