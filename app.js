@@ -11,9 +11,9 @@ var bookingSettings = {
     closedSlots: [], 
     adminLogs: [], 
     tabs: { 
-        monday: { isOpen: true, showSpeeds: false }, 
-        tuesday: { isOpen: true, showSpeeds: false }, 
-        thursday: { isOpen: true, showSpeeds: false } 
+        monday: { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false }, 
+        tuesday: { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false }, 
+        thursday: { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false } 
     } 
 };
 var adminAuthenticated = false;
@@ -232,18 +232,20 @@ function getLocalTimeStr(h, m) {
 function normalizeText(v) { return String(v || "").trim().toLowerCase(); }
 function simpleHash(v) { var str = String(v || ""); var hash = 0; for (var i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; } return "h_" + Math.abs(hash); }
 
-// [로직 교정] 자동 예약 마감 상태에서도 관리자가 수동 ON한 요일은 무조건 강제 오픈되도록 연동식 개선
+// [마스터 수정] 수동 강제 오픈(forceOpen) 상태가 세팅되어 있다면 자동 스케줄 시간을 시원하게 패스하고 즉시 통과시키는 연동 알고리즘
 function isTabActuallyOpen(day) { 
     if (!bookingSettings || !bookingSettings.tabs || !bookingSettings.tabs[day]) return true; 
     var s = bookingSettings.tabs[day], now = new Date(); 
     
-    // 1순위: 관리자가 직접 수동으로 비활성화(OFF)했다면 조건 없이 무조건 마감
+    // 1순위: 관리자가 명시적으로 해당 요일을 수동으로 강제 마감(forceClosed)했다면 무조건 차단
+    if (s.forceClosed === true) return false;
+    
+    // 2순위: 관리자가 스케줄보다 먼저 즉시 강제 활성화(forceOpen)를 켰다면 스케줄 클락을 무시하고 프리패스 오픈!
+    if (s.forceOpen === true) return true;
+    
+    // 3순위: 아무런 수동 제어가 없는 완전 중립 상태라면 기존 자동화 스케줄 규칙을 연동 추적
     if (!s.isOpen) return false; 
-    
-    // 2순위: 전체 마감 스케줄 체크 (지정 시각을 지나면 자동 마감)
     if (bookingSettings.globalCloseTime && now > new Date(bookingSettings.globalCloseTime)) return false; 
-    
-    // 3순위: 전체 오픈 스케줄 체크 (지정 시각 이전이면 자동 대기)
     if (bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime)) return false; 
     
     return true; 
@@ -371,9 +373,9 @@ function init() {
             bookingSettings.closedSlots = data.closedSlots || [];
             bookingSettings.adminLogs = data.adminLogs || [];
             if (data.tabs) {
-                bookingSettings.tabs.monday = data.tabs.monday || { isOpen: true, showSpeeds: false };
-                bookingSettings.tabs.tuesday = data.tabs.tuesday || { isOpen: true, showSpeeds: false };
-                bookingSettings.tabs.thursday = data.tabs.thursday || { isOpen: true, showSpeeds: false };
+                bookingSettings.tabs.monday = data.tabs.monday || { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false };
+                bookingSettings.tabs.tuesday = data.tabs.tuesday || { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false };
+                bookingSettings.tabs.thursday = data.tabs.thursday || { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false };
             }
         } else {
             window.db.collection("settings").doc("booking").set(bookingSettings).catch(function(e){});
@@ -434,13 +436,30 @@ window.confirmAdminLogin = function() {
     }
 };
 
+// [수정 완역] 수동 제어 클릭 시 상태 분기에 맞추어 강제 제어 플래그(forceOpen/forceClosed)를 데이터베이스에 주입하여 즉각적인 개방/마감 처리 보장
 window.toggleTabStatus = function(day) { 
     if (!window.db || !bookingSettings.tabs || !bookingSettings.tabs[day]) return; 
-    var newStatus = !bookingSettings.tabs[day].isOpen; 
-    var path = "tabs." + day + ".isOpen"; 
-    var obj = {}; obj[path] = newStatus; 
+    
+    var currentlyOpen = isTabActuallyOpen(day);
+    var obj = {};
+    var logMsg = "";
+    
+    if (currentlyOpen) {
+        // 현재 열려있는 상태에서 눌렀으므로 -> 무조건 즉시 닫기
+        obj["tabs." + day + ".forceOpen"] = false;
+        obj["tabs." + day + ".forceClosed"] = true;
+        obj["tabs." + day + ".isOpen"] = false;
+        logMsg = "[" + day + "] 관리자가 해당 요일을 수동으로 강제 마감(OFF) 처리했습니다.";
+    } else {
+        // 현재 닫혀있는 상태에서 눌렀으므로 -> 스케줄 시간이 아니더라도 즉시 강제 열기!
+        obj["tabs." + day + ".forceOpen"] = true;
+        obj["tabs." + day + ".forceClosed"] = false;
+        obj["tabs." + day + ".isOpen"] = true;
+        logMsg = "[" + day + "] 관리자가 자동 스케줄을 무시하고 해당 요일을 즉시 강제 오픈(ON) 처리했습니다.";
+    }
+    
     window.db.collection("settings").doc("booking").update(obj).then(function() {
-        window.addAdminLog("[" + day + "] 요일 수동 오픈 상태 변경: " + (newStatus ? "ON" : "OFF"));
+        window.addAdminLog(logMsg);
     }); 
 };
 
@@ -572,14 +591,24 @@ window.confirmCancelAll = function() {
     });
 };
 
+// [연동 최적화] 관리자가 자동 스케줄 세팅을 새로 저장할 때는 기존의 수동 개방/마감 강제 제어 장치를 자동으로 리셋시킵니다.
 window.saveAutoSchedule = function() { 
     if(!window.db) return; 
     bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; 
     bookingSettings.globalCloseTime = document.getElementById("global-close-time").value; 
     bookingSettings.closedSlots = []; 
     
+    // 신규 스케줄 등록 시 요일별 수동 강제 스위치 값 기본화
+    ['monday', 'tuesday', 'thursday'].forEach(function(day) {
+        if(bookingSettings.tabs[day]) {
+            bookingSettings.tabs[day].isOpen = true;
+            bookingSettings.tabs[day].forceOpen = false;
+            bookingSettings.tabs[day].forceClosed = false;
+        }
+    });
+    
     window.db.collection("settings").doc("booking").set(bookingSettings, {merge: true}).then(function() { 
-        window.addAdminLog("자동 오픈/마감 통합 스케줄을 업데이트했습니다.");
+        window.addAdminLog("자동 오픈/마감 통합 스케줄 스케줄링을 완료했습니다.");
         openCustomAlert(langPack[currentLang].promptSaved || "Saved!"); 
     }); 
 };
@@ -609,23 +638,17 @@ window.backupAndClearAll = function() {
     });
 };
 
-// [UI 싱크 개정] 스케줄 마감 상태라 하더라도, 수동 버튼 UI 컴포넌트 클래스가 비활성(OFF) 상태와 정확히 연동되도록 바인딩 보완
+// [UI 반응 싱크 완성] 실제 타임라인이 강제 개방(forceOpen) 또는 스케줄 연동으로 열려있을 때만 수동제어 스위치 컴포넌트에 ON 스타일 바인딩
 function updateAdminUI() { 
     if(!bookingSettings || !bookingSettings.tabs) return;
-    
-    var now = new Date();
-    var isScheduleClosed = bookingSettings.globalCloseTime && now > new Date(bookingSettings.globalCloseTime);
-    var isScheduleNotOpened = bookingSettings.globalOpenTime && now < new Date(bookingSettings.globalOpenTime);
-    var isSystemLocked = isScheduleClosed || isScheduleNotOpened; // 전체 스케줄 차단 여부
-
     ['monday', 'tuesday', 'thursday'].forEach(function(day) { 
         if(!bookingSettings.tabs[day]) return;
         
         var btn = document.getElementById("btn-admin-" + day); 
         if (btn) { 
-            // 스케줄 마감 상태이거나 수동으로 껐을 경우 UI 단추 OFF 표시
-            var shouldBeOn = bookingSettings.tabs[day].isOpen && !isSystemLocked;
-            btn.classList.toggle("on", shouldBeOn); 
+            // 현재 요일이 마스터 스위치 또는 강제 개방 조건에 의해 최종 오픈되어있는지 파악
+            var currentlyOpen = isTabActuallyOpen(day);
+            btn.classList.toggle("on", currentlyOpen); 
         } 
         
         var sBtn = document.getElementById("btn-speed-" + day); 
