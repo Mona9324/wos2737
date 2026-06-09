@@ -4,13 +4,18 @@ var allSlotsData = {};
 var MY_BOOKING_KEY = "svs_my_booking_info";
 var currentLang = localStorage.getItem("svs_lang") || "ko"; 
 
+// 기본값 완벽 보장 정의
 var bookingSettings = { 
     baseDate: "2026-05-23T21:00:00", 
     globalOpenTime: "", 
     globalCloseTime: "", 
-    closedSlots: [], // 개별 마감 리스트
+    closedSlots: [], 
     adminLogs: [], 
-    tabs: { monday: { isOpen: true, showSpeeds: false }, tuesday: { isOpen: true, showSpeeds: false }, thursday: { isOpen: true, showSpeeds: false } } 
+    tabs: { 
+        monday: { isOpen: true, showSpeeds: false }, 
+        tuesday: { isOpen: true, showSpeeds: false }, 
+        thursday: { isOpen: true, showSpeeds: false } 
+    } 
 };
 var adminAuthenticated = false;
 var sc = 0;
@@ -163,7 +168,7 @@ window.addAdminLog = function(msg) {
     logs.unshift(fullMsg); 
     if(logs.length > 50) logs.pop(); 
     
-    window.db.collection("settings").doc("booking").update({ adminLogs: logs });
+    window.db.collection("settings").doc("booking").update({ adminLogs: logs }).catch(function(e){});
 };
 
 function renderLogs() {
@@ -238,7 +243,6 @@ window.renderAll = function() {
             
             if (filter === "mine" && !attendees.some(function(a) { return normalizeText(a.player) === normalizeText(localStorage.getItem(MY_BOOKING_KEY) ? JSON.parse(localStorage.getItem(MY_BOOKING_KEY)).player : ""); })) continue;
             
-            // [방어 코드 추가] closedSlots 배열이 존재하지 않을 때 에러 차단
             var closedList = bookingSettings.closedSlots || [];
             var isSpecificallyClosed = closedList.includes(id);
             var effectivelyOpen = isOpen && !isSpecificallyClosed;
@@ -268,7 +272,23 @@ function init() {
     applyLanguagePack();
     
     window.db.collection("settings").doc("booking").onSnapshot(function(doc) { 
-        if(doc.exists) { bookingSettings = doc.data(); } 
+        if(doc.exists) { 
+            var data = doc.data();
+            // 파이어베이스 찌꺼기나 누락 필드를 위한 자동 결합 및 안전장치
+            bookingSettings.baseDate = data.baseDate || "2026-05-23T21:00:00";
+            bookingSettings.globalOpenTime = data.globalOpenTime || "";
+            bookingSettings.globalCloseTime = data.globalCloseTime || "";
+            bookingSettings.closedSlots = data.closedSlots || [];
+            bookingSettings.adminLogs = data.adminLogs || [];
+            if (data.tabs) {
+                bookingSettings.tabs.monday = data.tabs.monday || { isOpen: true, showSpeeds: false };
+                bookingSettings.tabs.tuesday = data.tabs.tuesday || { isOpen: true, showSpeeds: false };
+                bookingSettings.tabs.thursday = data.tabs.thursday || { isOpen: true, showSpeeds: false };
+            }
+        } else {
+            // 만약 문서 자체가 없으면 기본 구조 생성 유도
+            window.db.collection("settings").doc("booking").set(bookingSettings).catch(function(e){});
+        }
         updateStatusMessage(); updateAdminUI(); renderLogs(); window.renderAll(); 
     }, function(error) { console.log("Settings load error:", error); });
 
@@ -465,9 +485,8 @@ window.saveAutoSchedule = function() {
     if(!window.db) return; 
     bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; 
     bookingSettings.globalCloseTime = document.getElementById("global-close-time").value; 
-    bookingSettings.closedSlots = []; 
     
-    window.db.collection("settings").doc("booking").update(bookingSettings).then(function() { 
+    window.db.collection("settings").doc("booking").set(bookingSettings, {merge: true}).then(function() { 
         window.addAdminLog("자동 오픈/마감 통합 스케줄을 업데이트했습니다.");
         openCustomAlert(langPack[currentLang].promptSaved || "Saved!"); 
     }); 
@@ -489,7 +508,7 @@ window.backupAndClearAll = function() {
     window.openCustomConfirm(p.promptClear || "Clear all data?", function() {
         window.db.collection("slots").get().then(function(snap) { 
             var batch = window.db.batch(); 
-            snap.forEach(function(doc) { batch.delete(doc.ref)); 
+            snap.forEach(function(doc) { batch.delete(doc.ref); }); 
             batch.commit().then(function() { 
                 window.addAdminLog("🚨 데이터 센터 경보: 관리자가 전체 예약을 강제 리셋했습니다.");
                 window.closeAdmin(); window.renderAll(); 
