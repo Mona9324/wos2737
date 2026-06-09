@@ -20,19 +20,18 @@ var bookingSettings = {
 var adminAuthenticated = false;
 var sc = 0;
 
+// [다국어 팩 개정 완성] 각 언어별 가속 하한선 포맷을 서버 조절값과 연동 가능하도록 객체화 및 동기화 처리
 var langPack = {
     ko: { 
-        notice: "📢 요일별 1인 1타임만 예약 가능합니다.<br /><span style='color: #2d3748; font-weight: bold;'>[예약 오픈 조건] 수요일: 가속 50일 이상 | 목요일: 30일 이상 | 금요일: 15일 이상 | 토~일요일: 자유 예약</span>", 
+        notice: "📢 요일별 1인 1타임만 예약 가능합니다.", 
+        speedCond: "[예약 오픈 조건] 수요일: 가속 {wed}일 이상 | 목요일: {thu}일 이상 | 금요일: {fri}일 이상 | 토~일요일: 자유 예약",
         curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1", confirmedHeader: "👑 내 예약 시간", addAlarm: "🔔 알람 등록", 
         mon: "월요일 (건설)", tue: "화요일 (연구)", thu: "목요일 (훈련)", 
         mondayShort: "월요일", tuesdayShort: "화요일", thursdayShort: "목요일", 
         optAll: "전체 / All", optMine: "내 예약 / Mine", 
-        openAvailable: "✅ 예약 가능", openClosed: "🔒 예약 마감", pers: "명", 
-        noRes: "예약 가능", 
+        openAvailable: "✅ 예약 가능", openClosed: "🔒 예약 마감", pers: "명", noRes: "예약 가능", 
         addTitle: "새 예약 추가", confirmBtn: "확정", closeBtn: "닫기", statusTitle: "예약 현황", 
-        cancelLabel: "취소 비밀번호", 
-        cancelBtn: "나의 예약 취소", // [수정] 피드백 반영: '전체' 글자 제거하여 간소화
-        addBookingBtn: "예약 추가", 
+        cancelLabel: "취소 비밀번호", cancelBtn: "나의 예약 취소", addBookingBtn: "예약 추가", 
         closedAlert: "예약 마감되었습니다.", speedUnit: "일", 
         pAlliance: "연맹 (ZYZ, BUG, ZTP 등)", pNickname: "닉네임", pId: "플레이어 ID (9자리)", pSpeed: "가속 일수", pPass: "예약취소를 위한 비밀번호 (아무거나)", 
         editBtn: "수정", cancelBtnSmall: "취소", delBtn: "삭제", slotOpenBtn: "🔓 예약 열기", slotCloseBtn: "🔒 예약 마감", 
@@ -40,11 +39,11 @@ var langPack = {
         errNoRes: "삭제할 예약 데이터를 찾을 수 없습니다.", errFillAll: "모든 항목을 입력해야 합니다.", 
         errIdDigit: "플레이어 ID는 반드시 숫자 9자리여야 합니다.", promptEdit: "새로운 가속 일수(숫자만)를 입력하세요:", 
         errNan: "숫자 형식만 입력 가능합니다.", promptDelete: "정말 삭제하시겠습니까?", 
-        promptClear: "모든 예약 데이터를 삭제하시겠습니까?<br />(이 작업은 기록에 남습니다)", // [수정] 줄바꿈 강제 주입 및 문구 보정
-        promptSaved: "저장되었습니다!" 
+        promptClear: "모든 예약 데이터를 삭제하시겠습니까?<br />(이 작업은 기록에 남습니다)", promptSaved: "저장되었습니다!" 
     },
     en: { 
-        notice: "📢 1 Booking Per Person Per Day.<br /><span style='color: #2d3748; font-weight: bold;'>[Requirements] Wed: 50d+ | Thu: 30d+ | Fri: 15d+ | Sat~Sun: Free Booking</span>", 
+        notice: "📢 1 Booking Per Person Per Day.", 
+        speedCond: "[Requirements] Wed: {wed}d+ | Thu: {thu}d+ | Fri: {fri}d+ | Sat~Sun: Free Booking",
         curvedTxt: "The website usage fee is Mona's Island 💚+1", confirmedHeader: "👑 My Booked Buffs", addAlarm: "🔔 Add Alarm", 
         mon: "Monday (Construction)", tue: "Tuesday (Research)", thu: "Thursday (Troops Training)", 
         mondayShort: "Monday", tuesdayShort: "Tuesday", thursdayShort: "Thursday", optAll: "All", optMine: "My Booking", 
@@ -55,12 +54,36 @@ var langPack = {
         editBtn: "Edit", cancelBtnSmall: "Cancel", delBtn: "Delete", slotOpenBtn: "🔓 Open", slotCloseBtn: "🔒 Close", 
         errFill: "Please enter your password first.", errWrongPass: "Wrong password.", errNoRes: "Reservation not found.", errFillAll: "Please fill all fields.", errIdDigit: "ID must be exactly 9 digits.", promptEdit: "Enter new speed-up days:", errNan: "Invalid number.", promptDelete: "Are you sure?", promptClear: "Clear all booking data?<br />(This action is logged)", promptSaved: "Saved!" 
     },
-    zh: { notice: "📢 请尽可能重叠申请所有您可以参加的时间段。", curvedTxt: "预约网站使用费是 Mona의岛 💚+1", confirmedHeader: "👑 我的确定的增益时间", addAlarm: "🔔 添加提醒", mon: "星期一 (建筑)", tue: "星期二 (研究)", thu: "星期四 (训练)", mondayShort: "星期一", tuesdayShort: "星期二", thursdayShort: "星期四", optAll: "全部", optMine: "我的预约", openAvailable: "✅ 开放预约", openClosed: "🔒 预约截止", pers: "人", noRes: "预约开放", addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭", statusTitle: "预约状态", cancelLabel: "取消密码", cancelBtn: "取消我的预约", addBookingBtn: "添加预约", closedAlert: "预约已截止。", speedUnit: "天", pAlliance: "联盟 (ZYZ, BUG, ZTP 等)", pNickname: "游戏昵称", pId: "玩家 ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消密码 (任意)", editBtn: "修改", cancelBtnSmall: "取消", delBtn: "删除", slotOpenBtn: "🔓 开放", slotCloseBtn: "🔒 关闭", errFill: "请先在下方输入您的密码。", errWrongPass: "密码错误。", errNoRes: "找不到预约 data。", errFillAll: "必须填写所有字段。", errIdDigit: "玩家ID必须为9位数字。", promptEdit: "请输入新的加速天数（仅限数字）:", errNan: "只能输入数字格式。", promptDelete: "确定要删除吗？", promptClear: "清除所有数据？", promptSaved: "已保存！" },
-    fr: { notice: "📢 Veuillez réserver tous les créneaux horaires disponibles auxquels vous pouvez participer.", curvedTxt: "Frais d'utilisation du site : L'île de Mona 💚+1", confirmedHeader: "👑 Mes Buffs Confirmés", addAlarm: "🔔 Alarme", mon: "Lundi (Construction)", tue: "Mardi (Recherche)", thu: "Jeudi (Entraînement)", mondayShort: "Lundi", tuesdayShort: "Mardi", thursdayShort: "Jeudi", optAll: "Tout", optMine: "Mes Réservations", openAvailable: "✅ Réservation Ouverte", openClosed: "🔒 Réservation Fermée", pers: "Pers.", noRes: "Disponible", addTitle: "Nouvelle Réservation", confirmBtn: "Confirmer", closeBtn: "Fermer", statusTitle: "Statut de Réservation", cancelLabel: "Mot de passe", cancelBtn: "Annuler ma réservation", addBookingBtn: "Ajouter Réservation", closedAlert: "Réservation fermée.", speedUnit: "j", pAlliance: "Alliance (ZYZ, BUG, ZTP etc)", pNickname: "Beta", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", pPass: "Mot de passe", editBtn: "Modifier", cancelBtnSmall: "Annuler", delBtn: "Supprimer", slotOpenBtn: "🔓 Ouvrir", slotCloseBtn: "🔒 Fermer", errFill: "Saisissez votre mot de passe.", errWrongPass: "Mot de passe incorrect.", errNoRes: "Réservation introuvable.", errFillAll: "Veuillez remplir tous les champs.", errIdDigit: "L'identifiant doit comporter 9 chiffres.", promptEdit: "Modifier:", errNan: "Invalide.", promptDelete: "Supprimer ?", promptClear: "Effacer ?", promptSaved: "Enregistré !" },
-    ja: { notice: "📢 参加可能なすべての時間帯을 申请してください。", curvedTxt: "予約サイトの利用料は : Monaの島 💚+1", confirmedHeader: "👑 確定した大統領バフ時間", addAlarm: "🔔 アラーム登録", mon: "月曜日", tue: "火曜日", thu: "木曜日", mondayShort: "月曜日", tuesdayShort: "火曜日", thursdayShort: "木曜日", optAll: "すべて", optMine: "自分の予約", openAvailable: "✅ 予約受付中", openClosed: "🔒 予約終了", pers: "人", noRes: "予約可能", addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる", statusTitle: "予約状況", cancelLabel: "キャンセル", cancelBtn: "予約取消", addBookingBtn: "追加", closedAlert: "締め切られました。", speedUnit: "日", pAlliance: "同盟 (ZYZ, BUG, ZTP)", pNickname: "名前", pId: "プレイヤーID", pSpeed: "加速日数", pPass: "パスワード", editBtn: "修正", cancelBtnSmall: "取消", delBtn: "삭제", slotOpenBtn: "🔓 開く", slotCloseBtn: "🔒 閉じる", errFill: "パスワードを入力してください。", errWrongPass: "不正。", errNoRes: "見つかりません。", errFillAll: "すべて入力。", errIdDigit: "9桁の数字。", promptEdit: "修正:", errNan: "不正。", promptDelete: "削除？", promptClear: "初期化？", promptSaved: "保存！" },
-    id: { notice: "📢 Silakan pesan semua slot waktu tersedia.", curvedTxt: "Biaya penggunaan Pulau Mona 💚+1", confirmedHeader: "👑 Buff Saya", addAlarm: "🔔 Pasang Alarm", mon: "Senin", tue: "Selasa", thu: "Kamis", mondayShort: "Senin", tuesdayShort: "Selasa", thursdayShort: "Kamis", optAll: "Semua", optMine: "Pesanan Saya", openAvailable: "✅ Buka", openClosed: "🔒 Tutup", pers: "Orang", noRes: "Tersedia", addTitle: "Tambah Pesanan", confirmBtn: "Konfirmasi", closeBtn: "Tutup", statusTitle: "Status", cancelLabel: "Kata Sandi", cancelBtn: "Batalkan Pesanan", addBookingBtn: "Tambah", closedAlert: "Ditutup.", speedUnit: "hari", pAlliance: "Aliansi (ZYZ, BUG, ZTP etc)", pNickname: "Nama Pengguna", pId: "Player ID (9 digit)", pSpeed: "Speed-up Hari", pPass: "Kata sandi", editBtn: "Ubah", cancelBtnSmall: "Batal", delBtn: "Hapus", slotOpenBtn: "🔓 Buka", slotCloseBtn: "🔒 Tutup", errFill: "Masukkan kata sandi.", errWrongPass: "Salah.", errNoRes: "Tidak ditemukan.", errFillAll: "Harus diisi.", errIdDigit: "ID harus 9 digit.", promptEdit: "Ubah:", errNan: "Harus angka.", promptDelete: "Hapus?", promptClear: "Hapus semua?", promptSaved: "Tersimpan!" },
-    tr: { notice: "📢 Lütfen rezervasyon yapın.", curvedTxt: "Mona'nın Adası 💚+1", confirmedHeader: "👑 Onaylanmış Bufflarım", addAlarm: "🔔 Alarm Ekle", mon: "Pazartesi", tue: "Salı", thu: "Perşembe", mondayShort: "Pazartesi", tuesdayShort: "Salı", thursdayShort: "Perşembe", optAll: "Tümü", optMine: "Rezervasyonum", openAvailable: "✅ Açık", openClosed: "🔒 Kapalı", pers: "Kişi", noRes: "Müsait", addTitle: "Yeni Rezervasyon", confirmBtn: "Onayla", closeBtn: "Kapat", statusTitle: "Durum", cancelLabel: "Şifre", cancelBtn: "Rezervasyonumu İptal Et", addBookingBtn: "Ekle", closedAlert: "Kapandı.", speedUnit: "g", pAlliance: "İttifak (ZYZ, BUG, ZTP vb.)", pNickname: "Kullanıcı Adı", pId: "Oyuncu ID", pSpeed: "Hızlandırma", pPass: "İptal Şifresi", editBtn: "Düzenle", cancelBtnSmall: "İptal", delBtn: "Sil", slotOpenBtn: "🔓 Aç", slotCloseBtn: "🔒 Kapat", errFill: "Şifre giriniz.", errWrongPass: "Yanlış.", errNoRes: "Bulunamadı.", errFillAll: "Doldurunuz.", errIdDigit: "ID 9 haneli olmalıdır.", promptEdit: "Düzenle:", errNan: "Geçersiz.", promptDelete: "Sil?", promptClear: "Temizle?", promptSaved: "Kaydedildi!" },
-    ar: { notice: "📢 يرجى الحجز.", curvedTxt: "جزيرة منى 💚+1", confirmedHeader: "👑 حجوزاتي المؤكدة", addAlarm: "🔔 منبه", mon: "الاثنين", tue: "الثلاثاء", thu: "الخميس", mondayShort: "الاثنين", tuesdayShort: "الثلاثاء", thursdayShort: "الخميس", optAll: "الكل", optMine: "حجوزاتي", openAvailable: "✅ مفتوح", openClosed: "🔒 مغلق", pers: "أشخاص", noRes: "متاح", addTitle: "حجز جديد", confirmBtn: "تأكيد", closeBtn: "إغلاق", statusTitle: "الحالة", cancelLabel: "كلمة المرور", cancelBtn: "إلغاء حجزي", addBookingBtn: "إضافة", closedAlert: "مغلق.", speedUnit: "ي", pAlliance: "التحالف (ZYZ, BUG, ZTP إلخ)", pNickname: "الاسم", pId: "معرف اللاعب", pSpeed: "أيام التسريع", pPass: "كلمة المرور", editBtn: "تعديل", cancelBtnSmall: "إلغاء", delBtn: "حذف", slotOpenBtn: "🔓 فتح", slotCloseBtn: "🔒 إغلاق", errFill: "أدخل كلمة المرور.", errWrongPass: "خطأ.", errNoRes: "غير موجود.", errFillAll: "مطلوب.", errIdDigit: "يجب 9 أرقام.", promptEdit: "تعديل:", errNan: "غير صحيح.", promptDelete: "حذف؟", promptClear: "مسح؟", promptSaved: "تم!" }
+    zh: { 
+        notice: "📢 每人每天限预约1次。", 
+        speedCond: "[条件] 周三: 加速 {wed}天+ | 周四: {thu}天+ | 周五: {fri}天+ | 周六~周日: 自由预约",
+        curvedTxt: "预约网站使用费是 Mona的岛 💚+1", confirmedHeader: "👑 我的确定的增益时间", addAlarm: "🔔 添加提醒", mon: "星期一 (建筑)", tue: "星期二 (研究)", thu: "星期四 (训练)", mondayShort: "星期一", tuesdayShort: "星期二", thursdayShort: "星期四", optAll: "全部", optMine: "我的预约", openAvailable: "✅ 开放预约", openClosed: "🔒 预约截止", pers: "人", noRes: "预约开放", addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭", statusTitle: "预约状态", cancelLabel: "取消密码", cancelBtn: "取消我的预约", addBookingBtn: "添加预约", closedAlert: "预约已截止。", speedUnit: "天", pAlliance: "联盟 (ZYZ, BUG, ZTP 等)", pNickname: "游戏昵称", pId: "玩家 ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消密码 (任意)", editBtn: "修改", cancelBtnSmall: "取消", delBtn: "删除", slotOpenBtn: "🔓 开放", slotCloseBtn: "🔒 关闭", errFill: "请先在下方输入您的密码。", errWrongPass: "密码错误。", errNoRes: "找不到预约数据。", errFillAll: "必须填写所有字段。", errIdDigit: "玩家ID必须为9位数字。", promptEdit: "请输入新的加速天数（仅限数字）:", errNan: "只能输入数字格式。", promptDelete: "确定要删除吗？", promptClear: "清除所有数据？", promptSaved: "已保存！" 
+    },
+    fr: { 
+        notice: "📢 1 Réservation par personne et par jour.", 
+        speedCond: "[Req] Mer: {wed}j+ | Jeu: {thu}j+ | Ven: {fri}j+ | Sam~Dim: Libre",
+        curvedTxt: "Frais d'utilisation du site : L'île de Mona 💚+1", confirmedHeader: "👑 Mes Buffs Confirmés", addAlarm: "🔔 Alarme", mon: "Lundi (Construction)", tue: "Mardi (Recherche)", thu: "Jeudi (Entraînement)", mondayShort: "Lundi", tuesdayShort: "Mardi", thursdayShort: "Jeudi", optAll: "Tout", optMine: "Mes Réservations", openAvailable: "✅ Réservation Ouverte", openClosed: "🔒 Réservation Fermée", pers: "Pers.", noRes: "Disponible", addTitle: "Nouvelle Réservation", confirmBtn: "Confirmer", closeBtn: "Fermer", statusTitle: "Statut de Réservation", cancelLabel: "Mot de passe", cancelBtn: "Annuler ma réservation", addBookingBtn: "Ajouter Réservation", closedAlert: "Réservation fermée.", speedUnit: "j", pAlliance: "Alliance (ZYZ, BUG, ZTP etc)", pNickname: "Beta", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", pPass: "Mot de passe", editBtn: "Modifier", cancelBtnSmall: "Annuler", delBtn: "Supprimer", slotOpenBtn: "🔓 Ouvrir", slotCloseBtn: "🔒 Fermer", errFill: "Saisissez votre mot de passe.", errWrongPass: "Mot de passe incorrect.", errNoRes: "Réservation introuvable.", errFillAll: "Veuillez remplir tous les champs.", errIdDigit: "L'identifiant doit comporter 9 chiffres.", promptEdit: "Modifier:", errNan: "Invalide.", promptDelete: "Supprimer ?", promptClear: "Effacer ?", promptSaved: "Enregistré !" 
+    },
+    ja: { 
+        notice: "📢 曜日別1人1回のみ予約可能です。", 
+        speedCond: "[条件] 水曜日: 加速 {wed}日+ | 木曜日: {thu}日+ | 金曜日: {fri}日+ | 土~日曜日: 自由予約",
+        curvedTxt: "予約サイトの利用料は : Monaの島 💚+1", confirmedHeader: "👑 確定した大統領バフ時間", addAlarm: "🔔 アラーム登録", mon: "月曜日", tue: "火曜日", thu: "木曜日", mondayShort: "月曜日", tuesdayShort: "火曜日", thursdayShort: "木曜日", optAll: "すべて", optMine: "自分の予約", openAvailable: "✅ 予約受付중", openClosed: "🔒 予約終了", pers: "人", noRes: "予約可能", addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる", statusTitle: "予約状況", cancelLabel: "キャンセル", cancelBtn: "予約取消", addBookingBtn: "追加", closedAlert: "締め切られました。", speedUnit: "日", pAlliance: "同盟 (ZYZ, BUG, ZTP)", pNickname: "名前", pId: "プレイヤーID", pSpeed: "加速日数", pPass: "パスワード", editBtn: "修正", cancelBtnSmall: "取消", delBtn: "삭제", slotOpenBtn: "🔓 開く", slotCloseBtn: "🔒 閉じる", errFill: "パスワードを入力してください。", errWrongPass: "不正。", errNoRes: "見つかりません。", errFillAll: "すべて入力。", errIdDigit: "9桁の数字。", promptEdit: "修正:", errNan: "不正。", promptDelete: "削除？", promptClear: "初期化？", promptSaved: "保存！" 
+    },
+    id: { 
+        notice: "📢 1 Pesanan Per Orang Per Hari.", 
+        speedCond: "[Syarat] Rabu: Speed-up {wed}h+ | Kamis: {thu}h+ | Jumat: {fri}h+ | Sabtu~Minggu: Bebas",
+        curvedTxt: "Biaya penggunaan Pulau Mona 💚+1", confirmedHeader: "👑 Buff Saya", addAlarm: "🔔 Pasang Alarm", mon: "Senin", tue: "Selasa", thu: "Kamis", mondayShort: "Senin", tuesdayShort: "Selasa", thursdayShort: "Kamis", optAll: "Semua", optMine: "Pesanan Saya", openAvailable: "✅ Buka", openClosed: "🔒 Tutup", pers: "Orang", noRes: "Tersedia", addTitle: "Tambah Pesanan", confirmBtn: "Konfirmasi", closeBtn: "Tutup", statusTitle: "Status", cancelLabel: "Kata Sandi", cancelBtn: "Batalkan Pesanan", addBookingBtn: "Tambah", closedAlert: "Ditutup.", speedUnit: "hari", pAlliance: "Aliansi (ZYZ, BUG, ZTP etc)", pNickname: "Nama Pengguna", pId: "Player ID (9 digit)", pSpeed: "Speed-up Hari", pPass: "Kata sandi", editBtn: "Ubah", cancelBtnSmall: "Batal", delBtn: "Hapus", slotOpenBtn: "🔓 Buka", slotCloseBtn: "🔒 Tutup", errFill: "Masukkan kata sandi.", errWrongPass: "Salah.", errNoRes: "Tidak ditemukan.", errFillAll: "Harus diisi.", errIdDigit: "ID harus 9 digit.", promptEdit: "Ubah:", errNan: "Harus angka.", promptDelete: "Hapus?", promptClear: "Hapus semua?", promptSaved: "Tersimpan!" 
+    },
+    tr: { 
+        notice: "📢 Kişi başına günde 1 rezervasyon.", 
+        speedCond: "[Şartlar] Çarş: {wed}g+ | Perş: {thu}g+ | Cuma: {fri}g+ | Cmt~Paz: Serbest",
+        curvedTxt: "Mona'nın Adası 💚+1", confirmedHeader: "👑 Onaylanmış Bufflarım", addAlarm: "🔔 Alarm Ekle", mon: "Pazartesi", tue: "Salı", thu: "Perşembe", mondayShort: "Pazartesi", tuesdayShort: "Salı", thursdayShort: "Perşembe", optAll: "Tümü", optMine: "Rezervasyonum", openAvailable: "✅ Açık", openClosed: "🔒 Kapalı", pers: "Kişi", noRes: "Müsait", addTitle: "Yeni Rezervasyon", confirmBtn: "Onayla", closeBtn: "Kapat", statusTitle: "Durum", cancelLabel: "Şifre", cancelBtn: "Rezervasyonumu İptal Et", addBookingBtn: "Ekle", closedAlert: "Kapandı.", speedUnit: "g", pAlliance: "İttifak (ZYZ, BUG, ZTP vb.)", pNickname: "Kullanıcı Adı", pId: "Oyuncu ID", pSpeed: "Hızlandırma", pPass: "İptal Şifresi", editBtn: "Düzenle", cancelBtnSmall: "İptal", delBtn: "Sil", slotOpenBtn: "🔓 Aç", slotCloseBtn: "🔒 Kapat", errFill: "Şifre giriniz.", errWrongPass: "Yanlış.", errNoRes: "Bulunamadı.", errFillAll: "Doldurunuz.", errIdDigit: "ID 9 haneli olmalıdır.", promptEdit: "Düzenle:", errNan: "Geçersiz.", promptDelete: "Sil?", promptClear: "Temizle?", promptSaved: "Kaydedildi!" 
+    },
+    ar: { 
+        notice: "📢 حجز واحد للشخص الواحد في اليوم.", 
+        speedCond: "[الشروط] الأربعاء: {wed} ي+ | الخميس: {thu} ي+ | الجمعة: {fri} ي+ | السبت~الأحد: حجز حر",
+        curvedTxt: "جزيرة منى 💚+1", confirmedHeader: "👑 حجوزاتي المؤكدة", addAlarm: "🔔 منبه", mon: "الاثنين", tue: "الثلاثاء", thu: "الخميس", mondayShort: "الاثنين", tuesdayShort: "الثلاثاء", thursdayShort: "الخميس", optAll: "الكل", optMine: "حجوزاتي", openAvailable: "✅ مفتوح", openClosed: "🔒 مغلق", pers: "أشخاص", noRes: "متاح", addTitle: "حجز جديد", confirmBtn: "تأكيد", closeBtn: "إغلاق", statusTitle: "الحالة", cancelLabel: "كلمة المرور", cancelBtn: "إلغاء حجزي", addBookingBtn: "إضافة", closedAlert: "مغلق.", speedUnit: "ي", pAlliance: "التحالف (ZYZ, BUG, ZTP إلخ)", pNickname: "الاسم", pId: "معرف اللاعب", pSpeed: "أيام التسريع", pPass: "كلمة المرور", editBtn: "تعديل", cancelBtnSmall: "إلغاء", delBtn: "حذف", slotOpenBtn: "🔓 فتح", slotCloseBtn: "🔒 إغلاق", errFill: "أدخل كلمة المرور.", errWrongPass: "خطأ.", errNoRes: "غير موجود.", errFillAll: "مطلوب.", errIdDigit: "يجب 9 أرقام.", promptEdit: "تعديل:", errNan: "غير صحيح.", promptDelete: "حذف؟", promptClear: "مسح؟", promptSaved: "تم!" 
+    }
 };
 
 window.getGoogleCalendarUrl = window.getGoogleCalendarUrl || function(day, time) {
@@ -90,7 +113,7 @@ window.openCustomConfirm = function(msg, callback) {
     var titleEl = document.getElementById("confirm-modal-title");
     if(titleEl) titleEl.innerText = currentLang === 'ko' ? "⚠️ 확인" : "⚠️ Confirm";
     var msgEl = document.getElementById("confirmModalMessage");
-    if(msgEl) msgEl.innerHTML = msg; // [교정] Confirm 모달창 내부 br 태그 출력을 위해 innerHTML 주입 완료
+    if(msgEl) msgEl.innerHTML = msg; 
     
     var cancelBtn = document.getElementById("btn-confirm-cancel");
     if (cancelBtn) cancelBtn.innerText = langPack[currentLang].cancelBtnSmall || "Cancel";
@@ -154,11 +177,14 @@ function applyLanguagePack() {
     var speeds = bookingSettings.minSpeeds || { wed: 50, thu: 30, fri: 15 };
     var noticeKoEl = document.getElementById("notice-dynamic-txt");
     if (noticeKoEl) { 
-        if (currentLang === 'ko') {
-            noticeKoEl.innerHTML = p.notice + "<br /><span style='color: #2d3748; font-weight: bold;'>[예약 오픈 조건] 수요일: 가속 " + speeds.wed + "일 이상 | 목요일: " + speeds.thu + "일 이상 | 금요일: " + speeds.fri + "일 이상 | 토~일요일: 자유 예약</span>";
-        } else {
-            noticeKoEl.innerHTML = p.notice + "<br /><span style='color: #2d3748; font-weight: bold;'>[Requirements] Wed: " + speeds.wed + "d+ | Thu: " + speeds.thu + "d+ | Fri: " + speeds.fri + "d+ | Sat~Sun: Free Booking</span>";
-        }
+        // [다국어 동기화 엔진 수립] 치명적 결함을 고쳐 각 국가 코드로 변경 시 다국어로 치환 변환 연산 처리
+        var rawTemplate = p.speedCond || "";
+        var convertedTemplate = rawTemplate
+            .replace("{wed}", speeds.wed)
+            .replace("{thu}", speeds.thu)
+            .replace("{fri}", speeds.fri);
+            
+        noticeKoEl.innerHTML = p.notice + "<br /><span style='color: #2d3748; font-weight: bold;'>" + convertedTemplate + "</span>";
     }
     
     var safeSetText = function(id, text) { var el = document.getElementById(id); if (el) el.innerText = text; };
@@ -198,6 +224,7 @@ function isTabActuallyOpen(day) {
     return true; 
 }
 
+// [문법 검수 보정 완료] 대괄호 오타 기호 유효화 정리
 window.addAdminLog = function(msg) {
     if(!window.db) return;
     var now = new Date();
@@ -494,7 +521,6 @@ window.confirmBooking = function() {
     });
 
     if (alreadyBooked && !adminAuthenticated) { 
-        // [교정 완료] br 태그 유효화 및 요일별 마크 개행 2줄 정렬 고정 완료!
         return openCustomAlert(currentLang === 'ko' ? "이 요일에는 이미 예약된 내역이 있습니다.<br />(월/화/목 요일별 각 1회만 가능)" : "You have already booked a slot for this day.<br />(1 booking per day allowed)"); 
     }
 
@@ -596,8 +622,7 @@ window.saveAdminBaseDate = function() {
 window.backupAndClearAll = function() { 
     if(!window.db) return; 
     var p = langPack[currentLang] || langPack['en'];
-    // [수정] 피드백 반영: 버튼 명칭과 똑같이 '모든 예약 삭제' 안내 문맥으로 Confirm 동기화
-    window.openCustomConfirm("🚨 정말 모든 예약 데이터를 공중분해(삭제)하시겠습니까?<br />이 작업은 관리자 기록 로그에 영구 보존됩니다.", function() {
+    window.openCustomConfirm("🚨 정말 모든 예약 데이터를 삭제(초기화)하시겠습니까?<br />이 작업은 관리자 기록 로그에 보존됩니다.", function() {
         window.db.collection("slots").get().then(function(snap) { 
             var batch = window.db.batch(); 
             snap.forEach(function(doc) { batch.delete(doc.ref); }); 
