@@ -10,22 +10,25 @@
 <body>
     <canvas id="snow"></canvas>
     <header>
-        <div class="headerTop">
+        <div class="headerTop" style="margin-bottom: 20px;">
             <div class="titleArea">
                 <h1 id="mainTitle"><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
                 <div id="countdown" class="countdown"></div>
             </div>
-            <div class="headerToolbar">
-                <select id="langSelect" onchange="window.changeLanguage(this.value)">
-                    <option value="ko">🇰🇷 한국어</option>
-                    <option value="en" selected="selected">🇺🇸 English</option>
-                    <option value="zh">🇨🇳 中文(简体)</option>
-                    <option value="ja">🇯🇵 日本語</option>
-                    <option value="fr">🇫🇷 Français</option>
-                    <option value="ar">🇸🇦 العربية</option>
-                    <option value="id">🇮🇩 Indonesia</option>
-                    <option value="tr">🇹🇷 Türkçe</option>
-                </select>
+            <div class="headerToolbar" style="align-items: flex-start;">
+                <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                    <select id="langSelect" onchange="window.changeLanguage(this.value)">
+                        <option value="ko">🇰🇷 한국어</option>
+                        <option value="en" selected="selected">🇺🇸 English</option>
+                        <option value="zh">🇨🇳 中文(简体)</option>
+                        <option value="ja">🇯🇵 日本語</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="ar">🇸🇦 العربية</option>
+                        <option value="id">🇮🇩 Indonesia</option>
+                        <option value="tr">🇹🇷 Türkçe</option>
+                    </select>
+                    <div id="lang-help-msg" style="font-size: 10.5px; color: #718096; font-weight: 700; letter-spacing: -0.3px; white-space: nowrap;"></div>
+                </div>
                 <div class="filterGroup">
                     <select id="filterStatus" onchange="window.renderAll()">
                         <option value="all" id="opt-all">All</option>
@@ -36,10 +39,6 @@
             </div>
         </div>
         
-        <div style="width: 100%; text-align: right; margin-top: 5px; margin-bottom: 25px; padding-right: 10px; box-sizing: border-box;">
-            <span id="lang-help-msg" style="font-size: 11px; color: #718096; font-weight: 700; letter-spacing: -0.3px;"></span>
-        </div>
-
         <div class="creatorBadge">
             <div class="profile-wrapper">
                 <svg viewBox="0 0 400 140" class="curved-text-svg" xmlns="http://www.w3.org/2000/svg">
