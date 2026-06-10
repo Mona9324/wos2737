@@ -7,51 +7,61 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* [유저 피드백 반영] 모바일 화면이 터지거나 글씨가 잘리지 않도록 상단 레이아웃 전면 반응형 개조 */
-        .headerTop {
+        /* [레이아웃 마스터 패치] PC 기본 레이아웃 유지 (우측 상단 정렬) */
+        .toolbar-wrapper {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px; /* 공룡과의 안전 간격 확충 */
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .titleArea {
-            text-align: center;
-            width: 100%;
-        }
-        .headerToolbar {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 800px; /* 하단 요일 버튼과 일치하는 안정감 있는 너비 */
-            margin: 0 auto;
-            gap: 10px;
-            box-sizing: border-box;
-            padding: 0 10px;
-        }
-        .toolbar-buttons {
-            display: flex;
-            width: 100%;
-            gap: 8px;
-            justify-content: space-between;
-        }
-        .toolbar-buttons select, .toolbar-buttons button {
-            flex: 1; /* 3개의 버튼이 화면 너비에 맞춰 1:1:1로 동일하게 확장됨 */
-            margin: 0;
-            height: 42px; /* 터치하기 편한 모바일 최적화 높이 */
-            box-sizing: border-box;
-            font-size: 13px;
+            align-items: flex-end;
         }
         #lang-help-msg {
-            text-align: center;
-            font-size: 11.5px;
+            font-size: 11px;
             color: #718096;
             font-weight: 700;
-            word-break: keep-all; /* 모바일에서 단어 단위로 예쁘게 줄바꿈 */
-            width: 100%;
+            margin-top: 6px;
+            white-space: nowrap; /* PC에서는 한 줄로 예쁘게 출력 */
+        }
+        
+        /* 모바일(768px 이하) 전용 레이아웃 분리 */
+        @media (max-width: 768px) {
+            .headerTop {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 15px;
+                margin-bottom: 25px; /* 공룡과의 안전 간격 확충 */
+            }
+            .toolbar-wrapper {
+                width: 100%;
+                align-items: center; /* 모바일은 무조건 중앙 정렬 */
+                padding: 0 10px;
+                box-sizing: border-box;
+            }
+            .headerToolbar {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                gap: 6px !important;
+            }
+            .headerToolbar > select {
+                flex: 1; /* 언어 선택창 비율 */
+                margin: 0;
+            }
+            .filterGroup {
+                flex: 2; /* 필터 버튼들 비율 */
+                display: flex;
+                gap: 6px !important;
+                width: 100%;
+            }
+            .filterGroup select, .filterGroup button {
+                flex: 1; /* 3형제 버튼 너비 완전 통일 */
+                margin: 0;
+                width: 100%;
+            }
+            #lang-help-msg {
+                white-space: normal; /* 모바일에선 글씨가 찌그러지지 않고 자연스럽게 줄바꿈 허용 */
+                text-align: center;
+                margin-top: 10px;
+                line-height: 1.4;
+            }
         }
     </style>
 </head>
@@ -64,8 +74,8 @@
                 <div id="countdown" class="countdown"></div>
             </div>
             
-            <div class="headerToolbar">
-                <div class="toolbar-buttons">
+            <div class="toolbar-wrapper">
+                <div class="headerToolbar">
                     <select id="langSelect" onchange="window.changeLanguage(this.value)">
                         <option value="ko">🇰🇷 한국어</option>
                         <option value="en" selected="selected">🇺🇸 English</option>
@@ -76,13 +86,13 @@
                         <option value="id">🇮🇩 Indonesia</option>
                         <option value="tr">🇹🇷 Türkçe</option>
                     </select>
-                    
-                    <select id="filterStatus" onchange="window.renderAll()">
-                        <option value="all" id="opt-all">All</option>
-                        <option value="mine" id="opt-mine">My Booking</option>
-                    </select>
-                    
-                    <button type="button" class="btn-reset" id="btn-reset-txt" onclick="window.clearSearch()">Reset</button>
+                    <div class="filterGroup">
+                        <select id="filterStatus" onchange="window.renderAll()">
+                            <option value="all" id="opt-all">All</option>
+                            <option value="mine" id="opt-mine">My Booking</option>
+                        </select>
+                        <button type="button" class="btn-reset" id="btn-reset-txt" onclick="window.clearSearch()">Reset</button>
+                    </div>
                 </div>
                 <div id="lang-help-msg"></div>
             </div>
@@ -106,13 +116,11 @@
             </div>
         </div>
     </header>
-    
     <div class="tabs">
         <div id="tab-monday" class="tab-item" onclick="window.switchBuff('monday')"><div class="tabTitle" id="tab-mon-txt">Monday</div><div id="cd-monday" class="tabCD"></div></div>
         <div id="tab-tuesday" class="tab-item" onclick="window.switchBuff('tuesday')"><div class="tabTitle" id="tab-tue-txt">Tuesday</div><div id="cd-tuesday" class="tabCD"></div></div>
         <div id="tab-thursday" class="tab-item" onclick="window.switchBuff('thursday')"><div class="tabTitle" id="tab-thu-txt">Thursday</div><div id="cd-thursday" class="tabCD"></div></div>
     </div>
-    
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 10px; color: #2d3748;"></div>
     <main><div id="slots" class="grid"></div></main>
     
