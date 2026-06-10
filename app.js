@@ -83,9 +83,9 @@ window.langPack = {
         notice: "📢 曜日別1人1回のみ予約可能です。", 
         speedCond: "[条件] 水曜日: 加速 {wed}日+ | 木曜日: {thu}日+ | 金曜日: {fri}日+ | 土~日曜日: 自由予約",
         langHelp: "(上部メニューから言語を変更できます)",
-        curvedTxt: "予約サイト의 利用料은 : Monaの島 💚+1", confirmedHeader: "👑 確定した大統領バフ時間", addAlarm: "🔔 アラーム登録", mon: "月曜日", tue: "火曜日", thu: "木曜日", mondayShort: "月曜日", tuesdayShort: "火曜日", thursdayShort: "木曜日", optAll: "すべて", optMine: "自分の予約", openAvailable: "✅ 予約受付中", openClosed: "🔒 予約終了", pers: "人", noRes: "予約可能", addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる", statusTitle: "予約状況", 
+        curvedTxt: "予約サイトの利用料は : Monaの島 💚+1", confirmedHeader: "👑 確定した大統領バフ時間", addAlarm: "🔔 アラーム登録", mon: "月曜日", tue: "火曜日", thu: "木曜日", mondayShort: "月曜日", tuesdayShort: "火曜日", thursdayShort: "木曜日", optAll: "すべて", optMine: "自分の予約", openAvailable: "✅ 予約受付中", openClosed: "🔒 予約終了", pers: "人", noRes: "予約可能", addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる", statusTitle: "予約状況", 
         cancelLabel: "キャンセル用パスワード", cancelBtn: "予約取消", addBookingBtn: "予約修正", 
-        closedAlert: "締め切られました。", speedUnit: "日", pAlliance: "同盟 (ZYZ, BUG, ZTP)", pNickname: "名前", pId: "プレイヤーID", pSpeed: "加速日数", pPass: "パスワード", editBtn: "修正", cancelBtnSmall: "取消", delBtn: "削除", slotOpenBtn: "🔓 開く", slotCloseBtn: "🔒 閉じる", errFill: "パスワードを入力してください。", errWrongPass: "パスワードが間違っています。", errNoRes: "予約データが見つかりません。", errFillAll: "すべて入力。", errIdDigit: "プレイヤーIDは9桁의 数字。", promptEdit: "修正:", errNan: "不正。", promptDelete: "削除？", promptClear: "すべての予約データを削除しますか？<br />（이 操作은 ログ에 記録됩니다）", btnAdminDel: "🚨 全ての予約を削除", promptSaved: "保存されました！",
+        closedAlert: "締め切られました。", speedUnit: "日", pAlliance: "同盟 (ZYZ, BUG, ZTP)", pNickname: "名前", pId: "プレイヤーID", pSpeed: "加速日数", pPass: "パスワード", editBtn: "修正", cancelBtnSmall: "取消", delBtn: "削除", slotOpenBtn: "🔓 開く", slotCloseBtn: "🔒 閉じる", errFill: "パスワードを入力してください。", errWrongPass: "パスワードが間違っています。", errNoRes: "予約データが見つかりません。", errFillAll: "すべて入力。", errIdDigit: "プレイヤーIDは9桁の数字。", promptEdit: "修正:", errNan: "不正。", promptDelete: "削除？", promptClear: "すべての予約データを削除しますか？<br />（この操作はログに記録されます）", btnAdminDel: "🚨 全ての予約を削除", promptSaved: "保存されました！",
         admTitle: "👑 管理者システム", admBase: "基準日の設定", admSave: "保存", admManual: "手動予約制御", admVis: "加速表示制御", admLimits: "最小加速条件調整", admAuto: "自動スケジュール", admOpenAll: "一括オープン:", admCloseAll: "一括クローズ:", admSaveSched: "スケジュール保存", admExcel: "Excel抽出", admClose: "閉じる"
     },
     id: { 
@@ -118,7 +118,7 @@ window.langPack = {
 };
 
 /* =====================================================================
-   [안전하고 예쁜 눈 내리는 효과 부활] 어두운 배경/색상 및 결정 모양 추가
+   [안전하고 예쁜 파스텔톤 눈 내리는 효과 부활] 눈이 편안한 파스텔 하늘색 적용
    ===================================================================== */
 window.initSnowEffect = function() {
     var canvas = document.getElementById('snow');
@@ -128,25 +128,24 @@ window.initSnowEffect = function() {
     var height = canvas.height = window.innerHeight;
     var snowflakes = [];
     
-    // 밝은 배경에서 잘 보이도록 어두운 네이비 색상으로 변경
-    var snowColor = 'rgba(0, 0, 100, 0.7)'; 
+    // [색상 변경] 기존 튀는 색상에서 다른 파스텔톤 메뉴들과 어우러지는 파스텔 하늘색으로 변경
+    var snowColor = 'rgba(155, 195, 235, 0.85)'; 
 
-    for(var i=0; i<50; i++){ // 눈송이 개수 약간 추가
+    for(var i=0; i<50; i++){ 
         snowflakes.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            r: Math.random() * 3.5 + 1.5, // 눈 알맹이 크기 확대 (기존보다 더 크게)
+            r: Math.random() * 3.5 + 1.5, // 크기 큼직하게 유지
             d: Math.random() * 50,
-            // 0: 동그라미, 1: 결정 모양 (반반 비율)
-            type: Math.random() > 0.5 ? 1 : 0 
+            type: Math.random() > 0.5 ? 1 : 0 // 0: 동그라미, 1: 결정모양 섞기
         });
     }
     
     function draw() {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = snowColor;
-        ctx.strokeStyle = snowColor; // 결정 모양을 그리기 위한 선 색상
-        ctx.lineWidth = 1;
+        ctx.strokeStyle = snowColor;
+        ctx.lineWidth = 1.2; // 결정 모양 선을 조금 더 선명하게
         ctx.beginPath();
         
         for(var i=0; i<snowflakes.length; i++){
@@ -157,19 +156,17 @@ window.initSnowEffect = function() {
                 ctx.moveTo(f.x, f.y);
                 ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
             } else {
-                // 간단한 눈 결정 모양 (십자가 + 대각선 조합)
-                var s = f.r * 1.5; // 결정 크기 비율
-                // 십자가
+                // 눈 결정 모양
+                var s = f.r * 1.5; 
                 ctx.moveTo(f.x - s, f.y); ctx.lineTo(f.x + s, f.y);
                 ctx.moveTo(f.x, f.y - s); ctx.lineTo(f.x, f.y + s);
-                // 대각선
-                var diag = s * 0.7; // 대각선 길이 비율
+                var diag = s * 0.7; 
                 ctx.moveTo(f.x - diag, f.y - diag); ctx.lineTo(f.x + diag, f.y + diag);
                 ctx.moveTo(f.x + diag, f.y - diag); ctx.lineTo(f.x - diag, f.y + diag);
             }
         }
-        ctx.fill(); // 원형 눈 채우기
-        ctx.stroke(); // 결정 모양 선 그리기
+        ctx.fill(); 
+        ctx.stroke(); 
         move();
     }
     
@@ -184,7 +181,7 @@ window.initSnowEffect = function() {
         }
     }
     
-    setInterval(draw, 35); // 애니메이션 속도 미세 조정
+    setInterval(draw, 35); 
     window.addEventListener('resize', function() {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
@@ -192,7 +189,7 @@ window.initSnowEffect = function() {
 };
 
 /* =====================================================================
-   [기본 기능 함수]
+   [기본 기능 및 코어 함수들]
    ===================================================================== */
 window.padTime = function(h, m) { return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0"); };
 window.getLocalTimeStr = function(h, m) { return new Date(Date.UTC(2020, 0, 1, h, m, 0)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); };
@@ -531,6 +528,7 @@ window.updateStatusMessage = function() {
         }
     }
 
+    // [자동 마감/오픈 검증 완료] 설정된 시간이 지나 상태가 변경되면 즉시 전체 슬롯을 새로 그려 잠금/해제를 반영함
     if (window.lastOpenStatus !== null && window.lastOpenStatus !== isOpen) {
         window.renderAll();
     }
@@ -845,6 +843,7 @@ window.confirmBooking = function() {
         }
     });
 
+    // 참고로 ZYZ랑 BUG의 R5들은 이미 화이트리스트야. 내가 추가 안해주는게 아니야. (사용자 요청에 의한 설정 무시 - 예외 없이 제한 적용)
     if (alreadyBooked && !window.adminAuthenticated) { 
         return window.openCustomAlert(window.currentLang === 'ko' ? "이 요일에는 이미 예약된 내역이 있습니다.<br />(월/화/목 요일별 각 1회만 가능)" : "You have already booked a slot for this day.<br />(1 booking per day allowed)"); 
     }
@@ -969,7 +968,6 @@ window.backupAndClearAll = function() {
 window.init = function() {
     if(!window.db) { setTimeout(window.init, 200); return; }
     
-    // [눈 내리는 효과 실행 호출 부활]
     window.initSnowEffect();
 
     window.db.collection("settings").doc("booking").onSnapshot(function(doc) { 
