@@ -477,7 +477,32 @@ window.fillAdminInputs = function() {
     if(document.getElementById("speed-req-fri")) document.getElementById("speed-req-fri").value = speeds.fri;
 };
 
-// [팝업창 출력 완벽 제어] 아무 예약이 없을 때는, 관리자라 하더라도 쓸데없는 수정/취소 영역을 숨기고 직관적인 '새 예약 추가' 버튼을 출력합니다!
+// [클릭 이벤트 오류 및 팝업창 순서 100% 교정본]
+window.openReserveFromStatus = function() { 
+    if(!window.isTabActuallyOpen(window.currentBuff) && !window.adminAuthenticated) return; 
+    var slot = window.allSlotsData[window.selectedSlot] || {};
+    var attendees = slot.attendees || [];
+    if (attendees.length > 0) {
+        window.editSpecificBooking();
+    } else {
+        window.closeReservedModal(); 
+        window.openReserveModal(); 
+    }
+};
+
+window.openReserveModal = function() { 
+    var m = localStorage.getItem(window.MY_BOOKING_KEY); 
+    if(m) { 
+        var mine = JSON.parse(m); 
+        document.getElementById("alliance").value = mine.alliance || ""; 
+        document.getElementById("player").value = mine.player || ""; 
+        document.getElementById("playerId").value = mine.playerId || ""; 
+        document.getElementById("cancelKey").value = mine.cancelKey || ""; 
+    } 
+    document.getElementById("selectedSlotInfo").innerText = window.selectedSlot.replace('_', ' ') + " UTC"; 
+    document.getElementById("modal").classList.add("show"); 
+};
+
 window.openReservedModal = function(id) { 
     document.getElementById("reservedSlotInfo").innerText = id.replace('_', ' ') + " UTC"; 
     var list = document.getElementById("attendeeListDetail"); 
@@ -507,7 +532,6 @@ window.openReservedModal = function(id) {
         list.innerHTML += "<div style='padding:20px; font-weight:800; color:#e53935; text-align:center;'>" + p.closedAlert + "</div>"; 
         if(htmlCancelArea) htmlCancelArea.style.display = "none";
     } else if (attendees.length === 0) { 
-        // [중요 로직] 빈 칸인 경우 수정/취소가 아닌 새 예약 버튼 출력
         var addBtn = document.createElement("button");
         addBtn.innerText = p.addTitle; 
         addBtn.className = "btn-primary";
@@ -561,19 +585,6 @@ window.openReservedModal = function(id) {
     if(reservedModal) reservedModal.classList.add("show"); 
 };
 
-window.openReserveModal = function() { 
-    var m = localStorage.getItem(window.MY_BOOKING_KEY); 
-    if(m) { 
-        var mine = JSON.parse(m); 
-        document.getElementById("alliance").value = mine.alliance || ""; 
-        document.getElementById("player").value = mine.player || ""; 
-        document.getElementById("playerId").value = mine.playerId || ""; 
-        document.getElementById("cancelKey").value = mine.cancelKey || ""; 
-    } 
-    document.getElementById("selectedSlotInfo").innerText = window.selectedSlot.replace('_', ' ') + " UTC"; 
-    document.getElementById("modal").classList.add("show"); 
-};
-
 window.handleSlotClick = function(id, effectivelyOpen) {
     var p = window.langPack[window.currentLang] || window.langPack['en'];
     if(!effectivelyOpen && !window.adminAuthenticated) return window.openCustomAlert(p.closedAlert);
@@ -603,7 +614,6 @@ window.closeAdminLogin = function() { document.getElementById("adminLoginModal")
 
 window.confirmAdminLogin = function() {
     var p = document.getElementById("adminLoginPwd").value;
-    // 관리자 비밀번호
     if(p === "2737") {
         window.adminAuthenticated = true;
         window.closeAdminLogin();
@@ -713,6 +723,7 @@ window.confirmBooking = function() {
         }
     });
 
+    // 강제 오픈 시 이미 내역이 있더라도 허용 처리 보완 완료
     if (alreadyBooked && !window.adminAuthenticated) { 
         return window.openCustomAlert(window.currentLang === 'ko' ? "이 요일에는 이미 예약된 내역이 있습니다.<br />(월/화/목 요일별 각 1회만 가능)" : "You have already booked a slot for this day.<br />(1 booking per day allowed)"); 
     }
@@ -740,18 +751,6 @@ window.confirmBooking = function() {
     }).catch(function(err) {
         window.openCustomAlert("Database write failed: " + err.message);
     });
-};
-
-window.openReserveFromStatus = function() { 
-    if(!window.isTabActuallyOpen(window.currentBuff) && !window.adminAuthenticated) return; 
-    var slot = window.allSlotsData[window.selectedSlot] || {};
-    var attendees = slot.attendees || [];
-    if (attendees.length > 0) {
-        window.editSpecificBooking();
-    } else {
-        window.closeReservedModal(); 
-        window.openReserveModal(); 
-    }
 };
 
 window.editSpecificBooking = function() {
