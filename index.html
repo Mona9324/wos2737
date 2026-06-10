@@ -10,7 +10,7 @@
 <body>
     <canvas id="snow"></canvas>
     <header>
-        <div class="headerTop">
+        <div class="headerTop" style="margin-bottom: 25px;">
             <div class="titleArea">
                 <h1 id="mainTitle"><span id="snowSecret">❄</span> 2737 SVS Booking</h1>
                 <div id="countdown" class="countdown"></div>
@@ -33,7 +33,7 @@
                     </select>
                     <button type="button" class="btn-reset" id="btn-reset-txt" onclick="window.clearSearch()">Reset</button>
                 </div>
-                <div id="lang-help-msg" style="position: absolute; top: 100%; right: 0; margin-top: 6px; font-size: 11px; color: #718096; font-weight: 700; white-space: nowrap;"></div>
+                <div id="lang-help-msg" style="position: absolute; top: 100%; right: 0; margin-top: 6px; font-size: 10.5px; color: #718096; font-weight: 700; white-space: nowrap;"></div>
             </div>
         </div>
         <div class="creatorBadge">
@@ -89,8 +89,8 @@
                 <p style="font-size:13px; font-weight:800; margin-bottom:8px;" id="cancel-label-txt">Password</p>
                 <input id="editCancelKey" type="password" class="mask-input" placeholder="Password" />
                 <div class="buttonRow">
+                    <button type="button" onclick="window.openReserveFromStatus()" class="btn-primary" id="btn-add-txt">Modify Booking</button>
                     <button type="button" onclick="window.confirmCancelAll()" class="btn-danger" id="btn-cancel-txt">Cancel Booking</button>
-                    <button type="button" onclick="window.openReserveFromStatus()" class="btn-primary" id="btn-add-txt">Add Booking</button>
                 </div>
             </div>
             <button type="button" id="btn-res-close-txt" onclick="window.closeReservedModal()" class="btn-close-full" style="margin-top:15px;">Close</button>
