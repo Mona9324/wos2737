@@ -138,7 +138,7 @@ window.initSnowEffect = function() {
         snowflakes.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            r: Math.random() * 2.5 + 1.0, // 크기 살짝 아담하게 조정
+            r: Math.random() * 3.5 + 1.0, // 크기 큼지막하게 조정
             d: Math.random() * maxFlakes,
             type: Math.random() > 0.6 ? 1 : 0 // 동그라미 60%, 결정 모양 40%
         });
@@ -148,7 +148,7 @@ window.initSnowEffect = function() {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = snowColor;
         ctx.strokeStyle = snowColor;
-        ctx.lineWidth = 1.0; // 결정 모양 선 두께 얇게
+        ctx.lineWidth = 1.2; // 결정 모양 선 두께 얇게
         ctx.beginPath();
         
         for(var i=0; i<snowflakes.length; i++){
@@ -160,7 +160,7 @@ window.initSnowEffect = function() {
                 ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
             } else {
                 // 눈 결정 모양
-                var s = f.r * 1.3; 
+                var s = f.r * 1.5; 
                 ctx.moveTo(f.x - s, f.y); ctx.lineTo(f.x + s, f.y);
                 ctx.moveTo(f.x, f.y - s); ctx.lineTo(f.x, f.y + s);
                 var diag = s * 0.7; 
