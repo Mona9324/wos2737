@@ -4,9 +4,10 @@ window.allSlotsData = {};
 window.MY_BOOKING_KEY = "svs_my_booking_info";
 window.currentLang = localStorage.getItem("svs_lang") || "en"; 
 
-// [자료구조 업데이트] 기존 글로벌 타임 대신 요일별(autoSchedules) 타임 저장 허용
 window.bookingSettings = { 
     baseDate: "2026-05-23T21:00:00", 
+    globalOpenTime: "", 
+    closeTimes: { monday: "", tuesday: "", thursday: "" }, 
     closedSlots: [], 
     adminLogs: [], 
     minSpeeds: { wed: 50, thu: 30, fri: 15 }, 
@@ -14,14 +15,8 @@ window.bookingSettings = {
         monday: { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false }, 
         tuesday: { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false }, 
         thursday: { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false } 
-    },
-    autoSchedules: {
-        monday: { open: "", close: "" },
-        tuesday: { open: "", close: "" },
-        thursday: { open: "", close: "" }
     }
 };
-
 window.adminAuthenticated = false;
 window.sc = 0;
 
@@ -197,7 +192,7 @@ window.initSnowEffect = function() {
 };
 
 /* =====================================================================
-   [1. 명단 복사 기능]
+   [1. 명단 텍스트 복사 기능]
    ===================================================================== */
 window.copyTodayList = function() {
     var text = "👑 [" + window.currentBuff.toUpperCase() + "] Confirmed List 👑\n\n";
@@ -228,7 +223,7 @@ window.copyTodayList = function() {
 };
 
 /* =====================================================================
-   [2. 알림 기능 (웹 푸시)]
+   [2. 알림 기능 (웹 푸시)] - 기존 구글 캘린더 위치에 자연스럽게 이식
    ===================================================================== */
 window.requestNotification = function() {
     if (!("Notification" in window)) {
@@ -290,7 +285,7 @@ window.checkUpcomingBookings = function() {
 setInterval(window.checkUpcomingBookings, 30000);
 
 /* =====================================================================
-   [3. 연맹별 통계]
+   [3. 연맹별 예약 통계 시각화 엔진]
    ===================================================================== */
 window.renderStats = function() {
     var statsContainer = document.getElementById("statsContainer");
@@ -339,7 +334,7 @@ window.renderStats = function() {
 };
 
 /* =====================================================================
-   [기본 코어 함수]
+   [기본 코어 함수들]
    ===================================================================== */
 window.padTime = function(h, m) { return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0"); };
 window.getLocalTimeStr = function(h, m) { return new Date(Date.UTC(2020, 0, 1, h, m, 0)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); };
@@ -486,14 +481,13 @@ window.applyLanguagePack = function() {
     safeSetText("btn-cancel-txt", p.cancelBtn); safeSetText("btn-add-txt", p.addBookingBtn); safeSetText("btn-res-close-txt", p.closeBtn);
     
     safeSetText("btn-copy-txt", p.copyList || "Copy List");
-    safeSetText("btn-noti-txt", p.enableNoti || "🔔 Enable Alert");
     safeSetText("stats-title-txt", p.statsTitle || "📊 Alliance Stats");
 
     var curvedEl = document.getElementById("curved-profile-txt"); if (curvedEl) curvedEl.textContent = p.curvedTxt;
     var confHeader = document.getElementById("confirmed-header-txt"); if (confHeader) confHeader.innerText = p.confirmedHeader;
 };
 
-// [요일별 개별 스케줄 로직 반영 완료] 
+// [요일별 마감 시간 제어 엔진]
 window.isTabActuallyOpen = function(day) { 
     if (!window.bookingSettings || !window.bookingSettings.tabs || !window.bookingSettings.tabs[day]) return true; 
     var s = window.bookingSettings.tabs[day], now = new Date(); 
@@ -501,14 +495,13 @@ window.isTabActuallyOpen = function(day) {
     if (s.forceOpen === true) return true;
     if (!s.isOpen) return false; 
     
-    var daySchedule = window.bookingSettings.autoSchedules ? window.bookingSettings.autoSchedules[day] : null;
-    if (daySchedule) {
-        if (daySchedule.close && now > new Date(daySchedule.close)) return false;
-        if (daySchedule.open && now < new Date(daySchedule.open)) return false;
-    } else {
-        if (window.bookingSettings.globalCloseTime && now > new Date(window.bookingSettings.globalCloseTime)) return false; 
-        if (window.bookingSettings.globalOpenTime && now < new Date(window.bookingSettings.globalOpenTime)) return false; 
-    }
+    // 글로벌 오픈 시간보다 현재가 이전이면 닫힘
+    if (window.bookingSettings.globalOpenTime && now < new Date(window.bookingSettings.globalOpenTime)) return false; 
+    
+    // 해당 요일의 개별 마감 시간(closeTimes[day])보다 현재가 이후면 닫힘
+    var cTime = window.bookingSettings.closeTimes ? window.bookingSettings.closeTimes[day] : null;
+    if (cTime && now > new Date(cTime)) return false;
+
     return true; 
 };
 
@@ -562,12 +555,16 @@ window.updateMyConfirmedSummary = function() {
         var displayTime = dayTxt + " " + track.time + " UTC";
         
         var timeSpan = document.createElement("span"); timeSpan.className = "confirmedTime"; timeSpan.innerText = displayTime;
-        card.appendChild(timeSpan); listEl.appendChild(card);
+        // [디자인 롤백 및 알림 기능 대체 완료] 알람 등록 버튼과 동일한 btn-cal 클래스의 작은 회색 버튼으로 이식
+        var calBtn = document.createElement("button"); calBtn.type = "button"; calBtn.className = "btn-cal"; 
+        calBtn.innerText = p.enableNoti || "🔔 Enable Alert";
+        calBtn.onclick = function() { window.requestNotification(); };
+        card.appendChild(timeSpan); card.appendChild(calBtn); listEl.appendChild(card);
     });
     el.style.display = "block";
 };
 
-// [내 예약 색상 오류 완벽 교정] 
+// [내 예약 색상 오류 완벽 교정]
 window.renderAll = function() {
     var grid = document.getElementById("slots"); if (!grid) return; grid.innerHTML = "";
     var isOpen = window.isTabActuallyOpen(window.currentBuff), filter = document.getElementById("filterStatus") ? document.getElementById("filterStatus").value : "all";
@@ -601,7 +598,7 @@ window.renderAll = function() {
             var slotClass = "slot " + (h >= 12 ? "pm-slot " : "") + (!effectivelyOpen ? " locked" : "") + (isMine ? " myReservation" : "");
             div.className = slotClass;
             
-            // [색상 오류 수정] '내 예약'은 예쁜 파스텔 연두색으로, '다른 사람 예약'은 연한 회색으로 확실히 구분!
+            // [색상 오류 수정] '내 예약'은 파스텔 연두, '다른 사람 예약'은 연한 회색으로 직관적 구분!
             if (attendees.length > 0) {
                 if (isMine) {
                     div.style.setProperty("background-color", "#e8f5e9", "important"); 
@@ -671,9 +668,8 @@ window.updateStatusMessage = function() {
         return res;
     }
 
-    var daySchedule = window.bookingSettings.autoSchedules ? window.bookingSettings.autoSchedules[window.currentBuff] : null;
-    var cOpen = daySchedule && daySchedule.open ? daySchedule.open : window.bookingSettings.globalOpenTime;
-    var cClose = daySchedule && daySchedule.close ? daySchedule.close : window.bookingSettings.globalCloseTime;
+    var cOpen = window.bookingSettings.globalOpenTime;
+    var cClose = window.bookingSettings.closeTimes ? window.bookingSettings.closeTimes[window.currentBuff] : null;
 
     if (isOpen) {
         if (cClose) {
@@ -720,21 +716,21 @@ window.closeModal = function() { document.getElementById("modal").classList.remo
 window.closeReservedModal = function() { document.getElementById("reservedModal").classList.remove("show"); };
 window.closeAdmin = function() { document.getElementById("adminPanel").classList.remove("show"); };
 
-// [개별 요일 폼 데이터 매핑]
+// [어드민 폼에 1오픈 + 3마감 데이터 매핑]
 window.fillAdminInputs = function() { 
     if (!window.bookingSettings || !window.bookingSettings.baseDate) return; 
     document.getElementById("adminBaseDate").value = window.bookingSettings.baseDate.slice(0, 16); 
+    document.getElementById("global-open-time").value = window.bookingSettings.globalOpenTime || ""; 
+    
+    var cT = window.bookingSettings.closeTimes || {};
+    if(document.getElementById("close-monday")) document.getElementById("close-monday").value = cT.monday || "";
+    if(document.getElementById("close-tuesday")) document.getElementById("close-tuesday").value = cT.tuesday || "";
+    if(document.getElementById("close-thursday")) document.getElementById("close-thursday").value = cT.thursday || "";
     
     var speeds = window.bookingSettings.minSpeeds || { wed: 50, thu: 30, fri: 15 };
     if(document.getElementById("speed-req-wed")) document.getElementById("speed-req-wed").value = speeds.wed;
     if(document.getElementById("speed-req-thu")) document.getElementById("speed-req-thu").value = speeds.thu;
     if(document.getElementById("speed-req-fri")) document.getElementById("speed-req-fri").value = speeds.fri;
-    
-    ['monday', 'tuesday', 'thursday'].forEach(function(day) {
-        var s = window.bookingSettings.autoSchedules ? window.bookingSettings.autoSchedules[day] : null;
-        if(document.getElementById("auto-open-" + day)) document.getElementById("auto-open-" + day).value = s ? s.open : "";
-        if(document.getElementById("auto-close-" + day)) document.getElementById("auto-close-" + day).value = s ? s.close : "";
-    });
 };
 
 window.openReserveFromStatus = function() { 
@@ -1088,23 +1084,16 @@ window.confirmCancelAll = function() {
     });
 };
 
-// [요일별 스케줄 저장 로직 적용 완료]
+// [스케줄 저장 로직 개편] 전체 오픈 1개 + 개별 마감 3개
 window.saveAutoSchedule = function() { 
     if(!window.db) return; 
     
-    window.bookingSettings.autoSchedules = {
-        monday: { 
-            open: document.getElementById("auto-open-monday").value, 
-            close: document.getElementById("auto-close-monday").value 
-        },
-        tuesday: { 
-            open: document.getElementById("auto-open-tuesday").value, 
-            close: document.getElementById("auto-close-tuesday").value 
-        },
-        thursday: { 
-            open: document.getElementById("auto-open-thursday").value, 
-            close: document.getElementById("auto-close-thursday").value 
-        }
+    window.bookingSettings.globalOpenTime = document.getElementById("global-open-time").value; 
+    
+    window.bookingSettings.closeTimes = {
+        monday: document.getElementById("close-monday").value,
+        tuesday: document.getElementById("close-tuesday").value,
+        thursday: document.getElementById("close-thursday").value
     };
     
     window.bookingSettings.minSpeeds = {
@@ -1163,28 +1152,22 @@ window.init = function() {
             var data = doc.data();
             window.bookingSettings.baseDate = data.baseDate || "2026-05-23T21:00:00";
             window.bookingSettings.globalOpenTime = data.globalOpenTime || "";
-            window.bookingSettings.globalCloseTime = data.globalCloseTime || "";
+            
+            // 구버전 DB 호환성 체크
+            if (!data.closeTimes) {
+                window.bookingSettings.closeTimes = {
+                    monday: data.globalCloseTime || "",
+                    tuesday: data.globalCloseTime || "",
+                    thursday: data.globalCloseTime || ""
+                };
+            } else {
+                window.bookingSettings.closeTimes = data.closeTimes;
+            }
+            
             window.bookingSettings.closedSlots = data.closedSlots || [];
             window.bookingSettings.adminLogs = data.adminLogs || [];
             window.bookingSettings.minSpeeds = data.minSpeeds || { wed: 50, thu: 30, fri: 15 };
             
-            // 신형 요일별 스케줄 DB 호환 보장
-            if (!data.autoSchedules) {
-                window.bookingSettings.autoSchedules = {
-                    monday: { open: "", close: "" },
-                    tuesday: { open: "", close: "" },
-                    thursday: { open: "", close: "" }
-                };
-                if (window.bookingSettings.globalOpenTime || window.bookingSettings.globalCloseTime) {
-                    ['monday', 'tuesday', 'thursday'].forEach(function(d) {
-                        window.bookingSettings.autoSchedules[d].open = window.bookingSettings.globalOpenTime || "";
-                        window.bookingSettings.autoSchedules[d].close = window.bookingSettings.globalCloseTime || "";
-                    });
-                }
-            } else {
-                window.bookingSettings.autoSchedules = data.autoSchedules;
-            }
-
             if (data.tabs) {
                 window.bookingSettings.tabs.monday = data.tabs.monday || { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false };
                 window.bookingSettings.tabs.tuesday = data.tabs.tuesday || { isOpen: true, showSpeeds: false, forceOpen: false, forceClosed: false };
