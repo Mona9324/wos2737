@@ -20,7 +20,6 @@
             white-space: nowrap; 
         }
         
-        /* [관리자 패널] 날짜/시간 분리 및 ON/OFF 배지 스타일 */
         .dt-input {
             width: 35%;
             font-size: 11px;
@@ -42,7 +41,6 @@
             transition: all 0.3s ease;
         }
 
-        /* [모바일 최적화] 버튼 3형제 완벽한 1:1:1 정렬 */
         @media (max-width: 768px) {
             .headerTop {
                 flex-direction: column !important;
@@ -59,11 +57,10 @@
             .headerToolbar {
                 width: 100%;
                 display: flex;
-                flex-direction: row; /* 가로 정렬 강제 */
+                flex-direction: row; 
                 justify-content: space-between;
                 gap: 6px !important;
             }
-            /* 3개의 버튼 모두 flex: 1 적용 */
             .headerToolbar select, .headerToolbar button {
                 flex: 1;
                 margin: 0;
@@ -74,7 +71,7 @@
             #lang-help-msg {
                 white-space: normal; 
                 text-align: center;
-                margin-top: 15px; 
+                margin-top: 25px; 
                 line-height: 1.4;
             }
             .dt-input { width: 33%; font-size: 10px; padding: 2px; }
@@ -103,13 +100,13 @@
                         <option value="id">🇮🇩 Indonesia</option>
                         <option value="tr">🇹🇷 Türkçe</option>
                     </select>
-                    
-                    <select id="filterStatus" onchange="window.renderAll()">
-                        <option value="all" id="opt-all">All</option>
-                        <option value="mine" id="opt-mine">My Booking</option>
-                    </select>
-                    
-                    <button type="button" class="btn-reset" id="btn-copy-txt" onclick="window.copyTodayList()">Copy List</button>
+                    <div class="filterGroup">
+                        <select id="filterStatus" onchange="window.renderAll()">
+                            <option value="all" id="opt-all">All</option>
+                            <option value="mine" id="opt-mine">My Booking</option>
+                        </select>
+                        <button type="button" class="btn-reset" id="btn-copy-txt" onclick="window.copyTodayList()">Copy List</button>
+                    </div>
                 </div>
                 <div id="lang-help-msg"></div>
             </div>
@@ -286,20 +283,21 @@
                 <p id="adm-schedule-title" style="margin-bottom: 10px;">Auto Schedule</p>
                 <div style="font-size:11px; margin-bottom:10px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom: 1px solid #eee; padding-bottom: 12px;">
-                        <span style="font-weight:bold; width: 50px;">전체오픈</span>
+                        <span id="adm-open-lbl" style="font-weight:bold; width: 80px;">전체오픈</span>
                         <input type="date" id="open-date" class="dt-input" />
                         <input type="time" id="open-time" class="dt-input" />
                         <span id="ind-open" class="status-badge">OFF</span>
                     </div>
                     
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom: 1px solid #eee; padding-bottom: 12px;">
-                        <span style="font-weight:bold; width: 50px; color:#e53935;">전체마감</span>
+                        <span id="adm-global-close-lbl" style="font-weight:bold; width: 80px; color:#e53935;">전체마감</span>
                         <input type="date" id="global-close-date" class="dt-input" />
                         <input type="time" id="global-close-time" class="dt-input" />
                         <span id="ind-global-close" class="status-badge">OFF</span>
                     </div>
 
-                    <div style="margin-bottom:8px; color:#4a5568; font-weight:800;">요일별 개별 마감:</div>
+                    <div id="adm-indiv-close-lbl" style="margin-bottom:8px; color:#4a5568; font-weight:800;">요일별 개별 마감:</div>
+                    
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                         <span style="font-weight:bold; width: 40px;">Mon</span>
                         <input type="date" id="close-mon-date" class="dt-input" />
