@@ -21,7 +21,7 @@ window.bookingSettings = {
 window.adminAuthenticated = false;
 window.sc = 0;
 
-// [번역 팩 대규모 업데이트] 전체오픈, 전체마감, 개별 마감 텍스트를 8개 국어로 완벽 이식
+// [단어 교정] 한국어일 때 "전체", "내 예약"으로만 깔끔하게 나오도록 수정 완료
 window.langPack = {
     ko: { 
         notice: "📢 요일별 1인 1타임만 예약 가능합니다.", 
@@ -30,7 +30,7 @@ window.langPack = {
         curvedTxt: "예약사이트 이용료는 Mona의 섬 💚+1", confirmedHeader: "👑 내 예약 시간", 
         mon: "월요일 (건설)", tue: "화요일 (연구)", thu: "목요일 (훈련)", 
         mondayShort: "월요일", tuesdayShort: "화요일", thursdayShort: "목요일", 
-        optAll: "전체 / All", optMine: "내 예약 / Mine", 
+        optAll: "전체", optMine: "내 예약", 
         openAvailable: "✅ 예약 가능", openClosed: "🔒 예약 마감", pers: "명", noRes: "예약 가능", 
         addTitle: "새 예약 추가", confirmBtn: "확정", closeBtn: "닫기", statusTitle: "예약 현황", 
         cancelLabel: "취소용 비밀번호", cancelBtn: "예약 취소", addBookingBtn: "예약 수정", 
@@ -44,7 +44,7 @@ window.langPack = {
         promptClear: "모든 예약 데이터를 삭제하시겠습니까?<br />(이 작업은 관리자 로그에 기록됩니다)", 
         btnAdminDel: "🚨 모든 예약 삭제", promptSaved: "저장되었습니다!",
         admTitle: "👑 관리자 시스템", admBase: "SVS 기준일 설정", admSave: "저장", admManual: "예약 수동 제어", admVis: "가속 일수 공개 제어", admLimits: "요일별 최소 가속 조건 조절", admAuto: "자동 시간 설정", admSaveSched: "스케줄 저장", admExcel: "엑셀 추출", admClose: "닫기",
-        copyList: "명단 복사", copySuccess: "현재 요일의 예약 명단이 클립보드에 복사되었습니다!", enableNoti: "🔔 웹 알림 켜기", notiSuccess: "알림이 켜졌습니다! 예약 10분 전에 화면에 알려드릴게요.", statsTitle: "📊 연맹별 예약 통계",
+        copyList: "명단 복사", copySuccess: "예약 명단이 클립보드에 복사되었습니다!", enableNoti: "🔔 웹 알림 켜기", notiSuccess: "알림이 켜졌습니다! 예약 10분 전에 화면에 알려드릴게요.", statsTitle: "📊 연맹별 예약 통계",
         admOpen: "전체오픈", admGlobalClose: "전체마감", admIndivClose: "요일별 개별 마감:"
     },
     en: { 
@@ -53,7 +53,7 @@ window.langPack = {
         langHelp: "(You can change the language using the menu above.)",
         curvedTxt: "The website usage fee is Mona's Island 💚+1", confirmedHeader: "👑 My Booked Buffs", 
         mon: "Monday (Construction)", tue: "Tuesday (Research)", thu: "Thursday (Troops Training)", 
-        mondayShort: "Monday", tuesdayShort: "Tuesday", thursdayShort: "Thursday", optAll: "All", optMine: "My Booking", 
+        mondayShort: "Monday", tuesdayShort: "Tuesday", thursdayShort: "Thursday", optAll: "All", optMine: "My Bookings", 
         openAvailable: "✅ Booking Open", openClosed: "🔒 Booking Closed", pers: "Pers.", noRes: "Available", 
         addTitle: "New Booking", confirmBtn: "Confirm", closeBtn: "Close", statusTitle: "Booking Status", 
         cancelLabel: "Cancellation Password", cancelBtn: "Cancel Booking", addBookingBtn: "Modify Booking", 
@@ -64,7 +64,7 @@ window.langPack = {
         promptClear: "Delete all booking data?<br />(This action will be logged)", 
         btnAdminDel: "🚨 Clear All Bookings", promptSaved: "Saved!",
         admTitle: "👑 Admin System", admBase: "Set Base Date", admSave: "Save", admManual: "Manual Booking Control", admVis: "Speed-up Visibility", admLimits: "Dynamic Speed Limits", admAuto: "Auto Schedule", admSaveSched: "Save Schedule", admExcel: "Excel Export", admClose: "Close",
-        copyList: "Copy List", copySuccess: "Today's booking list has been copied to your clipboard!", enableNoti: "🔔 Enable Alerts", notiSuccess: "Alerts enabled! We will notify you 10 mins before your slot.", statsTitle: "📊 Alliance Stats",
+        copyList: "Copy List", copySuccess: "The booking list has been copied to your clipboard!", enableNoti: "🔔 Enable Alerts", notiSuccess: "Alerts enabled! We will notify you 10 mins before your slot.", statsTitle: "📊 Alliance Stats",
         admOpen: "Global Open", admGlobalClose: "Global Close", admIndivClose: "Individual Close by Day:"
     },
     zh: { 
@@ -76,7 +76,7 @@ window.langPack = {
         cancelLabel: "取消专用密码", cancelBtn: "取消预约", addBookingBtn: "修改预约", 
         closedAlert: "预约已截止。", speedUnit: "天", pAlliance: "联盟 (ZYZ, BUG, ZTP 等)", pNickname: "游戏昵称", pId: "玩家 ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消密码 (任意)", editBtn: "修改", cancelBtnSmall: "取消", delBtn: "删除", slotOpenBtn: "🔓 开放", slotCloseBtn: "🔒 关闭", errFill: "请先在下方输入您的密码。", errWrongPass: "密码错误。", errNoRes: "找不到预约数据。", errFillAll: "必须填写所有字段。", errIdDigit: "玩家ID必须为9位数字。", promptEdit: "请输入新的加速天数（仅限数字）:", errNan: "只能输入数字格式。", promptDelete: "确定要删除吗？", promptClear: "确定要删除所有预约数据吗？<br />（此操作将被记录）", btnAdminDel: "🚨 删除所有预约", promptSaved: "已保存！",
         admTitle: "👑 管理员系统", admBase: "设置基准日期", admSave: "保存", admManual: "手动预约控制", admVis: "加速可见性控制", admLimits: "最低加速条件调整", admAuto: "自动时间设置", admSaveSched: "保存时间表", admExcel: "导出Excel", admClose: "关闭",
-        copyList: "复制名单", copySuccess: "今日预约名单已复制到剪贴板！", enableNoti: "🔔 开启提醒", notiSuccess: "提醒已启用！我们将在预约前10分钟通知您。", statsTitle: "📊 联盟预约统计",
+        copyList: "复制名单", copySuccess: "预约名单已复制到剪贴板！", enableNoti: "🔔 开启提醒", notiSuccess: "提醒已启用！我们将在预约前10分钟通知您。", statsTitle: "📊 联盟预约统计",
         admOpen: "全局开放", admGlobalClose: "全局关闭", admIndivClose: "按天单独关闭:"
     },
     fr: { 
@@ -88,7 +88,7 @@ window.langPack = {
         cancelLabel: "Mot de passe d'annulation", cancelBtn: "Annuler la réservation", addBookingBtn: "Modifier la réservation", 
         closedAlert: "Réservation fermée.", speedUnit: "j", pAlliance: "Alliance (ZYZ, BUG, ZTP etc)", pNickname: "Beta", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", pPass: "Mot de passe", editBtn: "Modifier", cancelBtnSmall: "Annuler", delBtn: "Supprimer", slotOpenBtn: "🔓 Ouvrir", slotCloseBtn: "🔒 Fermer", errFill: "Saisissez votre mot de passe.", errWrongPass: "Mot de passe incorrect.", errNoRes: "Réservation introuvable.", errFillAll: "Veuillez remplir tous les champs.", errIdDigit: "L'identifiant doit comporter 9 chiffres.", promptEdit: "Modifier:", errNan: "Invalide.", promptDelete: "Supprimer ?", promptClear: "Effacer toutes les réservations ?<br />(Cette action sera enregistrée)", btnAdminDel: "🚨 Supprimer tout", promptSaved: "Enregistré !",
         admTitle: "👑 Système d'administration", admBase: "Définir la date", admSave: "Enregistrer", admManual: "Contrôle manuel", admVis: "Visibilité des accélérations", admLimits: "Limites dynamiques", admAuto: "Planification", admSaveSched: "Sauvegarder", admExcel: "Exporter Excel", admClose: "Fermer",
-        copyList: "Copier", copySuccess: "La liste d'aujourd'hui a été copiée !", enableNoti: "🔔 Activer l'alerte", notiSuccess: "Alertes activées ! (10 min avant)", statsTitle: "📊 Stats d'Alliance",
+        copyList: "Copier", copySuccess: "La liste a été copiée !", enableNoti: "🔔 Activer l'alerte", notiSuccess: "Alertes activées ! (10 min avant)", statsTitle: "📊 Stats d'Alliance",
         admOpen: "Ouverture Glob.", admGlobalClose: "Fermeture Glob.", admIndivClose: "Fermeture par jour:"
     },
     ja: { 
@@ -100,7 +100,7 @@ window.langPack = {
         cancelLabel: "キャンセル用パスワード", cancelBtn: "予約取消", addBookingBtn: "予約修正", 
         closedAlert: "締め切られました。", speedUnit: "日", pAlliance: "同盟 (ZYZ, BUG, ZTP)", pNickname: "名前", pId: "プレイヤーID", pSpeed: "加速日数", pPass: "パスワード", editBtn: "修正", cancelBtnSmall: "取消", delBtn: "削除", slotOpenBtn: "🔓 開く", slotCloseBtn: "🔒 閉じる", errFill: "パスワードを入力してください。", errWrongPass: "パスワードが間違っています。", errNoRes: "予約データが見つかりません。", errFillAll: "すべて入力。", errIdDigit: "プレイヤーIDは9桁の数字。", promptEdit: "修正:", errNan: "不正。", promptDelete: "削除？", promptClear: "すべての予約データを削除しますか？<br />（この操作はログに記録されます）", btnAdminDel: "🚨 全ての予約を削除", promptSaved: "保存されました！",
         admTitle: "👑 管理者システム", admBase: "基準日の設定", admSave: "保存", admManual: "手動予約制御", admVis: "加速表示制御", admLimits: "最小加速条件調整", admAuto: "自動スケジュール", admSaveSched: "スケジュール保存", admExcel: "Excel抽出", admClose: "閉じる",
-        copyList: "リストをコピー", copySuccess: "本日の予約リストをクリップボードにコピーしました！", enableNoti: "🔔 通知をオンにする", notiSuccess: "通知が有効になりました！予約の10分前にお知らせします。", statsTitle: "📊 同盟別予約統計",
+        copyList: "リストをコピー", copySuccess: "予約リストをクリップボードにコピーしました！", enableNoti: "🔔 通知をオンにする", notiSuccess: "通知が有効になりました！予約の10分前にお知らせします。", statsTitle: "📊 同盟別予約統計",
         admOpen: "全体オープン", admGlobalClose: "全体クローズ", admIndivClose: "曜日別の個別クローズ:"
     },
     id: { 
@@ -124,7 +124,7 @@ window.langPack = {
         cancelLabel: "İptal Şifresi", cancelBtn: "Rezervasyonu İptal Et", addBookingBtn: "Rezervasyonu Düzenle", 
         closedAlert: "Kapandı.", speedUnit: "g", pAlliance: "İttifak (ZYZ, BUG, ZTP vb.)", pNickname: "Kullanıcı Adı", pId: "Oyuncu ID", pSpeed: "Hızlandırma", pPass: "İptal Şifresi", editBtn: "Düzenle", cancelBtnSmall: "İptal", delBtn: "Sil", slotOpenBtn: "🔓 Aç", slotCloseBtn: "🔒 Kapat", errFill: "Şifre giriniz.", errWrongPass: "Yanlış.", errNoRes: "Bulunamadı.", errFillAll: "Doldurunuz.", errIdDigit: "ID 9 haneli olmalıdır.", promptEdit: "Düzenle:", errNan: "Geçersiz.", promptDelete: "Sil?", promptClear: "Tüm rezervasyon verilerini sil?<br />(Bu işlem kaydedilecektir)", btnAdminDel: "🚨 Tüm Rezervasyonları Sil", promptSaved: "Kaydedildi!",
         admTitle: "👑 Yönetici Paneli", admBase: "Tarihi Ayarla", admSave: "Kaydet", admManual: "Manuel Rezervasyon Kontrolü", admVis: "Hızlandırma Görünürlüğü", admLimits: "Dinamik Hız Sınırları", admAuto: "Otomatik Planlama", admSaveSched: "Programı Kaydet", admExcel: "Excel Aktar", admClose: "Kapat",
-        copyList: "Listeyi Kopyala", copySuccess: "Bugünün listesi kopyalandı!", enableNoti: "🔔 Bildirimleri Aç", notiSuccess: "Bildirimler etkinleştirildi! (10 dk kala)", statsTitle: "📊 İttifak İstatistikleri",
+        copyList: "Listeyi Kopyala", copySuccess: "Liste kopyalandı!", enableNoti: "🔔 Bildirimleri Aç", notiSuccess: "Bildirimler etkinleştirildi! (10 dk kala)", statsTitle: "📊 İttifak İstatistikleri",
         admOpen: "Genel Açılış", admGlobalClose: "Genel Kapanış", admIndivClose: "Güne Göre Bireysel Kapanış:"
     },
     ar: { 
@@ -211,22 +211,43 @@ window.combineDateTime = function(dateStr, timeStr) {
     return "";
 };
 
+// [스마트 복사 엔진] 전체, 내예약, 특정 연맹(ZTP, ZYZ, BUG) 필터링 조건에 완벽히 맞춰 복사
 window.copyTodayList = function() {
-    var text = "👑 [" + window.currentBuff.toUpperCase() + "] Confirmed List 👑\n\n";
+    var filter = document.getElementById("filterStatus").value;
+    var filterText = "";
+    if (filter === "mine") filterText = " (My Bookings)";
+    else if (filter !== "all") filterText = " (" + filter + ")";
+    
+    var text = "👑 [" + window.currentBuff.toUpperCase() + "]" + filterText + " Confirmed List 👑\n\n";
     var hasData = false;
+    
+    var myStored = localStorage.getItem(window.MY_BOOKING_KEY);
+    var myName = myStored ? window.normalizeText(JSON.parse(myStored).player) : "";
+
     for (var h = 0; h < 24; h++) {
         for (var m = 0; m < 60; m += 30) {
             var startId = window.padTime(h, m);
             var slotId = window.currentBuff + "_" + startId;
             var attendees = window.allSlotsData[slotId] ? (window.allSlotsData[slotId].attendees || []) : [];
-            if (attendees.length > 0) {
+            
+            var filteredAttendees = attendees;
+            if (filter === "mine") {
+                filteredAttendees = attendees.filter(function(a) { return window.normalizeText(a.player) === myName; });
+            } else if (filter !== "all") {
+                filteredAttendees = attendees.filter(function(a) { return String(a.alliance || "").toUpperCase().trim() === filter; });
+            }
+            
+            if (filteredAttendees.length > 0) {
                 hasData = true;
-                var playerNames = attendees.map(function(a) { return "[" + a.alliance + "] " + a.player; }).join(", ");
+                // [대/소문자 통일] 출력할 때는 무조건 대문자로 깔끔하게 포장
+                var playerNames = filteredAttendees.map(function(a) { return "[" + String(a.alliance).toUpperCase() + "] " + a.player; }).join(", ");
                 text += "- " + startId + " UTC : " + playerNames + "\n";
             }
         }
     }
-    if (!hasData) { text += "No bookings yet.\n"; }
+    
+    if (!hasData) { text += "No bookings found.\n"; }
+    
     navigator.clipboard.writeText(text).then(function() {
         var p = window.langPack[window.currentLang] || window.langPack['en'];
         window.openCustomAlert(p.copySuccess || "Copied to clipboard!");
@@ -314,6 +335,7 @@ window.renderStats = function() {
         var count = counts[ally];
         var percent = Math.round((count / total) * 100);
         var barColor = colors[index % colors.length];
+        
         html += "<div style='margin-bottom: 12px;'>";
         html += "  <div style='display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; color: #4a5568; margin-bottom: 4px;'>";
         html += "    <span>[" + ally + "]</span>";
@@ -411,7 +433,6 @@ window.changeLanguage = function(lang) {
     window.renderAll(); 
 };
 
-// [다국어 적용 로직에 관리자 텍스트 연결]
 window.applyLanguagePack = function() {
     var p = window.langPack[window.currentLang] || window.langPack['en'];
     var langSelectEl = document.getElementById("langSelect");
@@ -447,7 +468,6 @@ window.applyLanguagePack = function() {
     safeSetText("btn-copy-txt", p.copyList || "Copy List");
     safeSetText("stats-title-txt", p.statsTitle || "📊 Alliance Stats");
 
-    // [어드민 UI 다국어 연결]
     safeSetText("adm-open-lbl", p.admOpen);
     safeSetText("adm-global-close-lbl", p.admGlobalClose);
     safeSetText("adm-indiv-close-lbl", p.admIndivClose);
@@ -456,6 +476,7 @@ window.applyLanguagePack = function() {
     var confHeader = document.getElementById("confirmed-header-txt"); if (confHeader) confHeader.innerText = p.confirmedHeader;
 };
 
+// [스케줄 규칙 교정] 전체 오픈 시간 + (전체 마감 OR 개별 마감) 시간 판별
 window.isTabActuallyOpen = function(day) { 
     if (!window.bookingSettings || !window.bookingSettings.tabs || !window.bookingSettings.tabs[day]) return true; 
     var s = window.bookingSettings.tabs[day], now = new Date(); 
@@ -521,6 +542,8 @@ window.updateMyConfirmedSummary = function() {
         var displayTime = dayTxt + " " + track.time + " UTC";
         
         var timeSpan = document.createElement("span"); timeSpan.className = "confirmedTime"; timeSpan.innerText = displayTime;
+        
+        // [수정 완료] 구글 캘린더 대신 웹 푸시 알림 이식
         var notiBtn = document.createElement("button"); notiBtn.type = "button";
         notiBtn.style.padding = "4px 8px"; notiBtn.style.fontSize = "11px"; notiBtn.style.background = "#e2e8f0"; notiBtn.style.color = "#4a5568"; notiBtn.style.border = "none"; notiBtn.style.borderRadius = "6px"; notiBtn.style.fontWeight = "800"; notiBtn.style.cursor = "pointer";
         notiBtn.innerText = p.enableNoti || "🔔 Enable Alert";
@@ -531,6 +554,7 @@ window.updateMyConfirmedSummary = function() {
     el.style.display = "block";
 };
 
+// [필터링 및 렌더링 로직 수정] 특정 연맹을 선택하면 해당 연맹의 예약이 있는 슬롯만 노출!
 window.renderAll = function() {
     var grid = document.getElementById("slots"); if (!grid) return; grid.innerHTML = "";
     var isOpen = window.isTabActuallyOpen(window.currentBuff), filter = document.getElementById("filterStatus") ? document.getElementById("filterStatus").value : "all";
@@ -553,7 +577,17 @@ window.renderAll = function() {
             var slot = window.allSlotsData[id] || {};
             var attendees = slot.attendees || [];
             
-            if (filter === "mine" && !attendees.some(function(a) { return window.normalizeText(a.player) === window.normalizeText(localStorage.getItem(window.MY_BOOKING_KEY) ? JSON.parse(localStorage.getItem(window.MY_BOOKING_KEY)).player : ""); })) continue;
+            // [연맹 대소문자 무관 필터링 엔진 장착]
+            if (filter !== "all") {
+                if (filter === "mine") {
+                    var myStored = localStorage.getItem(window.MY_BOOKING_KEY);
+                    var myName = myStored ? window.normalizeText(JSON.parse(myStored).player) : "";
+                    if (!attendees.some(function(a) { return window.normalizeText(a.player) === myName; })) continue;
+                } else {
+                    // 특정 연맹 필터 시 (대/소문자 통일 후 비교)
+                    if (!attendees.some(function(a) { return String(a.alliance || "").toUpperCase().trim() === filter; })) continue;
+                }
+            }
             
             var closedList = window.bookingSettings.closedSlots || [];
             var isSpecificallyClosed = closedList.includes(id);
@@ -579,7 +613,9 @@ window.renderAll = function() {
             var displayList = attendees.slice();
             var listHtml = displayList.slice(0,1).map(function(a) { 
                 var speedText = showSpeeds ? " (" + a.daysSaved + p.speedUnit + ")" : "";
-                return "<div class='miniItem' style='font-size:15px; font-weight:800; padding:6px 0; justify-content:center; color:#2d3748;'><span>[" + a.alliance + "] " + a.player + speedText + "</span></div>"; 
+                // 출력 시 연맹 이름을 대문자로 강제 통일하여 렌더링
+                var formattedAlly = String(a.alliance).toUpperCase();
+                return "<div class='miniItem' style='font-size:15px; font-weight:800; padding:6px 0; justify-content:center; color:#2d3748;'><span>[" + formattedAlly + "] " + a.player + speedText + "</span></div>"; 
             }).join('');
             
             var reqSpeed = window.getMinSpeedRequired();
@@ -701,7 +737,7 @@ window.attachIndicatorEvents = function() {
 };
 
 window.fillAdminInputs = function() { 
-    if (!window.bookingSettings || !window.bookingSettings.baseDate) return; 
+    if (!window.bookingSettings) return; 
     var bDate = window.splitDateTime(window.bookingSettings.baseDate || "2026-05-23T21:00");
     if(document.getElementById("adminBaseDate")) document.getElementById("adminBaseDate").value = bDate.date;
     if(document.getElementById("adminBaseTime")) document.getElementById("adminBaseTime").value = bDate.time;
@@ -820,7 +856,7 @@ window.openReservedModal = function(id) {
             mainWrapper.style.display = "flex"; mainWrapper.style.justifyContent = "space-between"; mainWrapper.style.width = "100%"; mainWrapper.style.alignItems = "center";
             
             var textSpan = document.createElement("span");
-            textSpan.innerHTML = "[" + a.alliance + "] " + a.player;
+            textSpan.innerHTML = "[" + String(a.alliance).toUpperCase() + "] " + a.player;
             
             var speedSpan = document.createElement("span");
             if (window.adminAuthenticated) {
@@ -974,7 +1010,7 @@ window.exportAllCSV = function() {
                 var timeStr = slotId.split('_')[1]; 
                 var attendees = window.allSlotsData[slotId].attendees || []; 
                 attendees.forEach(function(a) { 
-                    rows.push({ "Day": day.toUpperCase(), "Time(UTC)": timeStr, "Alliance": a.alliance, "Nickname": a.player, "PlayerID": a.playerId, "SpeedDays": a.daysSaved }); 
+                    rows.push({ "Day": day.toUpperCase(), "Time(UTC)": timeStr, "Alliance": String(a.alliance).toUpperCase(), "Nickname": a.player, "PlayerID": a.playerId, "SpeedDays": a.daysSaved }); 
                 }); 
             }); 
             if (rows.length > 0) { 
