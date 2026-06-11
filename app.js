@@ -118,7 +118,7 @@ window.langPack = {
 };
 
 /* =====================================================================
-   [안전하고 예쁜 파스텔톤 눈 내리는 효과 부활] 눈이 편안한 파스텔 하늘색 적용
+   [최적화된 잔잔한 파스텔톤 눈 내리는 효과] 모바일 화면 고려 및 속도 대폭 감소
    ===================================================================== */
 window.initSnowEffect = function() {
     var canvas = document.getElementById('snow');
@@ -128,16 +128,19 @@ window.initSnowEffect = function() {
     var height = canvas.height = window.innerHeight;
     var snowflakes = [];
     
-    // [색상 변경] 기존 튀는 색상에서 다른 파스텔톤 메뉴들과 어우러지는 파스텔 하늘색으로 변경
-    var snowColor = 'rgba(155, 195, 235, 0.85)'; 
+    // [색상 최적화] 배경이나 버튼에 튀지 않는 투명하고 부드러운 파스텔 하늘색
+    var snowColor = 'rgba(180, 210, 240, 0.45)'; 
+    
+    // [반응형 최적화] 모바일 화면에서는 눈송이 개수를 절반 이하로 줄여 시야를 방해하지 않음
+    var maxFlakes = width < 768 ? 20 : 45;
 
-    for(var i=0; i<50; i++){ 
+    for(var i=0; i<maxFlakes; i++){ 
         snowflakes.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            r: Math.random() * 3.5 + 1.5, // 크기 큼직하게 유지
-            d: Math.random() * 50,
-            type: Math.random() > 0.5 ? 1 : 0 // 0: 동그라미, 1: 결정모양 섞기
+            r: Math.random() * 2.5 + 1.0, // 크기 살짝 아담하게 조정
+            d: Math.random() * maxFlakes,
+            type: Math.random() > 0.6 ? 1 : 0 // 동그라미 60%, 결정 모양 40%
         });
     }
     
@@ -145,7 +148,7 @@ window.initSnowEffect = function() {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = snowColor;
         ctx.strokeStyle = snowColor;
-        ctx.lineWidth = 1.2; // 결정 모양 선을 조금 더 선명하게
+        ctx.lineWidth = 1.0; // 결정 모양 선 두께 얇게
         ctx.beginPath();
         
         for(var i=0; i<snowflakes.length; i++){
@@ -157,7 +160,7 @@ window.initSnowEffect = function() {
                 ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
             } else {
                 // 눈 결정 모양
-                var s = f.r * 1.5; 
+                var s = f.r * 1.3; 
                 ctx.moveTo(f.x - s, f.y); ctx.lineTo(f.x + s, f.y);
                 ctx.moveTo(f.x, f.y - s); ctx.lineTo(f.x, f.y + s);
                 var diag = s * 0.7; 
@@ -173,15 +176,18 @@ window.initSnowEffect = function() {
     function move() {
         for(var i=0; i<snowflakes.length; i++){
             var f = snowflakes[i];
-            f.y += Math.cos(f.d) + 1 + f.r/2;
-            f.x += Math.sin(f.d) * 0.5;
+            // [속도 최적화] 기존보다 3~4배 천천히 살랑거리며 떨어지도록 계산식 대폭 수정
+            f.y += Math.cos(f.d) * 0.3 + 0.4 + f.r * 0.2;
+            f.x += Math.sin(f.d) * 0.3;
+            
             if(f.y > height){
-                snowflakes[i] = { x: Math.random()*width, y: 0, r: f.r, d: f.d, type: f.type };
+                // 바닥에 떨어지면 다시 위로
+                snowflakes[i] = { x: Math.random()*width, y: -10, r: f.r, d: f.d, type: f.type };
             }
         }
     }
     
-    setInterval(draw, 35); 
+    setInterval(draw, 40); // 프레임도 약간 늦춰서 더 부드럽고 차분하게 세팅
     window.addEventListener('resize', function() {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
@@ -528,7 +534,6 @@ window.updateStatusMessage = function() {
         }
     }
 
-    // [자동 마감/오픈 검증 완료] 설정된 시간이 지나 상태가 변경되면 즉시 전체 슬롯을 새로 그려 잠금/해제를 반영함
     if (window.lastOpenStatus !== null && window.lastOpenStatus !== isOpen) {
         window.renderAll();
     }
@@ -843,7 +848,6 @@ window.confirmBooking = function() {
         }
     });
 
-    // 참고로 ZYZ랑 BUG의 R5들은 이미 화이트리스트야. 내가 추가 안해주는게 아니야. (사용자 요청에 의한 설정 무시 - 예외 없이 제한 적용)
     if (alreadyBooked && !window.adminAuthenticated) { 
         return window.openCustomAlert(window.currentLang === 'ko' ? "이 요일에는 이미 예약된 내역이 있습니다.<br />(월/화/목 요일별 각 1회만 가능)" : "You have already booked a slot for this day.<br />(1 booking per day allowed)"); 
     }
