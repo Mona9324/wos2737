@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* [레이아웃 마스터 패치] PC 기본 레이아웃 유지 (우측 상단 정렬) */
         .toolbar-wrapper {
             display: flex;
             flex-direction: column;
@@ -18,49 +17,49 @@
             color: #718096;
             font-weight: 700;
             margin-top: 6px;
-            white-space: nowrap; /* PC에서는 한 줄로 예쁘게 출력 */
+            white-space: nowrap; 
         }
         
-        /* 모바일(768px 이하) 전용 레이아웃 분리 */
         @media (max-width: 768px) {
             .headerTop {
                 flex-direction: column !important;
                 align-items: center !important;
                 gap: 15px;
-                /* [여백 대폭 추가] 25px -> 50px로 늘려 둥근 글귀와 넉넉하게 한 줄 이상 띄움 */
                 margin-bottom: 50px; 
             }
             .toolbar-wrapper {
                 width: 100%;
-                align-items: center; /* 모바일은 무조건 중앙 정렬 */
+                align-items: center; 
                 padding: 0 10px;
                 box-sizing: border-box;
             }
             .headerToolbar {
                 width: 100%;
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
+                justify-content: center;
                 gap: 6px !important;
             }
             .headerToolbar > select {
-                flex: 1; /* 언어 선택창 비율 */
+                width: 100%;
                 margin: 0;
             }
             .filterGroup {
-                flex: 2; /* 필터 버튼들 비율 */
                 display: flex;
                 gap: 6px !important;
                 width: 100%;
             }
             .filterGroup select, .filterGroup button {
-                flex: 1; /* 3형제 버튼 너비 완전 통일 */
+                flex: 1; 
                 margin: 0;
                 width: 100%;
+                font-size: 12px;
+                padding: 8px 4px;
             }
             #lang-help-msg {
-                white-space: normal; /* 모바일에선 글씨가 찌그러지지 않고 자연스럽게 줄바꿈 허용 */
+                white-space: normal; 
                 text-align: center;
-                margin-top: 10px;
+                margin-top: 25px; 
                 line-height: 1.4;
             }
         }
@@ -92,6 +91,7 @@
                             <option value="all" id="opt-all">All</option>
                             <option value="mine" id="opt-mine">My Booking</option>
                         </select>
+                        <button type="button" class="btn-primary" id="btn-copy-txt" style="background-color: #2ecc71; border: none; color: white; font-weight: 800; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onclick="window.copyTodayList()">Copy List</button>
                         <button type="button" class="btn-reset" id="btn-reset-txt" onclick="window.clearSearch()">Reset</button>
                     </div>
                 </div>
@@ -108,22 +108,34 @@
                 <img src="creator-dino.png" alt="Creator" class="creatorAvatar" onclick="window.handleAdminAccess()" />
             </div>
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
+            
             <div id="myConfirmedSection" class="confirmedSection" style="display: none;">
-                <div class="confirmedHeader" id="confirmed-header-txt">👑 My Confirmed Buffs</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f6e05e; padding-bottom: 8px; margin-bottom: 12px;">
+                    <div class="confirmedHeader" id="confirmed-header-txt" style="border: none; padding: 0; margin: 0;">👑 My Confirmed Buffs</div>
+                    <button type="button" id="btn-noti-txt" class="btn-primary" style="padding: 4px 10px; font-size: 11px; background: #4a5568; border: none; border-radius: 6px;" onclick="window.requestNotification()">🔔 Enable Alert</button>
+                </div>
                 <div id="confirmedList" class="confirmedList"></div>
             </div>
+            
             <div class="ministerNotice">
                 <div id="notice-dynamic-txt" class="notice-ko"></div>
             </div>
         </div>
     </header>
+    
     <div class="tabs">
         <div id="tab-monday" class="tab-item" onclick="window.switchBuff('monday')"><div class="tabTitle" id="tab-mon-txt">Monday</div><div id="cd-monday" class="tabCD"></div></div>
         <div id="tab-tuesday" class="tab-item" onclick="window.switchBuff('tuesday')"><div class="tabTitle" id="tab-tue-txt">Tuesday</div><div id="cd-tuesday" class="tabCD"></div></div>
         <div id="tab-thursday" class="tab-item" onclick="window.switchBuff('thursday')"><div class="tabTitle" id="tab-thu-txt">Thursday</div><div id="cd-thursday" class="tabCD"></div></div>
     </div>
+    
     <div id="bookingStatusMsg" style="font-weight: 800; margin-bottom: 10px; color: #2d3748;"></div>
     <main><div id="slots" class="grid"></div></main>
+    
+    <div id="statsContainer" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none;">
+        <h3 id="stats-title-txt" style="margin-top: 0; color: #2d3748; font-size: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; text-align: left;">📊 Alliance Stats</h3>
+        <div id="allianceStats" style="margin-top: 15px;"></div>
+    </div>
     
     <div id="modal" class="modal">
         <div class="modalBox">
