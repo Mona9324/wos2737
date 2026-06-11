@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        /* [레이아웃 마스터 패치] PC 기본 레이아웃 유지 (우측 상단 정렬) */
         .toolbar-wrapper {
             display: flex;
             flex-direction: column;
@@ -21,7 +20,6 @@
             white-space: nowrap; 
         }
         
-        /* 모바일(768px 이하) 전용 레이아웃 분리 */
         @media (max-width: 768px) {
             .headerTop {
                 flex-direction: column !important;
@@ -38,23 +36,25 @@
             .headerToolbar {
                 width: 100%;
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
+                justify-content: center;
                 gap: 6px !important;
             }
             .headerToolbar > select {
-                flex: 1; /* 언어 선택창 비율 */
+                width: 100%;
                 margin: 0;
             }
             .filterGroup {
-                flex: 2; /* 필터 버튼들 비율 */
                 display: flex;
                 gap: 6px !important;
                 width: 100%;
             }
             .filterGroup select, .filterGroup button {
-                flex: 1; /* 버튼 너비 완전 통일 */
+                flex: 1; 
                 margin: 0;
                 width: 100%;
+                font-size: 12px;
+                padding: 8px 4px;
             }
             #lang-help-msg {
                 white-space: normal; 
@@ -91,7 +91,8 @@
                             <option value="all" id="opt-all">All</option>
                             <option value="mine" id="opt-mine">My Booking</option>
                         </select>
-                        <button type="button" class="btn-reset" id="btn-copy-txt" onclick="window.copyTodayList()">Copy List</button>
+                        <button type="button" class="btn-primary" id="btn-copy-txt" style="background-color: #2ecc71; border: none; color: white; font-weight: 800; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onclick="window.copyTodayList()">Copy List</button>
+                        <button type="button" class="btn-reset" id="btn-reset-txt" onclick="window.clearSearch()">Reset</button>
                     </div>
                 </div>
                 <div id="lang-help-msg"></div>
@@ -109,7 +110,10 @@
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
             
             <div id="myConfirmedSection" class="confirmedSection" style="display: none;">
-                <div class="confirmedHeader" id="confirmed-header-txt">👑 My Confirmed Buffs</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f6e05e; padding-bottom: 8px; margin-bottom: 12px;">
+                    <div class="confirmedHeader" id="confirmed-header-txt" style="border: none; padding: 0; margin: 0;">👑 My Confirmed Buffs</div>
+                    <button type="button" id="btn-noti-txt" class="btn-primary" style="padding: 4px 10px; font-size: 11px; background: #4a5568; border: none; border-radius: 6px;" onclick="window.requestNotification()">🔔 Enable Alert</button>
+                </div>
                 <div id="confirmedList" class="confirmedList"></div>
             </div>
             
@@ -219,6 +223,7 @@
         <div class="modalBox" style="max-width: 500px; position: relative;">
             <button type="button" class="admin-close-x" onclick="window.closeAdmin()">×</button>
             <h3 id="adm-title-main">Admin System</h3>
+            
             <div class="adminSection">
                 <p id="adm-base-title">Set Base Date</p>
                 <div class="buttonRow">
@@ -226,6 +231,7 @@
                     <button type="button" id="adm-base-save-btn" onclick="window.saveAdminBaseDate()" class="btn-primary" style="flex:0.4;">Save</button>
                 </div>
             </div>
+            
             <div class="adminSection">
                 <p id="adm-manual-title">Manual Booking Control</p>
                 <div class="buttonRow">
@@ -234,6 +240,7 @@
                     <button type="button" id="btn-admin-thursday" class="admin-tab-btn" onclick="window.toggleTabStatus('thursday')">Thu</button>
                 </div>
             </div>
+            
             <div class="adminSection">
                 <p id="adm-visibility-title">Speed-up Visibility</p>
                 <div class="buttonRow">
@@ -262,18 +269,28 @@
             </div>
 
             <div class="adminSection">
-                <p id="adm-schedule-title">Auto Schedule</p>
-                <div class="autoTimeGroup">
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                        <span id="adm-open-all-lbl" style="font-size:11px; font-weight:800; width:120px;">Open All:</span>
-                        <input type="datetime-local" id="global-open-time" style="flex:1;" />
+                <p id="adm-schedule-title" style="margin-bottom: 10px;">Auto Schedule (Per Day)</p>
+                <div style="font-size:11px; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom: 1px solid #eee; padding-bottom: 6px;">
+                        <span style="font-weight:bold; width: 40px;">Mon</span>
+                        <input type="datetime-local" id="auto-open-monday" style="width:40%; font-size:10px; padding:4px;" />
+                        <span style="color:#718096;">~</span>
+                        <input type="datetime-local" id="auto-close-monday" style="width:40%; font-size:10px; padding:4px;" />
                     </div>
-                    <div class="autoRow" style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                        <span id="adm-close-all-lbl" style="font-size:11px; font-weight:800; width:120px;">Close All:</span>
-                        <input type="datetime-local" id="global-close-time" style="flex:1;" />
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom: 1px solid #eee; padding-bottom: 6px;">
+                        <span style="font-weight:bold; width: 40px;">Tue</span>
+                        <input type="datetime-local" id="auto-open-tuesday" style="width:40%; font-size:10px; padding:4px;" />
+                        <span style="color:#718096;">~</span>
+                        <input type="datetime-local" id="auto-close-tuesday" style="width:40%; font-size:10px; padding:4px;" />
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:bold; width: 40px;">Thu</span>
+                        <input type="datetime-local" id="auto-open-thursday" style="width:40%; font-size:10px; padding:4px;" />
+                        <span style="color:#718096;">~</span>
+                        <input type="datetime-local" id="auto-close-thursday" style="width:40%; font-size:10px; padding:4px;" />
                     </div>
                 </div>
-                <button type="button" id="adm-schedule-save-btn" onclick="window.saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:10px;">Save Schedule</button>
+                <button type="button" id="adm-schedule-save-btn" onclick="window.saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:5px;">Save Schedule</button>
             </div>
             
             <div id="logsBox" class="logsBox" style="max-height: 130px; overflow-y: auto; text-align: left; font-size: 11px; padding: 10px; background: #111827; color: #9ca3af; border-radius: 8px; margin: 12px 0; line-height: 1.4; border: 1px solid #374151;">
