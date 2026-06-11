@@ -36,25 +36,24 @@
             .headerToolbar {
                 width: 100%;
                 display: flex;
-                flex-direction: column;
-                justify-content: center;
+                justify-content: space-between;
                 gap: 6px !important;
             }
             .headerToolbar > select {
-                width: 100%;
+                flex: 1;
                 margin: 0;
             }
             .filterGroup {
+                flex: 2; 
                 display: flex;
                 gap: 6px !important;
                 width: 100%;
             }
+            /* Reset을 명단 복사로 대체했으므로 1:1:1 비율 완벽 유지 */
             .filterGroup select, .filterGroup button {
                 flex: 1; 
                 margin: 0;
                 width: 100%;
-                font-size: 12px;
-                padding: 8px 4px;
             }
             #lang-help-msg {
                 white-space: normal; 
@@ -91,8 +90,7 @@
                             <option value="all" id="opt-all">All</option>
                             <option value="mine" id="opt-mine">My Booking</option>
                         </select>
-                        <button type="button" class="btn-primary" id="btn-copy-txt" style="background-color: #2ecc71; border: none; color: white; font-weight: 800; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onclick="window.copyTodayList()">Copy List</button>
-                        <button type="button" class="btn-reset" id="btn-reset-txt" onclick="window.clearSearch()">Reset</button>
+                        <button type="button" class="btn-reset" id="btn-copy-txt" onclick="window.copyTodayList()">Copy List</button>
                     </div>
                 </div>
                 <div id="lang-help-msg"></div>
@@ -110,10 +108,7 @@
             <div class="creatorCredit">[ZTP] Mona (X:697 Y:445)</div>
             
             <div id="myConfirmedSection" class="confirmedSection" style="display: none;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f6e05e; padding-bottom: 8px; margin-bottom: 12px;">
-                    <div class="confirmedHeader" id="confirmed-header-txt" style="border: none; padding: 0; margin: 0;">👑 My Confirmed Buffs</div>
-                    <button type="button" id="btn-noti-txt" class="btn-primary" style="padding: 4px 10px; font-size: 11px; background: #4a5568; border: none; border-radius: 6px;" onclick="window.requestNotification()">🔔 Enable Alert</button>
-                </div>
+                <div class="confirmedHeader" id="confirmed-header-txt">👑 My Confirmed Buffs</div>
                 <div id="confirmedList" class="confirmedList"></div>
             </div>
             
@@ -269,25 +264,25 @@
             </div>
 
             <div class="adminSection">
-                <p id="adm-schedule-title" style="margin-bottom: 10px;">Auto Schedule (Per Day)</p>
+                <p id="adm-schedule-title" style="margin-bottom: 10px;">Auto Schedule</p>
                 <div style="font-size:11px; margin-bottom:10px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom: 1px solid #eee; padding-bottom: 6px;">
-                        <span style="font-weight:bold; width: 40px;">Mon</span>
-                        <input type="datetime-local" id="auto-open-monday" style="width:40%; font-size:10px; padding:4px;" />
-                        <span style="color:#718096;">~</span>
-                        <input type="datetime-local" id="auto-close-monday" style="width:40%; font-size:10px; padding:4px;" />
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                        <span style="font-weight:bold; width: 60px;">전체 오픈</span>
+                        <input type="datetime-local" id="global-open-time" style="width:70%; font-size:11px; padding:4px;" />
                     </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; border-bottom: 1px solid #eee; padding-bottom: 6px;">
+                    
+                    <div style="margin-bottom:6px; color:#4a5568; font-weight:800;">요일별 마감 시간:</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <span style="font-weight:bold; width: 40px;">Mon</span>
+                        <input type="datetime-local" id="close-monday" style="width:70%; font-size:10px; padding:4px;" />
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                         <span style="font-weight:bold; width: 40px;">Tue</span>
-                        <input type="datetime-local" id="auto-open-tuesday" style="width:40%; font-size:10px; padding:4px;" />
-                        <span style="color:#718096;">~</span>
-                        <input type="datetime-local" id="auto-close-tuesday" style="width:40%; font-size:10px; padding:4px;" />
+                        <input type="datetime-local" id="close-tuesday" style="width:70%; font-size:10px; padding:4px;" />
                     </div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span style="font-weight:bold; width: 40px;">Thu</span>
-                        <input type="datetime-local" id="auto-open-thursday" style="width:40%; font-size:10px; padding:4px;" />
-                        <span style="color:#718096;">~</span>
-                        <input type="datetime-local" id="auto-close-thursday" style="width:40%; font-size:10px; padding:4px;" />
+                        <input type="datetime-local" id="close-thursday" style="width:70%; font-size:10px; padding:4px;" />
                     </div>
                 </div>
                 <button type="button" id="adm-schedule-save-btn" onclick="window.saveAutoSchedule()" class="btn-primary" style="width:100%; margin-top:5px;">Save Schedule</button>
