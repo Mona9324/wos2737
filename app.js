@@ -37,7 +37,7 @@ window.langPack = {
         pAlliance: "연맹 (ZYZ, BUG, ZTP 등)", pNickname: "닉네임", pId: "플레이어 ID (9자리)", pSpeed: "가속 일수", pPass: "예약취소를 위한 비밀번호 (아무거나)", 
         editBtn: "수정", cancelBtnSmall: "취소", delBtn: "삭제", slotOpenBtn: "🔓 예약 열기", slotCloseBtn: "🔒 예약 마감", 
         errFill: "비밀번호 칸에 비밀번호를 먼저 입력해주세요.", errWrongPass: "비밀번호가 올바르지 않습니다.", 
-        errNoRes: "삭제할 예약 데이터를 찾을 수 무 없습니다.", errFillAll: "모든 항목을 입력해야 합니다.", 
+        errNoRes: "삭제할 예약 데이터를 찾을 수 없습니다.", errFillAll: "모든 항목을 입력해야 합니다.", 
         errIdDigit: "플레이어 ID는 반드시 숫자 9자리여야 합니다.", promptEdit: "새로운 가속 일수(숫자만)를 입력하세요:", 
         errNan: "숫자 형식만 입력 가능합니다.", promptDelete: "정말 삭제하시겠습니까?", 
         promptClear: "모든 예약 데이터를 삭제하시겠습니까?<br />(이 작업은 관리자 로그에 기록됩니다)", 
@@ -223,7 +223,7 @@ window.combineDateTime = function(dateStr, timeStr) {
 };
 
 /* =====================================================================
-   [1. 명단 복사 기능] 24시간 전체 슬롯(빈칸 포함) 출력 적용 완료
+   [1. 명단 복사 기능: 빈 슬롯 텍스트 미출력 적용 완료]
    ===================================================================== */
 window.copyTodayList = function() {
     var filter = document.getElementById("filterStatus").value;
@@ -232,6 +232,7 @@ window.copyTodayList = function() {
     else if (filter !== "all") filterText = " (" + filter + ")";
     
     var text = "👑 [" + window.currentBuff.toUpperCase() + "]" + filterText + " Confirmed List 👑\n\n";
+    var hasData = false;
     
     var myStored = localStorage.getItem(window.MY_BOOKING_KEY);
     var myName = myStored ? window.normalizeText(JSON.parse(myStored).player) : "";
@@ -249,15 +250,16 @@ window.copyTodayList = function() {
                 filteredAttendees = attendees.filter(function(a) { return String(a.alliance || "").toUpperCase().trim() === filter; });
             }
             
+            // [핵심 변경] 비어있는 슬롯(배열 길이가 0)이면 아예 텍스트에 추가하지 않습니다.
             if (filteredAttendees.length > 0) {
+                hasData = true;
                 var playerNames = filteredAttendees.map(function(a) { return "[" + String(a.alliance).toUpperCase() + "] " + a.player; }).join(", ");
                 text += "- " + startId + " UTC : " + playerNames + "\n";
-            } else {
-                // 빈칸도 디스코드 공지용으로 그대로 출력되게 수정
-                text += "- " + startId + " UTC : \n";
             }
         }
     }
+    
+    if (!hasData) { text += "No bookings found.\n"; }
     
     navigator.clipboard.writeText(text).then(function() {
         var p = window.langPack[window.currentLang] || window.langPack['en'];
@@ -1015,7 +1017,7 @@ window.deleteAttendeeById = function(slotId, uniqueId) {
 };
 
 /* =====================================================================
-   [1. 엑셀 출력 완전체] 빈 시간대 24시간 풀-타임 출력 처리 
+   [1. 엑셀 출력 완전체] 24시간 풀-타임 출력 처리 
    ===================================================================== */
 window.exportAllCSV = function() { 
     try { 
@@ -1042,7 +1044,6 @@ window.exportAllCSV = function() {
                             });
                         });
                     } else {
-                        // 빈 시간대도 엑셀에 한 줄 차지하도록 구조화
                         rows.push({
                             "Day": day.toUpperCase(),
                             "Time(UTC)": startId + " UTC",
