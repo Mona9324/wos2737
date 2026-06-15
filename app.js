@@ -21,7 +21,6 @@ window.bookingSettings = {
 window.adminAuthenticated = false;
 window.sc = 0;
 
-// [다국어 패치] 모든 언어의 pPass(비밀번호 입력칸 힌트)에 "아무거나"라는 의미를 명확히 추가했습니다.
 window.langPack = {
     ko: { 
         notice: "📢 요일별 1인 1타임만 예약 가능합니다.", 
@@ -35,11 +34,10 @@ window.langPack = {
         addTitle: "새 예약 추가", confirmBtn: "확정", closeBtn: "닫기", statusTitle: "예약 현황", 
         cancelLabel: "취소용 비밀번호", cancelBtn: "예약 취소", addBookingBtn: "예약 수정", 
         closedAlert: "예약 마감되었습니다.", speedUnit: "일", 
-        pAlliance: "연맹 (ZYZ, BUG, ZTP 등)", pNickname: "닉네임", pId: "플레이어 ID (9자리)", pSpeed: "가속 일수", 
-        pPass: "예약취소를 위한 비밀번호 (아무거나)", 
+        pAlliance: "연맹 (ZYZ, BUG, ZTP 등)", pNickname: "닉네임", pId: "플레이어 ID (9자리)", pSpeed: "가속 일수", pPass: "예약취소를 위한 비밀번호 (아무거나)", 
         editBtn: "수정", cancelBtnSmall: "취소", delBtn: "삭제", slotOpenBtn: "🔓 예약 열기", slotCloseBtn: "🔒 예약 마감", 
         errFill: "비밀번호 칸에 비밀번호를 먼저 입력해주세요.", errWrongPass: "비밀번호가 올바르지 않습니다.", 
-        errNoRes: "삭제할 예약 데이터를 찾을 수 없습니다.", errFillAll: "모든 항목을 입력해야 합니다.", 
+        errNoRes: "삭제할 예약 데이터를 찾을 수 무 없습니다.", errFillAll: "모든 항목을 입력해야 합니다.", 
         errIdDigit: "플레이어 ID는 반드시 숫자 9자리여야 합니다.", promptEdit: "새로운 가속 일수(숫자만)를 입력하세요:", 
         errNan: "숫자 형식만 입력 가능합니다.", promptDelete: "정말 삭제하시겠습니까?", 
         promptClear: "모든 예약 데이터를 삭제하시겠습니까?<br />(이 작업은 관리자 로그에 기록됩니다)", 
@@ -59,8 +57,7 @@ window.langPack = {
         addTitle: "New Booking", confirmBtn: "Confirm", closeBtn: "Close", statusTitle: "Booking Status", 
         cancelLabel: "Cancellation Password", cancelBtn: "Cancel Booking", addBookingBtn: "Modify Booking", 
         closedAlert: "Reservation Closed.", speedUnit: "d", 
-        pAlliance: "Alliance (ZYZ, BUG, ZTP etc)", pNickname: "Nickname", pId: "Player ID (9 digits)", pSpeed: "Speed-up Days", 
-        pPass: "Password for cancellation (Any password)", 
+        pAlliance: "Alliance (ZYZ, BUG, ZTP etc)", pNickname: "Nickname", pId: "Player ID (9 digits)", pSpeed: "Speed-up Days", pPass: "Password for cancellation (Any password)", 
         editBtn: "Edit", cancelBtnSmall: "Cancel", delBtn: "Delete", slotOpenBtn: "🔓 Open", slotCloseBtn: "🔒 Close", 
         errFill: "Please enter your password first.", errWrongPass: "Wrong password.", errNoRes: "Reservation not found.", errFillAll: "Please fill all fields.", errIdDigit: "ID must be exactly 9 digits.", promptEdit: "Enter new speed-up days:", errNan: "Invalid number.", promptDelete: "Are you sure?", 
         promptClear: "Delete all booking data?<br />(This action will be logged)", 
@@ -76,8 +73,7 @@ window.langPack = {
         curvedTxt: "预约网站使用费是 Mona的岛 💚+1", confirmedHeader: "👑 我的确定的增益时间", 
         mon: "星期一 (建筑)", tue: "星期二 (研究)", thu: "星期四 (训练)", mondayShort: "星期一", tuesdayShort: "星期二", thursdayShort: "星期四", optAll: "全部", optMine: "我的预约", openAvailable: "✅ 开放预约", openClosed: "🔒 预约截止", pers: "人", noRes: "预约开放", addTitle: "添加新预约", confirmBtn: "确定", closeBtn: "关闭", statusTitle: "预约状态", 
         cancelLabel: "取消专用密码", cancelBtn: "取消预约", addBookingBtn: "修改预约", 
-        closedAlert: "预约已截止。", speedUnit: "天", pAlliance: "联盟 (ZYZ, BUG, ZTP 等)", pNickname: "游戏昵称", pId: "玩家 ID (9位数字)", pSpeed: "加速天数", 
-        pPass: "用于取消的密码 (任意输入)", 
+        closedAlert: "预约已截止。", speedUnit: "天", pAlliance: "联盟 (ZYZ, BUG, ZTP 等)", pNickname: "游戏昵称", pId: "玩家 ID (9位数字)", pSpeed: "加速天数", pPass: "用于取消的密码 (任意输入)", 
         editBtn: "修改", cancelBtnSmall: "取消", delBtn: "删除", slotOpenBtn: "🔓 开放", slotCloseBtn: "🔒 关闭", errFill: "请先在下方输入您的密码。", errWrongPass: "密码错误。", errNoRes: "找不到预约数据。", errFillAll: "必须填写所有字段。", errIdDigit: "玩家ID必须为9位数字。", promptEdit: "请输入新的加速天数（仅限数字）:", errNan: "只能输入数字格式。", promptDelete: "确定要删除吗？", promptClear: "确定要删除所有预约数据吗？<br />（此操作将被记录）", btnAdminDel: "🚨 删除所有预约", promptSaved: "已保存！",
         admTitle: "👑 管理员系统", admBase: "设置基准日期", admSave: "保存", admManual: "手动预约控制", admVis: "加速可见性控制", admLimits: "最低加速条件调整", admAuto: "自动时间设置", admSaveSched: "保存时间表", admExcel: "导出Excel", admClose: "关闭",
         copyList: "复制名单", copySuccess: "预约名单已复制到剪贴板！", enableNoti: "🔔 开启提醒", notiSuccess: "提醒已启用！我们将在预约前10分钟通知您。", statsTitle: "📊 联盟预约统计",
@@ -90,8 +86,7 @@ window.langPack = {
         curvedTxt: "Frais d'utilisation du site : L'île de Mona 💚+1", confirmedHeader: "👑 Mes Buffs Confirmés", 
         mon: "Lundi (Construction)", tue: "Mardi (Recherche)", thu: "Jeudi (Entraînement)", mondayShort: "Lundi", tuesdayShort: "Mardi", thursdayShort: "Jeudi", optAll: "Tout", optMine: "Mes Réservations", openAvailable: "✅ Réservation Ouverte", openClosed: "🔒 Réservation Fermée", pers: "Pers.", noRes: "Disponible", addTitle: "Nouvelle Réservation", confirmBtn: "Confirmer", closeBtn: "Fermer", statusTitle: "Statut de Réservation", 
         cancelLabel: "Mot de passe d'annulation", cancelBtn: "Annuler la réservation", addBookingBtn: "Modifier la réservation", 
-        closedAlert: "Réservation fermée.", speedUnit: "j", pAlliance: "Alliance (ZYZ, BUG, ZTP etc)", pNickname: "Beta", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", 
-        pPass: "Mot de passe d'annulation (N'importe lequel)", 
+        closedAlert: "Réservation fermée.", speedUnit: "j", pAlliance: "Alliance (ZYZ, BUG, ZTP etc)", pNickname: "Beta", pId: "ID Joueur (9 chiffres)", pSpeed: "Jours d'accélération", pPass: "Mot de passe d'annulation (N'importe lequel)", 
         editBtn: "Modifier", cancelBtnSmall: "Annuler", delBtn: "Supprimer", slotOpenBtn: "🔓 Ouvrir", slotCloseBtn: "🔒 Fermer", errFill: "Saisissez votre mot de passe.", errWrongPass: "Mot de passe incorrect.", errNoRes: "Réservation introuvable.", errFillAll: "Veuillez remplir tous les champs.", errIdDigit: "L'identifiant doit comporter 9 chiffres.", promptEdit: "Modifier:", errNan: "Invalide.", promptDelete: "Supprimer ?", promptClear: "Effacer toutes les réservations ?<br />(Cette action sera enregistrée)", btnAdminDel: "🚨 Supprimer tout", promptSaved: "Enregistré !",
         admTitle: "👑 Système d'administration", admBase: "Définir la date", admSave: "Enregistrer", admManual: "Contrôle manuel", admVis: "Visibilité des accélérations", admLimits: "Limites dynamiques", admAuto: "Planification", admSaveSched: "Sauvegarder", admExcel: "Exporter Excel", admClose: "Fermer",
         copyList: "Copier", copySuccess: "La liste a été copiée !", enableNoti: "🔔 Activer l'alerte", notiSuccess: "Alertes activées ! (10 min avant)", statsTitle: "📊 Stats d'Alliance",
@@ -104,8 +99,7 @@ window.langPack = {
         curvedTxt: "予約サイトの利用料は : Monaの島 💚+1", confirmedHeader: "👑 確定した大統領バフ時間", 
         mon: "月曜日", tue: "火曜日", thu: "木曜日", mondayShort: "月曜日", tuesdayShort: "火曜日", thursdayShort: "木曜日", optAll: "すべて", optMine: "自分の予約", openAvailable: "✅ 予約受付中", openClosed: "🔒 予約終了", pers: "人", noRes: "予約可能", addTitle: "新規予約追加", confirmBtn: "確定", closeBtn: "閉じる", statusTitle: "予約状況", 
         cancelLabel: "キャンセル用パスワード", cancelBtn: "予約取消", addBookingBtn: "予約修正", 
-        closedAlert: "締め切られました。", speedUnit: "日", pAlliance: "同盟 (ZYZ, BUG, ZTP)", pNickname: "名前", pId: "プレイヤーID", pSpeed: "加速日数", 
-        pPass: "キャンセル用パスワード (何でもOK)", 
+        closedAlert: "締め切られました。", speedUnit: "日", pAlliance: "同盟 (ZYZ, BUG, ZTP)", pNickname: "名前", pId: "プレイヤーID", pSpeed: "加速日数", pPass: "キャンセル用パスワード (何でもOK)", 
         editBtn: "修正", cancelBtnSmall: "取消", delBtn: "削除", slotOpenBtn: "🔓 開く", slotCloseBtn: "🔒 閉じる", errFill: "パスワードを入力してください。", errWrongPass: "パスワードが間違っています。", errNoRes: "予約データが見つかりません。", errFillAll: "すべて入力。", errIdDigit: "プレイヤーIDは9桁の数字。", promptEdit: "修正:", errNan: "不正。", promptDelete: "削除？", promptClear: "すべての予約データを削除しますか？<br />（この操作はログに記録されます）", btnAdminDel: "🚨 全ての予約を削除", promptSaved: "保存されました！",
         admTitle: "👑 管理者システム", admBase: "基準日の設定", admSave: "保存", admManual: "手動予約制御", admVis: "加速表示制御", admLimits: "最小加速条件調整", admAuto: "自動スケジュール", admSaveSched: "スケジュール保存", admExcel: "Excel抽出", admClose: "閉じる",
         copyList: "リストをコピー", copySuccess: "予約リストをクリップボードにコピーしました！", enableNoti: "🔔 通知をオンにする", notiSuccess: "通知が有効になりました！予約の10分前にお知らせします。", statsTitle: "📊 同盟別予約統計",
@@ -118,8 +112,7 @@ window.langPack = {
         curvedTxt: "Biaya penggunaan Pulau Mona 💚+1", confirmedHeader: "👑 Buff Saya", 
         mon: "Senin", tue: "Selasa", thu: "Kamis", mondayShort: "Senin", tuesdayShort: "Selasa", thursdayShort: "Kamis", optAll: "Semua", optMine: "Pesanan Saya", openAvailable: "✅ Buka", openClosed: "🔒 Tutup", pers: "Orang", noRes: "Tersedia", addTitle: "Tambah Pesanan", confirmBtn: "Konfirmasi", closeBtn: "Tutup", statusTitle: "Status", 
         cancelLabel: "Kata Sandi Pembatalan", cancelBtn: "Batalkan Pesanan", addBookingBtn: "Ubah Pesanan", 
-        closedAlert: "Ditutup.", speedUnit: "hari", pAlliance: "Aliansi (ZYZ, BUG, ZTP etc)", pNickname: "Nama Pengguna", pId: "Player ID (9 digit)", pSpeed: "Speed-up Hari", 
-        pPass: "Kata sandi pembatalan (Bebas)", 
+        closedAlert: "Ditutup.", speedUnit: "hari", pAlliance: "Aliansi (ZYZ, BUG, ZTP etc)", pNickname: "Nama Pengguna", pId: "Player ID (9 digit)", pSpeed: "Speed-up Hari", pPass: "Kata sandi pembatalan (Bebas)", 
         editBtn: "Ubah", cancelBtnSmall: "Batal", delBtn: "Hapus", slotOpenBtn: "🔓 Buka", slotCloseBtn: "🔒 Tutup", errFill: "Masukkan kata sandi.", errWrongPass: "Salah.", errNoRes: "Tidak ditemukan.", errFillAll: "Harus diisi.", errIdDigit: "ID harus 9 digit.", promptEdit: "Ubah:", errNan: "Harus angka.", promptDelete: "Hapus?", promptClear: "Hapus semua data pesanan?<br />(Tindakan ini akan dicatat)", btnAdminDel: "🚨 Hapus Semua Pesanan", promptSaved: "Tersimpan!",
         admTitle: "👑 Sistem Admin", admBase: "Atur Tanggal Dasar", admSave: "Simpan", admManual: "Kontrol Pesanan Manual", admVis: "Visibilitas Speed-up", admLimits: "Batas Speed-up Dinamis", admAuto: "Jadwal Otomatis", admSaveSched: "Simpan Jadwal", admExcel: "Ekspor Excel", admClose: "Tutup",
         copyList: "Salin Daftar", copySuccess: "Daftar berhasil disalin!", enableNoti: "🔔 Aktifkan Peringatan", notiSuccess: "Peringatan diaktifkan! (10 menit sebelum)", statsTitle: "📊 Statistik Aliansi",
@@ -132,8 +125,7 @@ window.langPack = {
         curvedTxt: "Mona'nın Adası 💚+1", confirmedHeader: "👑 Onaylanmış Bufflarım", 
         mon: "Pazartesi", tue: "Salı", thu: "Perşembe", mondayShort: "Pazartesi", tuesdayShort: "Salı", thursdayShort: "Perşembe", optAll: "Tümü", optMine: "Rezervasyonum", openAvailable: "✅ Açık", openClosed: "🔒 Kapalı", pers: "Kişi", noRes: "Müsait", addTitle: "Yeni Rezervasyon", confirmBtn: "Onayla", closeBtn: "Kapat", statusTitle: "Durum", 
         cancelLabel: "İptal Şifresi", cancelBtn: "Rezervasyonu İptal Et", addBookingBtn: "Rezervasyonu Düzenle", 
-        closedAlert: "Kapandı.", speedUnit: "g", pAlliance: "İttifak (ZYZ, BUG, ZTP vb.)", pNickname: "Kullanıcı Adı", pId: "Oyuncu ID", pSpeed: "Hızlandırma", 
-        pPass: "İptal Şifresi (Herhangi biri)", 
+        closedAlert: "Kapandı.", speedUnit: "g", pAlliance: "İttifak (ZYZ, BUG, ZTP vb.)", pNickname: "Kullanıcı Adı", pId: "Oyuncu ID", pSpeed: "Hızlandırma", pPass: "İptal Şifresi (Herhangi biri)", 
         editBtn: "Düzenle", cancelBtnSmall: "İptal", delBtn: "Sil", slotOpenBtn: "🔓 Aç", slotCloseBtn: "🔒 Kapat", errFill: "Şifre giriniz.", errWrongPass: "Yanlış.", errNoRes: "Bulunamadı.", errFillAll: "Doldurunuz.", errIdDigit: "ID 9 haneli olmalıdır.", promptEdit: "Düzenle:", errNan: "Geçersiz.", promptDelete: "Sil?", promptClear: "Tüm rezervasyon verilerini sil?<br />(Bu işlem kaydedilecektir)", btnAdminDel: "🚨 Tüm Rezervasyonları Sil", promptSaved: "Kaydedildi!",
         admTitle: "👑 Yönetici Paneli", admBase: "Tarihi Ayarla", admSave: "Kaydet", admManual: "Manuel Rezervasyon Kontrolü", admVis: "Hızlandırma Görünürlüğü", admLimits: "Dinamik Hız Sınırları", admAuto: "Otomatik Planlama", admSaveSched: "Programı Kaydet", admExcel: "Excel Aktar", admClose: "Kapat",
         copyList: "Listeyi Kopyala", copySuccess: "Liste kopyalandı!", enableNoti: "🔔 Bildirimleri Aç", notiSuccess: "Bildirimler etkinleştirildi! (10 dk kala)", statsTitle: "📊 İttifak İstatistikleri",
@@ -146,8 +138,7 @@ window.langPack = {
         curvedTxt: "جزيرة منى 💚+1", confirmedHeader: "👑 حجوزاتي المؤكدة", 
         mon: "الاثنين", tue: "الثلاثاء", thu: "الخميس", mondayShort: "الاثنين", tuesdayShort: "الثلاثاء", thursdayShort: "الخميس", optAll: "الكل", optMine: "حجوزاتي", openAvailable: "✅ مفتوح", openClosed: "🔒 مغلق", pers: "أشخاص", noRes: "متاح", addTitle: "حجز جديد", confirmBtn: "تأكيد", closeBtn: "إغلاق", statusTitle: "الحالة", 
         cancelLabel: "كلمة مرور الإلغاء", cancelBtn: "إلغاء الحجز", addBookingBtn: "تعديل الحجز", 
-        closedAlert: "مغلق.", speedUnit: "ي", pAlliance: "التحالف (ZYZ, BUG, ZTP إلخ)", pNickname: "الاسم", pId: "معرف اللاعب", pSpeed: "أيام التسريع", 
-        pPass: "كلمة مرور الإلغاء (أي كلمة)", 
+        closedAlert: "مغلق.", speedUnit: "ي", pAlliance: "التحالف (ZYZ, BUG, ZTP إلخ)", pNickname: "الاسم", pId: "معرف اللاعب", pSpeed: "أيام التسريع", pPass: "كلمة مرور الإلغاء (أي كلمة)", 
         editBtn: "تعديل", cancelBtnSmall: "إلغاء", delBtn: "حذف", slotOpenBtn: "🔓 فتح", slotCloseBtn: "🔒 إغلاق", errFill: "أدخل كلمة المرور.", errWrongPass: "خطأ.", errNoRes: "غير موجود.", errFillAll: "مطلوب.", errIdDigit: "يجب 9 أرقام.", promptEdit: "تعديل:", errNan: "غير صحيح.", promptDelete: "حذف؟", promptClear: "هل أنت متأكد من حذف جميع بيانات الحجز؟<br />(سيتم تسجيل هذا الإجراء)", btnAdminDel: "🚨 حذف جميع الحجوزات", promptSaved: "تم!",
         admTitle: "👑 نظام المشرف", admBase: "تعيين التاريخ الأساسي", admSave: "حفظ", admManual: "التحكم اليدوي في الحجز", admVis: "التحكم في رؤية التسريع", admLimits: "تعديل شروط الحد الأدنى", admAuto: "الجدولة التلقائية", admSaveSched: "حفظ الجدول", admExcel: "تصدير إكسل", admClose: "إغلاق",
         copyList: "نسخ القائمة", copySuccess: "تم نسخ القائمة!", enableNoti: "🔔 تفعيل التنبيه", notiSuccess: "تم التفعيل!", statsTitle: "📊 إحصائيات التحالف",
@@ -231,6 +222,9 @@ window.combineDateTime = function(dateStr, timeStr) {
     return "";
 };
 
+/* =====================================================================
+   [1. 명단 복사 기능] 24시간 전체 슬롯(빈칸 포함) 출력 적용 완료
+   ===================================================================== */
 window.copyTodayList = function() {
     var filter = document.getElementById("filterStatus").value;
     var filterText = "";
@@ -238,7 +232,6 @@ window.copyTodayList = function() {
     else if (filter !== "all") filterText = " (" + filter + ")";
     
     var text = "👑 [" + window.currentBuff.toUpperCase() + "]" + filterText + " Confirmed List 👑\n\n";
-    var hasData = false;
     
     var myStored = localStorage.getItem(window.MY_BOOKING_KEY);
     var myName = myStored ? window.normalizeText(JSON.parse(myStored).player) : "";
@@ -257,14 +250,14 @@ window.copyTodayList = function() {
             }
             
             if (filteredAttendees.length > 0) {
-                hasData = true;
                 var playerNames = filteredAttendees.map(function(a) { return "[" + String(a.alliance).toUpperCase() + "] " + a.player; }).join(", ");
                 text += "- " + startId + " UTC : " + playerNames + "\n";
+            } else {
+                // 빈칸도 디스코드 공지용으로 그대로 출력되게 수정
+                text += "- " + startId + " UTC : \n";
             }
         }
     }
-    
-    if (!hasData) { text += "No bookings found.\n"; }
     
     navigator.clipboard.writeText(text).then(function() {
         var p = window.langPack[window.currentLang] || window.langPack['en'];
@@ -871,8 +864,6 @@ window.openReservedModal = function(id) {
             textSpan.innerHTML = "[" + String(a.alliance).toUpperCase() + "] " + a.player;
             
             var speedSpan = document.createElement("span");
-            
-            // [권한 업그레이드] 관리자가 패스워드를 열람할 수 있도록 개선
             if (window.adminAuthenticated) {
                 var pwd = a.rawPassword ? a.rawPassword : "****";
                 speedSpan.innerHTML = " (" + a.daysSaved + "d) <span style='color:#e53935; font-size:10px; margin-left:4px;'>🔑 " + pwd + "</span>";
@@ -887,7 +878,6 @@ window.openReservedModal = function(id) {
             btnGroup.style.display = "flex"; btnGroup.style.gap = "4px"; btnGroup.style.marginLeft = "10px";
             
             if (window.adminAuthenticated) { 
-                // [권한 업그레이드] 관리자가 예약을 직접 수정(가속일수 변경)할 수 있는 버튼 추가
                 var editBtn = document.createElement("button"); 
                 editBtn.innerText = p.editBtn; 
                 editBtn.className = "btn-primary"; 
@@ -1024,30 +1014,49 @@ window.deleteAttendeeById = function(slotId, uniqueId) {
     });
 };
 
+/* =====================================================================
+   [1. 엑셀 출력 완전체] 빈 시간대 24시간 풀-타임 출력 처리 
+   ===================================================================== */
 window.exportAllCSV = function() { 
     try { 
         if (typeof XLSX === 'undefined') return window.openCustomAlert("XLSX Loading..."); 
         var wb = XLSX.utils.book_new(); 
-        var hasData = false;
         
         ["monday", "tuesday", "thursday"].forEach(function(day) { 
             var rows = []; 
-            Object.keys(window.allSlotsData).filter(function(k) { return k.startsWith(day); }).forEach(function(slotId) { 
-                var timeStr = slotId.split('_')[1]; 
-                var attendees = window.allSlotsData[slotId].attendees || []; 
-                attendees.forEach(function(a) { 
-                    rows.push({ "Day": day.toUpperCase(), "Time(UTC)": timeStr, "Alliance": a.alliance, "Nickname": a.player, "PlayerID": a.playerId, "SpeedDays": a.daysSaved }); 
-                }); 
-            }); 
-            if (rows.length > 0) { 
-                XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day); 
-                hasData = true;
-            } 
+            for (var h = 0; h < 24; h++) {
+                for (var m = 0; m < 60; m += 30) {
+                    var startId = window.padTime(h, m);
+                    var slotId = day + "_" + startId;
+                    var attendees = window.allSlotsData[slotId] ? (window.allSlotsData[slotId].attendees || []) : [];
+
+                    if (attendees.length > 0) {
+                        attendees.forEach(function(a) {
+                            rows.push({
+                                "Day": day.toUpperCase(),
+                                "Time(UTC)": startId + " UTC",
+                                "Alliance": String(a.alliance).toUpperCase(),
+                                "Nickname": a.player,
+                                "PlayerID": a.playerId,
+                                "SpeedDays": a.daysSaved
+                            });
+                        });
+                    } else {
+                        // 빈 시간대도 엑셀에 한 줄 차지하도록 구조화
+                        rows.push({
+                            "Day": day.toUpperCase(),
+                            "Time(UTC)": startId + " UTC",
+                            "Alliance": "",
+                            "Nickname": "",
+                            "PlayerID": "",
+                            "SpeedDays": ""
+                        });
+                    }
+                }
+            }
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), day); 
         }); 
         
-        if (!hasData) {
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([{ "Message": "No bookings yet" }]), "Empty");
-        }
         XLSX.writeFile(wb, "SVS_Booking.xlsx"); 
     } catch (e) { 
         console.error(e);
@@ -1088,8 +1097,6 @@ window.confirmBooking = function() {
     }
 
     var entryId = "uid_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-    
-    // [DB 저장 개선] 관리자 확인용으로 rawPassword를 함께 저장합니다.
     var newEntry = { 
         id: entryId, 
         alliance: a, 
@@ -1144,7 +1151,6 @@ window.editSpecificBooking = function() {
     });
 };
 
-// [관리자 전용 기능] 유저를 삭제하지 않고도 관리자가 직접 가속일수를 수정할 수 있는 함수입니다.
 window.adminEditSpecificBooking = function(slotId, uniqueId, currentDays) {
     var p = window.langPack[window.currentLang] || window.langPack['en'];
     window.openCustomPrompt(p.promptEdit, currentDays, function(newDays) {
