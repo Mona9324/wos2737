@@ -1,6 +1,3 @@
-8개 국어 모두 월요일(연구), 화요일(건설), 목요일(훈련)으로 통일해 수정했습니다. 보내주신 코드 중간에 같은 내용이 한 번 중복으로 들어가 있던 부분도 깔끔하게 정리했으니, 아래 전체 코드를 그대로 복사해서 `app.js`에 덮어씌워 주세요.
-
-```javascript
 window.currentBuff = "monday";
 window.selectedSlot = null;
 window.allSlotsData = {};
@@ -1397,5 +1394,3 @@ window.init = function() {
 };
 
 if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", window.init); } else { window.init(); }
-
-```
