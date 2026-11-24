@@ -1196,7 +1196,9 @@ window.confirmBooking = function() {
 
     window.db.collection("slots").doc(window.selectedSlot).set({ attendees: unionFn(newEntry) }, {merge: true}).then(function() { 
         localStorage.setItem(window.MY_BOOKING_KEY, JSON.stringify({ alliance: a, player: nickname, playerId: idNum, cancelKey: pass })); 
-        localStorage.setItem("starred_player", window.normalizeText(nickname));
+        if (!localStorage.getItem("starred_player")) {
+    localStorage.setItem("starred_player", window.normalizeText(nickname));
+}
         
         // [유저 활동 기록 추가]
         window.addAdminLog("🟢 [예약 등록] " + nickname + " (" + idNum + ") -> " + window.getSlotInfoStr(window.selectedSlot));
